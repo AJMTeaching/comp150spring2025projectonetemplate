@@ -1,7 +1,7 @@
-# COMP150 Fall 2024 Project One: Simplified Dungeons & Dragons Game
+# COMP150 Spring 2025 Project One: Simplified Dungeons & Dragons Game
 
 ## Overview
-This is the repository for the first project of the Fall 2024 semester for COMP150. The project is to create a command line version of a simplified Dungeons & Dragons game. It will be text-based and played in the terminal using Python. The project is due **October 29th, 2024** and is a group effort.
+This is the repository for the first project of the Spring 2025 semester for COMP150. The project is to create a command line version of a simplified Dungeons & Dragons game. It will be text-based and played in the terminal using Python. The project is due **March 25th, 2025** and is a group effort.
 
 ## Team Members
 You will be assigned a teammate based on class rank and attendance.
@@ -37,7 +37,7 @@ Each game contains a "party" with at least one member. The game ends if the enti
 ### Characters & Stats
 Each character has a common set of statistics (stats), which determine their effectiveness in overcoming challenges.
 
-#### Common Stats:
+#### Examples of common Stats from video games and media:
 - **Strength**: Physical power.
 - **Dexterity**: Skill in performing intricate tasks.
 - **Constitution**: Physical resilience.
@@ -67,5 +67,4 @@ This project is expected to take **36-54 hours** total. Since you'll be working 
 - **`project_code/`**: Top-level directory
     - **`src/`**: All the game code goes here.
     - **`test/`**: Unit tests to ensure your code is working as expected. Aim for **60-80% code coverage**. Use tools like `pytest` or `unittest`.
-
 ---

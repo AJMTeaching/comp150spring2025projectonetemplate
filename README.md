@@ -1,6 +1,6 @@
-# COMP150 Fall 2024 Project One Template
+# COMP150 Spring 2025 Project One Template
 
-This is a template for the first project in the COMP150 Fall 2024 course. The goal of this project is to create a simplified Dungeons & Dragons text-based game in Python.
+This is a template for the first project in the COMP150 Fall 2025 course. The goal of this project is to create a simplified Dungeons & Dragons text-based game in Python.
 
 ## How to Run the Project
 
@@ -13,10 +13,10 @@ To run the example project, follow the steps below:
 
 1. Clone or download the project to your local machine.
 
-2. Navigate to the project root directory (assumed to be named `comp150fall2024projectonetemplate`):
+2. Navigate to the project root directory (assumed to be named `comp150spring2025projectonetemplate`):
 
    ```bash
-   cd comp150fall2024projectonetemplate
+   cd comp150spring2025projectonetemplate
    ```
 
 3. Run the game using Python:
