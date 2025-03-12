@@ -28,17 +28,27 @@ class Statistic:
 
 
 class Character:
-    def __init__(self, name: str = "Bob"):
+    def __init__(self, name: str = "Bob", strength_value: int = 10, intelligence_value: int = 10, stamina_value: int = 10, agility_value: int = 10):
         self.name = name
-        self.strength = Statistic("Strength", description="Strength is a measure of physical power.")
-        self.intelligence = Statistic("Intelligence", description="Intelligence is a measure of cognitive ability.")
-        # Add more stats as needed
+        self.strength = Statistic("Strength", value=strength_value, description="Strength is a measure of physical power.")
+        self.intelligence = Statistic("Intelligence", value=intelligence_value, description="Intelligence is a measure of cognitive ability.")
+        self.stamina = Statistic("Stamina", value = stamina_value, description="Stamina is a measure of endurance")
+        self.agility = Statistic("Agility", value = agility_value, description="Agility is a measure of nimbleness")
 
     def __str__(self):
         return f"Character: {self.name}, Strength: {self.strength}, Intelligence: {self.intelligence}"
 
     def get_stats(self):
-        return [self.strength, self.intelligence]  # Extend this list if there are more stats
+        return [self.strength, self.intelligence, self.stamina, self.agility]  # Extend this list if there are more stats
+    
+total_characters = [
+    Character(name="Jonathan Davis", strength_value= 50, intelligence_value=50, stamina_value=10, agility_value=10),
+    Character(name="Fred Durst", strength_value=50, intelligence_value=10, stamina_value=30, agility_value=30),
+    Character(name="Solana SZA", strength_value=30, intelligence_value=40, stamina_value=20, agility_value=30),
+    Character(name="Soobin Choi", strength_value=20, intelligence_value=20, stamina_value=45, agility_value=35),
+    Character(name="Chappell Roan", strength_value=30, intelligence_value=30, stamina_value=30, agility_value=30)
+    ]
+
 
 
 class Event:
@@ -80,9 +90,20 @@ class Location:
 class Game:
     def __init__(self, parser, characters: List[Character], locations: List[Location]):
         self.parser = parser
-        self.party = characters
+        self.total_characters = total_characters
+        self.party = self.parser.party
         self.locations = locations
         self.continue_playing = True
+
+    def add_character_to_party(self):
+        chosen_character = self.parser.make_your_party(self.total_characters)
+        self.party.append(chosen_character)  # Add the selected character to the party
+        print(f"{chosen_character.name} has been added to your party!")
+
+    def display_party(self):
+        print("\nYour current party members:")
+        for member in self.party:
+            print(f"{member.name} - Strength: {member.strength.value}, Intelligence: {member.intelligence.value}, Stamina: {member.stamina.value}, Agility: {member.agility.value}")
 
     def start(self):
         while self.continue_playing:
@@ -98,8 +119,23 @@ class Game:
 
 
 class UserInputParser:
+    def __init__(self, max_party_size: int):
+        self.party = []
+        self.max_party_size = max_party_size
+
     def parse(self, prompt: str) -> str:
         return input(prompt)
+
+    def make_your_party(self, total_characters: List[Character]) -> Character:
+        while len(self.party) < self.max_party_size:
+            print(f"\nYour party has {len(self.party)} members. You can add {self.max_party_size - len(self.party)} more.")
+            print("Choose a character to add to your party:")
+            for idx, character in enumerate(total_characters):
+                print(f"{idx + 1}. {character.name} - Strength: {character.strength.value}, Intelligence: {character.intelligence.value}, Stamina: {character.stamina.value}, Agility: {character.agility.value}")
+            choice = int(self.parse("Enter the number of the character to add to your party: ")) - 1
+            self.party.append(total_characters[choice])
+        print("\nYour party is now full!")
+        return self.party
 
     def select_party_member(self, party: List[Character]) -> Character:
         print("Choose a party member:")
@@ -124,14 +160,17 @@ def load_events_from_json(file_path: str) -> List[Event]:
 
 
 def start_game():
-    parser = UserInputParser()
-    characters = [Character(f"Character_{i}") for i in range(3)]
+    parser = UserInputParser(max_party_size=5)
+    chosen_characters = parser.make_your_party(total_characters)
+    print(f"\nYou have chosen the following characters for your party:")
+    for character in chosen_characters:
+        print(f"{character.name}")
 
     # Load events from the JSON file
     events = load_events_from_json('project_code/location_events/location_1.json')
 
     locations = [Location(events)]
-    game = Game(parser, characters, locations)
+    game = Game(parser, total_characters, locations)
     game.start()
 
 
