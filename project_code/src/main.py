@@ -137,3 +137,6 @@ def start_game():
 
 if __name__ == '__main__':
     start_game()
+
+map_object = map(function, iterable)
+
