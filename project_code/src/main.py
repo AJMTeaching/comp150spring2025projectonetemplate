@@ -46,10 +46,13 @@ total_characters = [
     Character(name="Fred Durst", strength_value=50, intelligence_value=10, stamina_value=30, agility_value=30),
     Character(name="Solana SZA", strength_value=30, intelligence_value=40, stamina_value=20, agility_value=30),
     Character(name="Soobin Choi", strength_value=20, intelligence_value=20, stamina_value=45, agility_value=35),
-    Character(name="Chappell Roan", strength_value=30, intelligence_value=30, stamina_value=30, agility_value=30)
-    ]
-
-
+    Character(name="Chappell Roan", strength_value=30, intelligence_value=30, stamina_value=30, agility_value=30),
+    Character(name="Sabrina Carpenter", strength_value=40, intelligence_value=20, stamina_value=30, agility_value=30),
+    Character(name="Beyoncé", strength_value=30, intelligence_value=30, stamina_value=30, agility_value=30),
+    Character(name="Ariana Grande", strength_value=50, intelligence_value=30, stamina_value=20, agility_value=30),
+    Character(name="Theo James", strength_value=30, intelligence_value=40, stamina_value=30, agility_value=30),
+    Character(name="Anne Hathaway", strength_value=20, intelligence_value=20, stamina_value=30, agility_value=50)
+]
 
 class Event:
     def __init__(self, data: dict):
