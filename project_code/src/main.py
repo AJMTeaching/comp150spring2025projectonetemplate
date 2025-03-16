@@ -128,6 +128,9 @@ class Game:
             event = location.get_event()
             event.execute(self.party, self.parser)
 
+            if random.random() < 0.3:
+                self.trigger_special_event()
+
             if self.check_game_over():
                 self.continue_playing = False
                 break  # Exit the loop if the game is over
@@ -152,7 +155,32 @@ class Game:
         # Add a chance for a special encounter
         if random.random() < 0.2:  # 20% chance for a surprise event
             self.trigger_special_event()
+    def trigger_special_event(self):
+        print("\n💥 A surprise event has occurred! 💥")
 
+    # List of traps and power-ups
+        surprise_events = [
+            {"description": "You stepped on a hidden trap! Lose 10 stamina.", "effect": lambda player: player.stamina.modify(-10)},
+            {"description": "You find a Speed Boost potion! Gain +10 agility.", "effect": lambda player: player.agility.modify(10)},
+            {"description": "A spiked pit appears! Lose 5 agility escaping it.", "effect": lambda player: player.agility.modify(-5)},
+            {"description": "You find a Strength Gauntlet! Gain +15 strength.", "effect": lambda player: player.strength.modify(15)},
+            {"description": "A sudden rockslide hits you! Lose 10 stamina.", "effect": lambda player: player.stamina.modify(-10)},
+            {"description": "You discover an Invisibility Cloak! Sneak past obstacles next round.", "effect": lambda player: self.activate_invisibility(player)},
+            {"description": "A lightning strike charges you up! Gain +5 strength and +5 agility.", "effect": lambda player: (player.strength.modify(5), player.agility.modify(5))},
+    ]
+
+    # Pick a random event
+        selected_event = random.choice(surprise_events)
+
+    # Print the event description
+        print(f"⚡ {selected_event['description']}")
+
+    # Apply the effect to the entire party (or you could choose just one player)
+        for player in self.party:
+            selected_event['effect'](player)
+
+def activate_invisibility(self, player):
+    print(f"{player.name} becomes invisible! They avoid the next trap.")
 
 
 class UserInputParser:
