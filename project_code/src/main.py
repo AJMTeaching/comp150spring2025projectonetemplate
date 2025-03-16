@@ -108,17 +108,51 @@ class Game:
         for member in self.party:
             print(f"{member.name} - Strength: {member.strength.value}, Intelligence: {member.intelligence.value}, Stamina: {member.stamina.value}, Agility: {member.agility.value}")
 
+        print("Game Over.")
+
+import random  # Ensure random is imported
+
+class Game:
+    def __init__(self, locations, party, parser):
+        self.locations = locations
+        self.party = party
+        self.parser = parser
+        self.continue_playing = True  # Initialize continue_playing flag
+
     def start(self):
-        while self.continue_playing:
+        round_count = 0  # Track the number of rounds
+        max_rounds = 10  # Set a limit for the game
+
+        while self.continue_playing and round_count < max_rounds:
             location = random.choice(self.locations)
             event = location.get_event()
             event.execute(self.party, self.parser)
+
             if self.check_game_over():
                 self.continue_playing = False
+                break  # Exit the loop if the game is over
+
+            round_count += 1  # Increment round count
+
         print("Game Over.")
 
     def check_game_over(self):
-        return len(self.party) == 0
+        return len(self.party) == 0    
+        print(f"\n--- Round {round_count + 1} ---")
+        location = random.choice(self.locations)  # Pick a random location
+        event = location.get_event()  # Get a random event for the location
+        event.execute(self.party, self.parser)  # Execute the event
+
+        round_count += 1  # Increase round count
+
+        # Check if the game should end (e.g., all characters defeated)
+        if self.check_game_over():
+            self.continue_playing = False
+
+        # Add a chance for a special encounter
+        if random.random() < 0.2:  # 20% chance for a surprise event
+            self.trigger_special_event()
+
 
 
 class UserInputParser:
