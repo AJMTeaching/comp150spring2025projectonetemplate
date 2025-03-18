@@ -28,6 +28,13 @@ class Statistic:
 
 
 class Character:
+    class WizardCat(Character):
+    def __init__(self):
+        super().__init__(name="Wizard Cat", health=12)
+        self.add_ability("Fireball")
+        self.add_ability("Magic Shield")
+
+        
     def __init__(self, name: str = "Bob"):
         self.name = name
         self.strength = Statistic("Strength", description="Strength is a measure of physical power.")
