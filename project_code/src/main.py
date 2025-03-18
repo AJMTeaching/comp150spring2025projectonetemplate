@@ -81,6 +81,26 @@ class Event:
             self.status = EventStatus.FAIL
             print(self.fail_message)
 
+event1_data = {
+    'primary_attribute': 'Strength',
+    'secondary_attribute': 'Stamina',
+    'prompt_text': "A massive boulder blocks your way. You need to push it out of the way!",
+    'pass': {'message': "You pushed the boulder successfully!"},
+    'fail': {'message': "You couldn't move the boulder, you got exhausted."},
+    'partial_pass': {'message': "You moved the boulder a little, but you are exhausted."}
+}
+
+event2_data = {
+    'primary_attribute': 'Intelligence',
+    'secondary_attribute': 'Agility',
+    'prompt_text': "A riddle appears. Solve it to proceed!",
+    'pass': {'message': "You solved the riddle quickly!"},
+    'fail': {'message': "You couldn't solve the riddle in time!"},
+    'partial_pass': {'message': "You solved part of the riddle, but not enough."}
+}
+
+event1 = Event(event1_data)
+event2 = Event(event2_data)
 
 class Location:
     def __init__(self, events: List[Event]):
@@ -88,7 +108,8 @@ class Location:
 
     def get_event(self) -> Event:
         return random.choice(self.events)
-
+    
+location1 = Location(events=[event1, event2])
 
 class Game:
     def __init__(self, parser, characters: List[Character], locations: List[Location]):
@@ -109,15 +130,6 @@ class Game:
             print(f"{member.name} - Strength: {member.strength.value}, Intelligence: {member.intelligence.value}, Stamina: {member.stamina.value}, Agility: {member.agility.value}")
 
         print("Game Over.")
-
-import random  # Ensure random is imported
-
-class Game:
-    def __init__(self, locations, party, parser):
-        self.locations = locations
-        self.party = party
-        self.parser = parser
-        self.continue_playing = True  # Initialize continue_playing flag
 
     def start(self):
         round_count = 0  # Track the number of rounds
@@ -140,7 +152,7 @@ class Game:
         print("Game Over.")
 
     def check_game_over(self):
-        return len(self.party) == 0    
+            
         print(f"\n--- Round {round_count + 1} ---")
         location = random.choice(self.locations)  # Pick a random location
         event = location.get_event()  # Get a random event for the location
@@ -155,6 +167,7 @@ class Game:
         # Add a chance for a special encounter
         if random.random() < 0.2:  # 20% chance for a surprise event
             self.trigger_special_event()
+        return len(self.party) == 0
     def trigger_special_event(self):
         print("\n💥 A surprise event has occurred! 💥")
 
@@ -192,15 +205,28 @@ class UserInputParser:
         return input(prompt)
 
     def make_your_party(self, total_characters: List[Character]) -> Character:
+        unchosen_characters = total_characters.copy()
         while len(self.party) < self.max_party_size:
             print(f"\nYour party has {len(self.party)} members. You can add {self.max_party_size - len(self.party)} more.")
             print("Choose a character to add to your party:")
             for idx, character in enumerate(total_characters):
                 print(f"{idx + 1}. {character.name} - Strength: {character.strength.value}, Intelligence: {character.intelligence.value}, Stamina: {character.stamina.value}, Agility: {character.agility.value}")
             choice = int(self.parse("Enter the number of the character to add to your party: ")) - 1
-            self.party.append(total_characters[choice])
+            selected_character = total_characters[choice]
+            if selected_character in self.party:
+                print(f"{selected_character.name} is already in your party. Please choose a different character.")
+            else:
+                self.party.append(total_characters[choice])
+                unchosen_characters.remove(selected_character)
+                print(f"{selected_character.name} has been added to your party!")
         print("\nYour party is now full!")
-        return self.party
+        opposing_team = unchosen_characters
+        print("\nOpposing team consists of:")
+        for character in opposing_team:
+            print(f"{character.name} - Strength: {character.strength.value}, Intelligence: {character.intelligence.value}, Stamina: {character.stamina.value}, Agility: {character.agility.value}")
+
+        return self.party, opposing_team
+        
 
     def select_party_member(self, party: List[Character]) -> Character:
         print("Choose a party member:")
@@ -226,9 +252,9 @@ def load_events_from_json(file_path: str) -> List[Event]:
 
 def start_game():
     parser = UserInputParser(max_party_size=5)
-    chosen_characters = parser.make_your_party(total_characters)
+    chosen_party, opposing_team = parser.make_your_party(total_characters)
     print(f"\nYou have chosen the following characters for your party:")
-    for character in chosen_characters:
+    for character in chosen_party:
         print(f"{character.name}")
 
     # Load events from the JSON file
