@@ -1,7 +1,7 @@
 import json
 import sys
 import random
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from enum import Enum
 
 
@@ -30,6 +30,7 @@ class Statistic:
 class Character:
     def __init__(self, name: str = "Bob", strength_value: int = 10, intelligence_value: int = 10, stamina_value: int = 10, agility_value: int = 10):
         self.name = name
+        self.is_invisible = False
         self.strength = Statistic("Strength", value=strength_value, description="Strength is a measure of physical power.")
         self.intelligence = Statistic("Intelligence", value=intelligence_value, description="Intelligence is a measure of cognitive ability.")
         self.stamina = Statistic("Stamina", value = stamina_value, description="Stamina is a measure of endurance")
@@ -112,12 +113,18 @@ class Location:
 location1 = Location(events=[event1, event2])
 
 class Game:
-    def __init__(self, parser, characters: List[Character], locations: List[Location]):
+    def __init__(self, parser, characters: List[Character], locations: List[Location], chosen_party, opposing_team):
+        self.is_invisible = None
         self.parser = parser
         self.total_characters = total_characters
         self.party = self.parser.party
         self.locations = locations
         self.continue_playing = True
+        self.round_count = 0  # Track the number of rounds
+        self.max_rounds = 10  # Set a limit for the game
+        self.chosen_part = chosen_party
+        self.opposing_team = opposing_team
+
 
     def add_character_to_party(self):
         chosen_character = self.parser.make_your_party(self.total_characters)
@@ -132,65 +139,70 @@ class Game:
         print("Game Over.")
 
     def start(self):
-        round_count = 0  # Track the number of rounds
-        max_rounds = 10  # Set a limit for the game
-
-        while self.continue_playing and round_count < max_rounds:
+        while self.continue_playing and self.round_count < self.max_rounds:
             location = random.choice(self.locations)
             event = location.get_event()
+
             event.execute(self.party, self.parser)
 
-            if random.random() < 0.3:
+            if self.round_count == 6:
                 self.trigger_special_event()
 
-            if self.check_game_over():
-                self.continue_playing = False
-                break  # Exit the loop if the game is over
+            self.check_game_over()
 
-            round_count += 1  # Increment round count
-
+            self.round_count += 1  # Increment round count
+            if self.is_invisible:
+                self.deactivate_invisibility()
         print("Game Over.")
 
     def check_game_over(self):
-            
-        print(f"\n--- Round {round_count + 1} ---")
-        location = random.choice(self.locations)  # Pick a random location
-        event = location.get_event()  # Get a random event for the location
-        event.execute(self.party, self.parser)  # Execute the event
-
-        round_count += 1  # Increase round count
-
-        # Check if the game should end (e.g., all characters defeated)
-        if self.check_game_over():
-            self.continue_playing = False
+        if self.did_succeed():
+            self.continue_playing = True
 
         # Add a chance for a special encounter
         if random.random() < 0.2:  # 20% chance for a surprise event
             self.trigger_special_event()
+
         return len(self.party) == 0
     def trigger_special_event(self):
         print("\n💥 A surprise event has occurred! 💥")
 
-    # List of traps and power-ups
+
+        # List of traps and power-ups
         surprise_events = [
             {"description": "You stepped on a hidden trap! Lose 10 stamina.", "effect": lambda player: player.stamina.modify(-10)},
             {"description": "You find a Speed Boost potion! Gain +10 agility.", "effect": lambda player: player.agility.modify(10)},
             {"description": "A spiked pit appears! Lose 5 agility escaping it.", "effect": lambda player: player.agility.modify(-5)},
             {"description": "You find a Strength Gauntlet! Gain +15 strength.", "effect": lambda player: player.strength.modify(15)},
             {"description": "A sudden rockslide hits you! Lose 10 stamina.", "effect": lambda player: player.stamina.modify(-10)},
-            {"description": "You discover an Invisibility Cloak! Sneak past obstacles next round.", "effect": lambda player: self.activate_invisibility(player)},
+            {"description": "You discover an Invisibility Cloak! Sneak past obstacles next round.", "effect": lambda player: self.activate_invisibility()},
             {"description": "A lightning strike charges you up! Gain +5 strength and +5 agility.", "effect": lambda player: (player.strength.modify(5), player.agility.modify(5))},
-    ]
+        ]
 
-    # Pick a random event
+        # Pick a random event
         selected_event = random.choice(surprise_events)
 
-    # Print the event description
+        # Print the event description
         print(f"⚡ {selected_event['description']}")
 
-    # Apply the effect to the entire party (or you could choose just one player)
+        # Apply the effect to the entire party (or you could choose just one player)
         for player in self.party:
             selected_event['effect'](player)
+
+    def did_succeed(self):
+        if self.round_count == 7:
+            return True
+
+    def activate_invisibility(self):
+        self.is_invisible = True
+        for member in self.party:
+            member.is_invisible = True
+
+    def deactivate_invisibility(self):
+        self.is_invisible = False
+        for member in self.party:
+            member.is_invisible = False
+
 
 def activate_invisibility(self, player):
     print(f"{player.name} becomes invisible! They avoid the next trap.")
@@ -204,7 +216,7 @@ class UserInputParser:
     def parse(self, prompt: str) -> str:
         return input(prompt)
 
-    def make_your_party(self, total_characters: List[Character]) -> Character:
+    def make_your_party(self, total_characters: List[Character]) -> Tuple[List[Character], List[Character]]:
         unchosen_characters = total_characters.copy()
         while len(self.party) < self.max_party_size:
             print(f"\nYour party has {len(self.party)} members. You can add {self.max_party_size - len(self.party)} more.")
@@ -261,7 +273,7 @@ def start_game():
     events = load_events_from_json('project_code/location_events/location_1.json')
 
     locations = [Location(events)]
-    game = Game(parser, total_characters, locations)
+    game = Game(parser, total_characters, locations, chosen_party, opposing_team)
     game.start()
 
 
