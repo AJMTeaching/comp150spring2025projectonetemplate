@@ -3,29 +3,114 @@ import time
 
 # Character class represents both player and monsters
 class Character:
-    def __init__(self, name, health, attack, defense):
+    def __init__(self, name, attack, health, mana, defense):
         self.name = name
-        self.health = health
         self.attack = attack
+        self.health = health
+        self.mana = mana
         self.defense = defense
 
-    def take_damage(self, damage):
+    def __str__(self):
+        return f"{self.name}: Attack={self.attack}, Health={self.health}, Mana={self.mana},defense={self.defense}"
+
+
+class Swordsman(Character):
+    def __init__(self, name):
+        # Swordsman has higher attack, lower health, and no mana
+        super().__init__(name, attack=20, health=50, mana=0,defense=100)
+
+
+class Mage(Character):
+    def __init__(self, name):
+        # Mage has lower attack, higher health, and starting mana of 5
+        super().__init__(name, attack=10, health=80, mana=5,defense=100)
+        self.initial_mana = 5  # Track the starting mana
+
+    def defeat_monster(self):
+        # Each time a monster is defeated, increase mana by 5
+        self.mana += 5
+
+    def __str__(self):
+        return f"{self.name}: Attack={self.attack}, Health={self.health}, Mana={self.mana}"
+
+def choose_character():
+    print("Welcome to the game!")
+    print("Choose your character class:")
+    print("1. Swordsman (Higher attack, lower health, no mana)")
+    print("2. Mage (Lower attack, higher health, starting mana of 5 that increases with each monster defeated)")
+
+    choice = input("Enter the number of your choice (1 or 2): ")
+
+    if choice == "1":
+        name = input("Enter the name of your Swordsman: ")
+        character = Swordsman(name)
+        print(f"\nYou have chosen {character.name}, the Swordsman!")
+        print(character)
+    elif choice == "2":
+        name = input("Enter the name of your Mage: ")
+        character = Mage(name)
+        print(f"\nYou have chosen {character.name}, the Mage!")
+        print(character)
+    else:
+        print("Invalid choice. Please choose either 1 or 2.")
+        return choose_character()  # Restart the choice prompt if invalid input is given
+
+    return character
+
+
+# Starting the game and choosing a character
+chosen_character = choose_character()
+
+def equip_armor(self, defense_boost):
+        """Equips armor, increasing defense."""
+        self.defense += defense_boost
+        print(f"{self.name} equipped armor! Defense increased to {self.defense:.2f}.")
+
+def check_chest(self):
+        """Checks a chest for armor."""
+        if random.random() < 0.45:  # 45% chance of finding armor
+            defense_boost = random.randint(10, 50)  # Random defense boost
+            self.equip_armor(defense_boost)
+        else:
+            print(f"{self.name} found nothing in the chest.")
+
+def attack(self, target, damage):
+        """Attacks another character."""
+        actual_damage = damage
+        self.target=target
+        self.target=Monster
+
+        if self.defense == 0: #damage boost if no armor
+                actual_damage *= 1.03
+
+        if target.defense > 0:
+            actual_damage = max(0, actual_damage - (actual_damage * (target.defense / 100))) # apply damage reduction.
+            target.defense = max(0, target.defense - 5) # reduce defense
+            print(f"{self.name} attacks {target.name} for {actual_damage:.2f} damage (Defense reduced).")
+        else:
+            print(f"{self.name} attacks {target.name} for {actual_damage:.2f} damage (No defense).")
+
+        target.health -= actual_damage
+        target.health = max(0, target.health)  # Ensure health doesn't go below 0
+        print(f"{target.name}'s health: {target.health:.2f}")
+
+def take_damage(self, damage):
         actual_damage = max(0, damage - self.defense)
         self.health -= actual_damage
         if self.health < 0:
             self.health = 0
         return actual_damage
 
-    def is_alive(self):
+def is_alive(self):
         return self.health > 0
 
-    def attack_enemy(self, enemy):
+def attack_enemy(self, enemy):
         damage = random.randint(1, self.attack)
         actual_damage = enemy.take_damage(damage)
         return actual_damage
 
 # Monster class inherits from Character class
-class Monster(Character):
+class Monster:
     def __init__(self, name, health, attack, defense):
         super().__init__(name, health, attack, defense)
 
@@ -104,15 +189,10 @@ def random_event(player):
 
 # Game loop
 def start_game():
-    print("Welcome to the Tomb of the Dead!")
-    player_name = input("Enter your character's name: ")
 
     # Initial random stage setup
     dungeon_name, min_attack, max_attack, min_health = generate_dungeon_stage()
     print(f"\nYou are about to enter the {dungeon_name}. Prepare yourself!")
-
-    # Create player and set initial stats
-    player = Character(player_name, health=100, attack=20, defense=5)
 
     # Prepare monsters for this dungeon
     monster_count = random.randint(3, 6)
@@ -126,10 +206,10 @@ def start_game():
 
     # Game loop
     dungeon_level = 1
-    while player.is_alive():
+    while chosen_character.is_alive():
         print(f"\n--- Dungeon Level {dungeon_level} ---")
-        random_event(player)
-        if not combat(player, monsters):
+        random_event(Character)
+        if not combat(Character, monsters):
             break
 
         # Proceed to next dungeon level
@@ -145,7 +225,7 @@ def start_game():
             monster_defense = random.randint(2, 5)
             monsters.append(Monster(monster_name, monster_health, monster_attack, monster_defense))
 
-    print(f"\n{player.name} has died. Game Over!")
+    print(f"\n{Character.name} has died. Game Over!")
 
 if __name__ == "__main__":
     start_game()
