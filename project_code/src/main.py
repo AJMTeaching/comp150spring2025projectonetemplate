@@ -1,150 +1,139 @@
 import json
-import sys
 import random
-from typing import List, Optional
+from typing import List
 from enum import Enum
 
-
+# --- ENUMS ---
 class EventStatus(Enum):
     UNKNOWN = "unknown"
     PASS = "pass"
     FAIL = "fail"
     PARTIAL_PASS = "partial_pass"
 
-
+# --- STATISTIC CLASS ---
 class Statistic:
-    def __init__(self, name: str, value: int = 0, description: str = "", min_value: int = 0, max_value: int = 100):
+    def __init__(self, name: str, value: int = 0, min_value: int = 0, max_value: int = 100):
         self.name = name
         self.value = value
-        self.description = description
         self.min_value = min_value
         self.max_value = max_value
-
-    def __str__(self):
-        return f"{self.name}: {self.value}"
 
     def modify(self, amount: int):
         self.value = max(self.min_value, min(self.max_value, self.value + amount))
 
-
+# --- CHARACTER CLASSES ---
 class Character:
-    class WizardCat(Character):
+    def __init__(self, name: str, health: int = 10):
+        self.name = name
+        self.health = health
+        self.inventory = []
+        self.strength = Statistic("Strength", value=5)
+        self.intelligence = Statistic("Intelligence", value=5)
+        self.abilities = []
+    
+    def take_damage(self, amount: int):
+        self.health = max(0, self.health - amount)
+        print(f"{self.name} took {amount} damage! Remaining Health: {self.health}")
+    
+    def add_ability(self, ability):
+        self.abilities.append(ability)
+
+class WizardCat(Character):
     def __init__(self):
         super().__init__(name="Wizard Cat", health=12)
         self.add_ability("Fireball")
         self.add_ability("Magic Shield")
 
-class ZombieCat(Player):
-    def revive_player(self, target):
-        target.health = 50
-        print(f"{self.name} used a whisker to revive {target.name}!")
-        
-    def __init__(self, name: str = "Bob"):
+class FeralCat(Character):
+    def __init__(self):
+        super().__init__(name="Feral Cat", health=15)
+        self.add_ability("Forsaken Furball")
+        self.add_ability("Cowardice")
+
+class ExplodingKitten(Character):
+    def __init__(self):
+        super().__init__(name="Exploding Kitten", health=10)
+        self.add_ability("Nuclear Reactivity")
+
+# --- ENEMY CLASS ---
+class Enemy:
+    def __init__(self, name: str, health: int, damage: int):
         self.name = name
-        self.strength = Statistic("Strength", description="Strength is a measure of physical power.")
-        self.intelligence = Statistic("Intelligence", description="Intelligence is a measure of cognitive ability.")
-        # Add more stats as needed
+        self.health = health
+        self.damage = damage
+    
+    def take_damage(self, amount: int):
+        self.health = max(0, self.health - amount)
+        print(f"{self.name} took {amount} damage! Remaining Health: {self.health}")
 
-    def __str__(self):
-        return f"Character: {self.name}, Strength: {self.strength}, Intelligence: {self.intelligence}"
+# --- COMBAT SYSTEM ---
+def combat(player: Character, enemy: Enemy):
+    print(f"{player.name} engages in battle with {enemy.name}!")
+    while player.health > 0 and enemy.health > 0:
+        print(f"\n{player.name}'s turn! Choose an ability:")
+        for idx, ability in enumerate(player.abilities):
+            print(f"{idx + 1}. {ability}")
+        choice = int(input("Enter ability number: ")) - 1
+        damage = random.randint(3, 7)  # Randomized damage output
+        print(f"{player.name} used {player.abilities[choice]} and dealt {damage} damage!")
+        enemy.take_damage(damage)
+        
+        if enemy.health <= 0:
+            print(f"{enemy.name} is defeated!")
+            return True
+        
+        print(f"{enemy.name} attacks!")
+        player.take_damage(enemy.damage)
+        if player.health <= 0:
+            print(f"{player.name} has been defeated...")
+            return False
 
-    def get_stats(self):
-        return [self.strength, self.intelligence]  # Extend this list if there are more stats
+# --- GAME LOGIC ---
+def choose_character():
+    print("Choose your kitten:")
+    print("1. Wizard Cat")
+    print("2. Feral Cat")
+    print("3. Exploding Kitten")
+    choice = input("Enter your choice: ")
+    
+    if choice == "1":
+        return WizardCat()
+    elif choice == "2":
+        return FeralCat()
+    elif choice == "3":
+        return ExplodingKitten()
+    else:
+        print("Invalid choice! Defaulting to Wizard Cat.")
+        return WizardCat()
 
-
-class Event:
-    def __init__(self, data: dict):
-        self.primary_attribute = data['primary_attribute']
-        self.secondary_attribute = data['secondary_attribute']
-        self.prompt_text = data['prompt_text']
-        self.pass_message = data['pass']['message']
-        self.fail_message = data['fail']['message']
-        self.partial_pass_message = data['partial_pass']['message']
-        self.status = EventStatus.UNKNOWN
-
-    def execute(self, party: List[Character], parser):
-        print(self.prompt_text)
-        character = parser.select_party_member(party)
-        chosen_stat = parser.select_stat(character)
-        self.resolve_choice(character, chosen_stat)
-
-    def resolve_choice(self, character: Character, chosen_stat: Statistic):
-        if chosen_stat.name == self.primary_attribute:
-            self.status = EventStatus.PASS
-            print(self.pass_message)
-        elif chosen_stat.name == self.secondary_attribute:
-            self.status = EventStatus.PARTIAL_PASS
-            print(self.partial_pass_message)
+def play_game():
+    print("Welcome to Exploding Kittens: The RPG!")
+    player = choose_character()
+    print(f"You have chosen: {player.name}\n")
+    
+    locations = ["The Clawed Goblet", "Felis Infernum", "The Witherwild Thicket"]
+    artifacts_collected = 0
+    
+    for mission in range(1, 4):
+        print(f"Mission {mission}: Travel to {random.choice(locations)}")
+        enemy = Enemy("Claw Bandit", 7, random.randint(2, 5))
+        
+        if combat(player, enemy):
+            artifacts_collected += 1
+            print("You found an artifact! Abilities unlocked.")
+            if artifacts_collected == 3:
+                print("All abilities unlocked! You are ready for the final battle.")
         else:
-            self.status = EventStatus.FAIL
-            print(self.fail_message)
+            print("Game Over! Try again.")
+            return
+    
+    print("\nFinal Battle: The Barking Kitten War General appears!")
+    final_boss = Enemy("Barking Kitten War General", 14, 5)
+    if combat(player, final_boss):
+        print("Congratulations! You have defeated the War General and saved the Kitten Kingdom!")
+    else:
+        print("You were defeated... The Kitten Kingdom falls into chaos!")
 
-
-class Location:
-    def __init__(self, events: List[Event]):
-        self.events = events
-
-    def get_event(self) -> Event:
-        return random.choice(self.events)
-
-
-class Game:
-    def __init__(self, parser, characters: List[Character], locations: List[Location]):
-        self.parser = parser
-        self.party = characters
-        self.locations = locations
-        self.continue_playing = True
-
-    def start(self):
-        while self.continue_playing:
-            location = random.choice(self.locations)
-            event = location.get_event()
-            event.execute(self.party, self.parser)
-            if self.check_game_over():
-                self.continue_playing = False
-        print("Game Over.")
-
-    def check_game_over(self):
-        return len(self.party) == 0
-
-
-class UserInputParser:
-    def parse(self, prompt: str) -> str:
-        return input(prompt)
-
-    def select_party_member(self, party: List[Character]) -> Character:
-        print("Choose a party member:")
-        for idx, member in enumerate(party):
-            print(f"{idx + 1}. {member.name}")
-        choice = int(self.parse("Enter the number of the chosen party member: ")) - 1
-        return party[choice]
-
-    def select_stat(self, character: Character) -> Statistic:
-        print(f"Choose a stat for {character.name}:")
-        stats = character.get_stats()
-        for idx, stat in enumerate(stats):
-            print(f"{idx + 1}. {stat.name} ({stat.value})")
-        choice = int(self.parse("Enter the number of the stat to use: ")) - 1
-        return stats[choice]
-
-
-def load_events_from_json(file_path: str) -> List[Event]:
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-    return [Event(event_data) for event_data in data]
-
-
-def start_game():
-    parser = UserInputParser()
-    characters = [Character(f"Character_{i}") for i in range(3)]
-
-    # Load events from the JSON file
-    events = load_events_from_json('project_code/location_events/location_1.json')
-
-    locations = [Location(events)]
-    game = Game(parser, characters, locations)
-    game.start()
-
-
-if __name__ == '__main__':
-    start_game()
+# --- START GAME ---
+if __name__ == "__main__":
+    play_game()
