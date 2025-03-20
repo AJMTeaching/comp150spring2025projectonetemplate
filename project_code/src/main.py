@@ -66,6 +66,27 @@ class Enemy:
         self.health = max(0, self.health - amount)
         print(f"{self.name} took {amount} damage! Remaining Health: {self.health}")
 
+# --- INPUT HANDLING CLASS ---
+class UserInputHandler:
+    @staticmethod
+    def get_valid_input(prompt: str, options: List[str]):
+        while True:
+            user_input = input(prompt).strip().lower()
+            if user_input in options:
+                return user_input
+            print("Invalid input! Please choose a valid option.")
+    
+    @staticmethod
+    def get_valid_number(prompt: str, min_val: int, max_val: int):
+        while True:
+            try:
+                choice = int(input(prompt))
+                if min_val <= choice <= max_val:
+                    return choice
+                print(f"Please enter a number between {min_val} and {max_val}.")
+            except ValueError:
+                print("Invalid input! Please enter a valid number.")
+
 # --- COMBAT SYSTEM ---
 def combat(player: Character, enemy: Enemy):
     print(f"{player.name} engages in battle with {enemy.name}!")
@@ -73,7 +94,7 @@ def combat(player: Character, enemy: Enemy):
         print(f"\n{player.name}'s turn! Choose an ability:")
         for idx, ability in enumerate(player.abilities):
             print(f"{idx + 1}. {ability}")
-        choice = int(input("Enter ability number: ")) - 1
+        choice = UserInputHandler.get_valid_number("Enter ability number: ", 1, len(player.abilities)) - 1
         damage = random.randint(3, 7)  # Randomized damage output
         print(f"{player.name} used {player.abilities[choice]} and dealt {damage} damage!")
         enemy.take_damage(damage)
@@ -91,27 +112,19 @@ def combat(player: Character, enemy: Enemy):
 # --- GAME LOGIC ---
 def choose_character():
     print("Choose your kitten:")
-    print("1. Wizard Cat")
-    print("2. Feral Cat")
-    print("3. Exploding Kitten")
-    choice = input("Enter your choice: ")
-    
-    if choice == "1":
-        return WizardCat()
-    elif choice == "2":
-        return FeralCat()
-    elif choice == "3":
-        return ExplodingKitten()
-    else:
-        print("Invalid choice! Defaulting to Wizard Cat.")
-        return WizardCat()
+    choices = {"1": WizardCat, "2": FeralCat, "3": ExplodingKitten}
+    user_choice = UserInputHandler.get_valid_input("1. Wizard Cat\n2. Feral Cat\n3. Exploding Kitten\nEnter your choice: ", choices.keys())
+    return choices[user_choice]()
 
 def play_game():
     print("Welcome to Exploding Kittens: The RPG!")
     player = choose_character()
     print(f"You have chosen: {player.name}\n")
     
-    locations = ["The Clawed Goblet", "Felis Infernum", "The Witherwild Thicket"]
+    locations = [
+        "The Clawed Goblet", "Felis Infernum", "The Witherwild Thicket",
+        "Purrgatory Dungeon", "Meowntain Fortress", "The Neon Alley", "Shadowclaw Ruins", "The Golden Litterbox"
+    ]
     artifacts_collected = 0
     
     for mission in range(1, 4):
