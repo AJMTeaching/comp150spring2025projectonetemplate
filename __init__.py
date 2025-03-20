@@ -26,11 +26,19 @@ class Mage(Character):
         super().__init__(name, attack=10, health=80, mana=5,defense=100)
         self.initial_mana = 5  # Track the starting mana
 
-    def defeat_monster(self):
+class CelestialMonk(Character):
+    def __init__(self, name):
+        super().__init__(name, attack = 25, mana = 50, defense = 10, health = 100)
+
+class FrostRevenant(Character):
+    def __init__(self, name):
+	    super().__init__(name, attack = 18, mana = 40, health = 120, defense = 15)
+
+def defeat_monster(self):
         # Each time a monster is defeated, increase mana by 5
         self.mana += 5
 
-    def __str__(self):
+def __str__(self):
         return f"{self.name}: Attack={self.attack}, Health={self.health}, Mana={self.mana}"
 
 def choose_character():
@@ -38,8 +46,10 @@ def choose_character():
     print("Choose your character class:")
     print("1. Swordsman (Higher attack, lower health, no mana)")
     print("2. Mage (Lower attack, higher health, starting mana of 5 that increases with each monster defeated)")
+    print("3. FrostRevenant ( A backer, highest heath and most versatile attacks with their own defence system")
+    print("4. CelestialMonk(a heavy hitter, highest starting attack power, with the ability to use mana)")
 
-    choice = input("Enter the number of your choice (1 or 2): ")
+    choice = input("Enter the number of your choice (1 thru 4 ): ")
 
     if choice == "1":
         name = input("Enter the name of your Swordsman: ")
@@ -50,6 +60,16 @@ def choose_character():
         name = input("Enter the name of your Mage: ")
         character = Mage(name)
         print(f"\nYou have chosen {character.name}, the Mage!")
+        print(character)
+    elif choice == "3":
+        name = input("Enter the name of your FrostRevenant: ")
+        character = FrostRevenant(name)
+        print(f"\nYou have chosen {character.name}, the FrostRevenant!")
+        print(character)
+    elif choice == "4":
+        name = input("Enter the name of your CelestialMonk: ")
+        character = CelestialMonk(name)
+        print(f"\nYou have chosen {character.name}, the CelestialMonk!")
         print(character)
     else:
         print("Invalid choice. Please choose either 1 or 2.")
@@ -108,6 +128,7 @@ def attack_enemy(self, enemy):
         damage = random.randint(1, self.attack)
         actual_damage = enemy.take_damage(damage)
         return actual_damage
+
 
 # Monster class inherits from Character class
 class Monster:
