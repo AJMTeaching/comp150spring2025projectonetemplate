@@ -21,51 +21,6 @@ class Statistic:
     def modify(self, amount: int):
         self.value = max(self.min_value, min(self.max_value, self.value + amount))
 
-# --- CHARACTER CLASSES ---
-class Character:
-    def __init__(self, name: str, health: int = 10):
-        self.name = name
-        self.health = health
-        self.inventory = []
-        self.strength = Statistic("Strength", value=5)
-        self.intelligence = Statistic("Intelligence", value=5)
-        self.abilities = []
-    
-    def take_damage(self, amount: int):
-        self.health = max(0, self.health - amount)
-        print(f"{self.name} took {amount} damage! Remaining Health: {self.health}")
-    
-    def add_ability(self, ability):
-        self.abilities.append(ability)
-
-class WizardCat(Character):
-    def __init__(self):
-        super().__init__(name="Wizard Cat", health=12)
-        self.add_ability("Fireball")
-        self.add_ability("Magic Shield")
-
-class FeralCat(Character):
-    def __init__(self):
-        super().__init__(name="Feral Cat", health=15)
-        self.add_ability("Forsaken Furball")
-        self.add_ability("Cowardice")
-
-class ExplodingKitten(Character):
-    def __init__(self):
-        super().__init__(name="Exploding Kitten", health=10)
-        self.add_ability("Nuclear Reactivity")
-
-# --- ENEMY CLASS ---
-class Enemy:
-    def __init__(self, name: str, health: int, damage: int):
-        self.name = name
-        self.health = health
-        self.damage = damage
-    
-    def take_damage(self, amount: int):
-        self.health = max(0, self.health - amount)
-        print(f"{self.name} took {amount} damage! Remaining Health: {self.health}")
-
 # --- INPUT HANDLING CLASS ---
 class UserInputHandler:
     @staticmethod
@@ -87,27 +42,73 @@ class UserInputHandler:
             except ValueError:
                 print("Invalid input! Please enter a valid number.")
 
-# --- COMBAT SYSTEM ---
-def combat(player: Character, enemy: Enemy):
-    print(f"{player.name} engages in battle with {enemy.name}!")
-    while player.health > 0 and enemy.health > 0:
-        print(f"\n{player.name}'s turn! Choose an ability:")
-        for idx, ability in enumerate(player.abilities):
-            print(f"{idx + 1}. {ability}")
-        choice = UserInputHandler.get_valid_number("Enter ability number: ", 1, len(player.abilities)) - 1
-        damage = random.randint(3, 7)  # Randomized damage output
-        print(f"{player.name} used {player.abilities[choice]} and dealt {damage} damage!")
-        enemy.take_damage(damage)
-        
-        if enemy.health <= 0:
-            print(f"{enemy.name} is defeated!")
-            return True
-        
-        print(f"{enemy.name} attacks!")
-        player.take_damage(enemy.damage)
-        if player.health <= 0:
-            print(f"{player.name} has been defeated...")
-            return False
+# --- CHARACTER CLASSES ---
+class Character:
+    def __init__(self, name: str, health: int = 10, coins: int = 0):
+        self.name = name
+        self.health = health
+        self.inventory = []
+        self.strength = Statistic("Strength", value=5)
+        self.intelligence = Statistic("Intelligence", value=5)
+        self.abilities = []
+        self.coins = coins
+    
+    def take_damage(self, amount: int):
+        self.health = max(0, self.health - amount)
+        print(f"{self.name} took {amount} damage! Remaining Health: {self.health}")
+    
+    def add_ability(self, ability):
+        self.abilities.append(ability)
+
+    def earn_coins(self, amount: int):
+        self.coins += amount
+        print(f"{self.name} earned {amount} coins! Total: {self.coins}")
+
+    def spend_coins(self, amount: int):
+        if self.coins >= amount:
+            self.coins -= amount
+            print(f"{self.name} spent {amount} coins. Remaining: {self.coins}")
+        else:
+            print("Not enough coins!")
+
+class WizardCat(Character):
+    def __init__(self):
+        super().__init__(name="Wizard Cat", health=12, coins=5)
+        self.add_ability("Fireball")
+        self.add_ability("Magic Shield")
+
+class FeralCat(Character):
+    def __init__(self):
+        super().__init__(name="Feral Cat", health=15, coins=3)
+        self.add_ability("Forsaken Furball")
+        self.add_ability("Cowardice")
+
+class ExplodingKitten(Character):
+    def __init__(self):
+        super().__init__(name="Exploding Kitten", health=10, coins=7)
+        self.add_ability("Nuclear Reactivity")
+
+# --- SHOP SYSTEM ---
+class Shop:
+    def __init__(self):
+        self.items = {"Health Potion": 3, "Strength Boost": 5, "Intelligence Boost": 5}
+
+    def display_items(self):
+        print("Welcome to the Shop! Available items:")
+        for item, price in self.items.items():
+            print(f"{item}: {price} coins")
+
+    def purchase(self, player: Character):
+        self.display_items()
+        choice = UserInputHandler.get_valid_input("What would you like to buy? (Enter item name or 'exit' to leave): ", list(self.items.keys()) + ["exit"])
+        if choice != "exit":
+            price = self.items[choice]
+            if player.coins >= price:
+                player.spend_coins(price)
+                player.inventory.append(choice)
+                print(f"{player.name} purchased {choice}!")
+            else:
+                print("Not enough coins!")
 
 # --- GAME LOGIC ---
 def choose_character():
@@ -126,6 +127,7 @@ def play_game():
         "Purrgatory Dungeon", "Meowntain Fortress", "The Neon Alley", "Shadowclaw Ruins", "The Golden Litterbox"
     ]
     artifacts_collected = 0
+    shop = Shop()
     
     for mission in range(1, 4):
         print(f"Mission {mission}: Travel to {random.choice(locations)}")
@@ -133,12 +135,15 @@ def play_game():
         
         if combat(player, enemy):
             artifacts_collected += 1
+            player.earn_coins(5)
             print("You found an artifact! Abilities unlocked.")
             if artifacts_collected == 3:
                 print("All abilities unlocked! You are ready for the final battle.")
         else:
             print("Game Over! Try again.")
             return
+        
+        shop.purchase(player)
     
     print("\nFinal Battle: The Barking Kitten War General appears!")
     final_boss = Enemy("Barking Kitten War General", 14, 5)
