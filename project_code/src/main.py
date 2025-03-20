@@ -82,35 +82,16 @@ class Event:
             self.status = EventStatus.FAIL
             print(self.fail_message)
 
-event1_data = {
-    'primary_attribute': 'Strength',
-    'secondary_attribute': 'Stamina',
-    'prompt_text': "A massive boulder blocks your way. You need to push it out of the way!",
-    'pass': {'message': "You pushed the boulder successfully!"},
-    'fail': {'message': "You couldn't move the boulder, you got exhausted."},
-    'partial_pass': {'message': "You moved the boulder a little, but you are exhausted."}
-}
-
-event2_data = {
-    'primary_attribute': 'Intelligence',
-    'secondary_attribute': 'Agility',
-    'prompt_text': "A riddle appears. Solve it to proceed!",
-    'pass': {'message': "You solved the riddle quickly!"},
-    'fail': {'message': "You couldn't solve the riddle in time!"},
-    'partial_pass': {'message': "You solved part of the riddle, but not enough."}
-}
-
-event1 = Event(event1_data)
-event2 = Event(event2_data)
-
 class Location:
     def __init__(self, events: List[Event]):
         self.events = events
+        self.max_events = 3
 
     def get_event(self) -> Event:
         return random.choice(self.events)
     
-location1 = Location(events=[event1, event2])
+    def is_completed(self, completed_events: int) -> bool:
+        return completed_events >= self.max_events
 
 class Game:
     def __init__(self, parser, characters: List[Character], locations: List[Location], chosen_party, opposing_team):
@@ -124,6 +105,8 @@ class Game:
         self.max_rounds = 10  # Set a limit for the game
         self.chosen_part = chosen_party
         self.opposing_team = opposing_team
+        self.completed_events = 0  # Track how many events have been completed in the current location
+        self.current_location = locations[0]  # Start with the first location
 
 
     def add_character_to_party(self):
@@ -154,6 +137,15 @@ class Game:
             if self.is_invisible:
                 self.deactivate_invisibility()
         print("Game Over.")
+
+    def move_to_new_location(self):
+        print("\nYou have completed the required number of events. Moving to a new location...\n")
+        
+        # Move to the next location
+        next_location = self.locations[(self.locations.index(self.current_location) + 1) % len(self.locations)]
+        self.current_location = next_location
+        self.completed_events = 0  # Reset the event counter for the new location
+        print(f"Now at a new location! ({self.current_location})")
 
     def check_game_over(self):
         if self.did_succeed():
@@ -222,8 +214,16 @@ class UserInputParser:
             print(f"\nYour party has {len(self.party)} members. You can add {self.max_party_size - len(self.party)} more.")
             print("Choose a character to add to your party:")
             for idx, character in enumerate(total_characters):
-                print(f"{idx + 1}. {character.name} - Strength: {character.strength.value}, Intelligence: {character.intelligence.value}, Stamina: {character.stamina.value}, Agility: {character.agility.value}")
-            choice = int(self.parse("Enter the number of the character to add to your party: ")) - 1
+                print(f"{idx + 1}. {character.name}")
+            while True:  # Loop to ensure valid input
+                try:
+                    choice = int(self.parse("Enter the number of the character to add to your party: ")) - 1
+                    if 0 <= choice < len(total_characters):  # Check if choice is within valid range
+                        break
+                    else:
+                        print(f"Invalid choice. Please enter a number between 1 and {len(total_characters)}.")
+                except ValueError:
+                    print("Invalid input. Please enter a valid number.")
             selected_character = total_characters[choice]
             if selected_character in self.party:
                 print(f"{selected_character.name} is already in your party. Please choose a different character.")
@@ -235,7 +235,7 @@ class UserInputParser:
         opposing_team = unchosen_characters
         print("\nOpposing team consists of:")
         for character in opposing_team:
-            print(f"{character.name} - Strength: {character.strength.value}, Intelligence: {character.intelligence.value}, Stamina: {character.stamina.value}, Agility: {character.agility.value}")
+            print(f"{character.name}")
 
         return self.party, opposing_team
         
