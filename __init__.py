@@ -12,6 +12,54 @@ class Character:
 
     def __str__(self):
         return f"{self.name}: Attack={self.attack}, Health={self.health}, Mana={self.mana},defense={self.defense}"
+    
+    def equip_armor(self, defense_boost):
+        """Equips armor, increasing defense."""
+        self.defense += defense_boost
+        print(f"{self.name} equipped armor! Defense increased to {self.defense:.2f}.")
+
+    def check_chest(self):
+        """Checks a chest for armor."""
+        if random.random() < 0.45:  # 45% chance of finding armor
+            defense_boost = random.randint(10, 50)  # Random defense boost
+            self.equip_armor(defense_boost)
+        else:
+            print(f"{self.name} found nothing in the chest.")
+
+    def attack(self, target, damage):
+        """Attacks another character."""
+        actual_damage = damage
+        self.target=target
+        self.target=Monster
+
+        if self.defense == 0: #damage boost if no armor
+                actual_damage *= 1.03
+
+        if target.defense > 0:
+            actual_damage = max(0, actual_damage - (actual_damage * (target.defense / 100))) # apply damage reduction.
+            target.defense = max(0, target.defense - 5) # reduce defense
+            print(f"{self.name} attacks {target.name} for {actual_damage:.2f} damage (Defense reduced).")
+        else:
+            print(f"{self.name} attacks {target.name} for {actual_damage:.2f} damage (No defense).")
+
+        target.health -= actual_damage
+        target.health = max(0, target.health)  # Ensure health doesn't go below 0
+        print(f"{target.name}'s health: {target.health:.2f}")
+
+    def take_damage(self, damage):
+        actual_damage = max(0, damage - self.defense)
+        self.health -= actual_damage
+        if self.health < 0:
+            self.health = 0
+        return actual_damage
+
+    def is_alive(self):
+        return self.health > 0
+
+    def attack_enemy(self, enemy):
+        damage = random.randint(1, self.attack)
+        actual_damage = enemy.take_damage(damage)
+        return actual_damage
 
 
 class Swordsman(Character):
@@ -35,11 +83,11 @@ class FrostRevenant(Character):
 	    super().__init__(name, attack = 18, mana = 40, health = 120, defense = 15)
 
 def defeat_monster(self):
-        # Each time a monster is defeated, increase mana by 5
-        self.mana += 5
+    # Each time a monster is defeated, increase mana by 5
+    self.mana += 5
 
 def __str__(self):
-        return f"{self.name}: Attack={self.attack}, Health={self.health}, Mana={self.mana}"
+    return f"{self.name}: Attack={self.attack}, Health={self.health}, Mana={self.mana}"
 
 def choose_character():
     print("Welcome to the game!")
@@ -81,59 +129,10 @@ def choose_character():
 # Starting the game and choosing a character
 chosen_character = choose_character()
 
-def equip_armor(self, defense_boost):
-        """Equips armor, increasing defense."""
-        self.defense += defense_boost
-        print(f"{self.name} equipped armor! Defense increased to {self.defense:.2f}.")
-
-def check_chest(self):
-        """Checks a chest for armor."""
-        if random.random() < 0.45:  # 45% chance of finding armor
-            defense_boost = random.randint(10, 50)  # Random defense boost
-            self.equip_armor(defense_boost)
-        else:
-            print(f"{self.name} found nothing in the chest.")
-
-def attack(self, target, damage):
-        """Attacks another character."""
-        actual_damage = damage
-        self.target=target
-        self.target=Monster
-
-        if self.defense == 0: #damage boost if no armor
-                actual_damage *= 1.03
-
-        if target.defense > 0:
-            actual_damage = max(0, actual_damage - (actual_damage * (target.defense / 100))) # apply damage reduction.
-            target.defense = max(0, target.defense - 5) # reduce defense
-            print(f"{self.name} attacks {target.name} for {actual_damage:.2f} damage (Defense reduced).")
-        else:
-            print(f"{self.name} attacks {target.name} for {actual_damage:.2f} damage (No defense).")
-
-        target.health -= actual_damage
-        target.health = max(0, target.health)  # Ensure health doesn't go below 0
-        print(f"{target.name}'s health: {target.health:.2f}")
-
-def take_damage(self, damage):
-        actual_damage = max(0, damage - self.defense)
-        self.health -= actual_damage
-        if self.health < 0:
-            self.health = 0
-        return actual_damage
-
-def is_alive(self):
-        return self.health > 0
-
-def attack_enemy(self, enemy):
-        damage = random.randint(1, self.attack)
-        actual_damage = enemy.take_damage(damage)
-        return actual_damage
-
-
 # Monster class inherits from Character class
-class Monster:
+class Monster(Character):
     def __init__(self, name, health, attack, defense):
-        super().__init__(name, health, attack, defense)
+        super().__init__(name, health, attack, 0,defense)
 
     def attack_player(self, player):
         damage = random.randint(1, self.attack)
@@ -229,24 +228,36 @@ def start_game():
     dungeon_level = 1
     while chosen_character.is_alive():
         print(f"\n--- Dungeon Level {dungeon_level} ---")
-        random_event(Character)
-        if not combat(Character, monsters):
+        random_event(chosen_character)
+        if not combat(chosen_character, monsters):
             break
 
         # Proceed to next dungeon level
         dungeon_level += 1
         monsters = []  # Reset monsters after level
 
-        # Re-generate new monsters for next level
-        monster_count = random.randint(3, 6)
-        for i in range(monster_count):
-            monster_name = f"Monster-{i+1}"
-            monster_attack = random.randint(min_attack, max_attack)
-            monster_health = random.randint(min_health, min_health + 10)
-            monster_defense = random.randint(2, 5)
-            monsters.append(Monster(monster_name, monster_health, monster_attack, monster_defense))
+        if dungeon_level < 7:
+            # Re-generate new monsters for next level
+            monster_count = random.randint(3, 6)
+            for i in range(monster_count):
+                monster_name = f"Monster-{i+1}"
+                monster_attack = random.randint(min_attack, max_attack)
+                monster_health = random.randint(min_health, min_health + 10)
+                monster_defense = random.randint(2, 5)
+                monsters.append(Monster(monster_name, monster_health, monster_attack, monster_defense))
+        elif dungeon_level == 7:
+            # Final Boss Battle - Dungeon Level 7
+            final_boss = Monster("Dragon", 50, 100, 20)
+            final_boss.mana = 100
+            monsters.append(final_boss)
+        else:
+            end_game()
+            return
 
-    print(f"\n{Character.name} has died. Game Over!")
+    print(f"\n{chosen_character.name} has died. Game Over!")
+
+def end_game():
+    print("You win!")
 
 if __name__ == "__main__":
     start_game()
