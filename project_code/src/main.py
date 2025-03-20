@@ -34,6 +34,10 @@ class Character:
         self.add_ability("Fireball")
         self.add_ability("Magic Shield")
 
+class ZombieCat(Player):
+    def revive_player(self, target):
+        target.health = 50
+        print(f"{self.name} used a whisker to revive {target.name}!")
         
     def __init__(self, name: str = "Bob"):
         self.name = name
