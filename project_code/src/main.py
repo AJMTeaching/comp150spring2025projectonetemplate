@@ -164,7 +164,10 @@ def play_game():
     
     print("Final Battle: The Barking Kitten War General appears!")
     final_boss = Enemy("Barking Kitten War General", 14, 5)
-    combat(player, final_boss)
+    if combat(player, final_boss):
+        print("Congratulations! You defeated the Barking Kitten War General.")
+    else:
+        print("Game Over! You were defeated by the Barking Kitten War General. Rest in Peace, soldier.")
     
 # --- START GAME ---
 if __name__ == "__main__":
