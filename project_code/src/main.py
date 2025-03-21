@@ -71,16 +71,15 @@ class Event:
         chosen_stat = parser.select_stat(character)
         self.resolve_choice(character, chosen_stat)
 
-    def resolve_choice(self, character: Character, chosen_stat: Statistic):
+    def resolve_choice(self, character: Character, chosen_stat: Statistic, game):
         if chosen_stat.name == self.primary_attribute:
             self.status = EventStatus.PASS
             print(self.pass_message)
 
-            if "win the game" in self.pass_message.lower():
-            # End the game with a win!
-                print("🏆 You captured the flag and WON the game!")
-                game.continue_playing = False
-
+        # Winning condition
+        if "win the game" in self.pass_message.lower():
+            print("🏆 You captured the flag and WON the game!")
+            game.continue_playing = False
         elif "eliminate" in self.pass_message.lower():
             if len(game.opposing_team) > 0:
                 eliminated_enemy = random.choice(game.opposing_team)
@@ -95,10 +94,10 @@ class Event:
             self.status = EventStatus.FAIL
             print(self.fail_message)
 
-            if len(game.party) > 0:
-                eliminated_player = random.choice(game.party)
-                game.party.remove(eliminated_player)
-                print(f"{eliminated_player.name} has been captured and removed from your team!")
+        if len(game.party) > 0:
+            eliminated_player = random.choice(game.party)
+            game.party.remove(eliminated_player)
+            print(f"{eliminated_player.name} has been captured and removed from your team!")
 
         if len(game.party) == 0:
             print("❌ Your entire team has been captured! GAME OVER.")
@@ -324,9 +323,7 @@ event_data_list = [
 events = [Event(data) for data in event_data_list]
 
 
-locations = [Location(events)]
-game = Game(parser, total_characters, locations, chosen_party, opposing_team)
-game.start()
+
 
 
 if __name__ == '__main__':
