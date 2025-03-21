@@ -75,12 +75,35 @@ class Event:
         if chosen_stat.name == self.primary_attribute:
             self.status = EventStatus.PASS
             print(self.pass_message)
+
+            if "win the game" in self.pass_message.lower():
+            # End the game with a win!
+                print("🏆 You captured the flag and WON the game!")
+                game.continue_playing = False
+
+        elif "eliminate" in self.pass_message.lower():
+            if len(game.opposing_team) > 0:
+                eliminated_enemy = random.choice(game.opposing_team)
+                game.opposing_team.remove(eliminated_enemy)
+                print(f"You eliminated {eliminated_enemy.name} from the opposing team!")
+
         elif chosen_stat.name == self.secondary_attribute:
             self.status = EventStatus.PARTIAL_PASS
             print(self.partial_pass_message)
+
         else:
             self.status = EventStatus.FAIL
             print(self.fail_message)
+
+            if len(game.party) > 0:
+                eliminated_player = random.choice(game.party)
+                game.party.remove(eliminated_player)
+                print(f"{eliminated_player.name} has been captured and removed from your team!")
+
+        if len(game.party) == 0:
+            print("❌ Your entire team has been captured! GAME OVER.")
+            game.continue_playing = False
+
 
 class Location:
     def __init__(self, events: List[Event]):
@@ -269,12 +292,41 @@ def start_game():
     for character in chosen_party:
         print(f"{character.name}")
 
-    # Load events from the JSON file
-    events = load_events_from_json('project_code/location_events/location_1.json')
+    # Hardcoded event data instead of using JSON
+event_data_list = [
+    {
+        "primary_attribute": "Agility",
+        "secondary_attribute": "Intelligence",
+        "prompt_text": "You attempt to stealthily infiltrate the enemy camp to steal their flag. What stat do you rely on?",
+        "pass": {"message": "You slip in unnoticed, grab the flag, and make it back safely!"},
+        "partial_pass": {"message": "You grab the flag but trigger an alarm! Be careful!"},
+        "fail": {"message": "You’re caught! One of your party members is captured!"}
+    },
+    {
+        "primary_attribute": "Strength",
+        "secondary_attribute": "Agility",
+        "prompt_text": "You attempt to ambush a member of the enemy team. Which stat do you rely on?",
+        "pass": {"message": "You overpower your opponent and eliminate them from the game!"},
+        "partial_pass": {"message": "You surprise them, but they escape injured!"},
+        "fail": {"message": "They turn the tables and capture one of your team members!"}
+    },
+    {
+        "primary_attribute": "Stamina",
+        "secondary_attribute": "Agility",
+        "prompt_text": "With the flag in hand, you sprint back toward your base. How do you push through?",
+        "pass": {"message": "You cross the finish line! Your team wins the game!"},
+        "partial_pass": {"message": "You’re close but get surrounded. Time to fight!"},
+        "fail": {"message": "You’re tackled, lose the flag, and one teammate is captured!"}
+    }
+]
 
-    locations = [Location(events)]
-    game = Game(parser, total_characters, locations, chosen_party, opposing_team)
-    game.start()
+# Convert data to Event objects
+events = [Event(data) for data in event_data_list]
+
+
+locations = [Location(events)]
+game = Game(parser, total_characters, locations, chosen_party, opposing_team)
+game.start()
 
 
 if __name__ == '__main__':
