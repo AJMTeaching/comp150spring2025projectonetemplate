@@ -148,7 +148,7 @@ class Game:
             location = random.choice(self.locations)
             event = location.get_event()
 
-            event.execute(self.party, self.parser)
+            event.execute(self.party, self.parser, self)
 
             if self.round_count == 6:
                 self.trigger_special_event()
@@ -316,8 +316,33 @@ event_data_list = [
         "pass": {"message": "You cross the finish line! Your team wins the game!"},
         "partial_pass": {"message": "You’re close but get surrounded. Time to fight!"},
         "fail": {"message": "You’re tackled, lose the flag, and one teammate is captured!"}
+    },
+    {
+        "primary_attribute": "Intelligence",
+        "secondary_attribute": "Agility",
+        "prompt_text": "You decipher enemy signals to predict their moves. What stat do you rely on?",
+        "pass": {"message": "You outsmart the enemy, avoiding their trap entirely!"},
+        "partial_pass": {"message": "You evade the trap but they know you’re nearby!"},
+        "fail": {"message": "You walk right into their ambush. One team member is taken!"}
+    },
+    {
+        "primary_attribute": "Agility",
+        "secondary_attribute": "Strength",
+        "prompt_text": "You sneak through a minefield guarding the enemy base. What stat do you rely on?",
+        "pass": {"message": "You make it through the minefield without a scratch!"},
+        "partial_pass": {"message": "You get through but take a minor hit. Lose 10 stamina."},
+        "fail": {"message": "BOOM! You trigger a mine and lose a teammate!"}
+    },
+    {
+        "primary_attribute": "Strength",
+        "secondary_attribute": "Stamina",
+        "prompt_text": "A boulder blocks your path! How do you get past?",
+        "pass": {"message": "You lift the boulder like a champ! Clear path ahead."},
+        "partial_pass": {"message": "You shove it aside, but you’re exhausted. Lose 10 stamina."},
+        "fail": {"message": "You can't move it, and your delay costs a team member!"}
     }
 ]
+    
 
 # Convert data to Event objects
 events = [Event(data) for data in event_data_list]
