@@ -202,20 +202,20 @@ class Game:
         {"description": "You drink mysterious water... Gain +10 intelligence!", "effect": lambda player: player.intelligence.modify(10)},
     ]
 
-    # Pick a random event
-    selected_event = random.choice(surprise_events)
+        # Pick a random event
+        selected_event = random.choice(surprise_events)
 
-    # Print the event description
-    print(f"⚡ {selected_event['description']}")
+        # Print the event description
+        print(f"⚡ {selected_event['description']}")
 
-    # Apply the effect to the party
-    if "Invisibility" in selected_event['description']:
-        selected_event['effect'](None)  # Invisibility affects the team, not individual players
-    elif "sniper" in selected_event['description']:
-        selected_event['effect'](None)  # Sniper targets one random teammate
-    else:
-        for player in self.party:
-            selected_event['effect'](player)
+     # Apply the effect to the party
+        if "Invisibility" in selected_event['description']:
+            selected_event['effect'](None)  # Invisibility affects the team, not individual players
+        elif "sniper" in selected_event['description']:
+            selected_event['effect'](None)  # Sniper targets one random teammate
+        else:
+            for player in self.party:
+                selected_event['effect'](player)
 
 
     def did_succeed(self):
@@ -235,6 +235,15 @@ class Game:
 
 def activate_invisibility(self, player):
     print(f"{player.name} becomes invisible! They avoid the next trap.")
+
+def random_team_damage(self, damage_amount):
+    if self.party:
+        unlucky_player = random.choice(self.party)
+        unlucky_player.stamina.modify(-damage_amount)
+        print(f"⚠️ {unlucky_player.name} was hit and lost {damage_amount} stamina!")
+        if unlucky_player.stamina.value <= 0:
+            print(f"💀 {unlucky_player.name} has collapsed from exhaustion and is out of the game!")
+            self.party.remove(unlucky_player)
 
 
 class UserInputParser:
