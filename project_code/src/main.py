@@ -150,33 +150,33 @@ class Game:
         while self.continue_playing and self.round_count < self.max_rounds:
 
         # Mini-Boss at round 4
-         if self.round_count == 3:
-            self.trigger_mini_boss(boss_number=1)
+            if self.round_count == 3:
+                self.trigger_mini_boss(boss_number=1)
 
             # Final Mini-Boss at round 8
-         if self.round_count == 7:
-            self.trigger_mini_boss(boss_number=2)
+            if self.round_count == 7:
+                self.trigger_mini_boss(boss_number=2)
 
-        # Final Boss at round 10 (last round)
-        if self.round_count == self.max_rounds - 1:
-            self.trigger_final_boss()
+            # Final Boss at round 10 (last round)
+            if self.round_count == self.max_rounds - 1:
+                self.trigger_final_boss()
 
-        location = random.choice(self.locations)
-        event = location.get_event()
+            location = random.choice(self.locations)
+            event = location.get_event()
 
-        event.execute(self.party, self.parser, self)
+            event.execute(self.party, self.parser, self)
 
-        if self.round_count == 6:
-            self.trigger_special_event()
+            if self.round_count == 6:
+                self.trigger_special_event()
 
-        self.check_game_over()
+            self.check_game_over()
 
-        self.round_count += 1
+            self.round_count += 1
 
-        if self.is_invisible:
-            self.deactivate_invisibility()
+            if self.is_invisible:
+                self.deactivate_invisibility()
 
-    print("Game Over.")
+        print("Game Over.")
 
 
 
