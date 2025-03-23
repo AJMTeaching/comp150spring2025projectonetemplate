@@ -181,26 +181,6 @@ class Game:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def move_to_new_location(self):
         print("\nYou have completed the required number of events. Moving to a new location...\n")
         
@@ -309,6 +289,22 @@ def trigger_mini_boss(self, boss_number=1):
             unlucky = random.choice(self.party)
             print(f"{unlucky.name} was captured by the Mini-Boss!")
             self.party.remove(unlucky)
+
+        
+def trigger_final_boss(self):
+    print("\n👑 THE FINAL BOSS HAS ARRIVED! 👑")
+    boss_strength = random.randint(150, 200)
+    print(f"The Final Boss has {boss_strength} strength!")
+
+    total_team_strength = sum([member.strength.value for member in self.party])
+
+    if total_team_strength > boss_strength:
+        print("🏆 You defeated the Final Boss and won the game!")
+        self.continue_playing = False
+    else:
+        print("💀 The Final Boss crushes your team. GAME OVER.")
+        self.party.clear()
+        self.continue_playing = False
 
 
 
