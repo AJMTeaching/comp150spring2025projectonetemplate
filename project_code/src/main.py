@@ -65,44 +65,42 @@ class Event:
         self.partial_pass_message = data['partial_pass']['message']
         self.status = EventStatus.UNKNOWN
 
-    def execute(self, party: List[Character], parser):
+    def execute(self, party: List[Character], parser, game):
         print(self.prompt_text)
         character = parser.select_party_member(party)
         chosen_stat = parser.select_stat(character)
-        self.resolve_choice(character, chosen_stat)
+        self.resolve_choice(character, chosen_stat, game)
 
     def resolve_choice(self, character: Character, chosen_stat: Statistic, game):
         if chosen_stat.name == self.primary_attribute:
             self.status = EventStatus.PASS
             print(self.pass_message)
+        elif chosen_stat.name == self.secondary_attribute:
+            self.status = EventStatus.PARTIAL_PASS
+            print(self.partial_pass_message)
+        else: 
+            self.status = EventStatus.FAIL 
+            print(self.fail_message)
 
         # Winning condition
         if "win the game" in self.pass_message.lower():
             print("🏆 You captured the flag and WON the game!")
             game.continue_playing = False
-        elif "eliminate" in self.pass_message.lower():
-            if len(game.opposing_team) > 0:
+
+        if "eliminate" in self.pass_message.lower():
+            if game.opposing_team:
                 eliminated_enemy = random.choice(game.opposing_team)
                 game.opposing_team.remove(eliminated_enemy)
-                print(f"You eliminated {eliminated_enemy.name} from the opposing team!")
-
-        elif chosen_stat.name == self.secondary_attribute:
-            self.status = EventStatus.PARTIAL_PASS
-            print(self.partial_pass_message)
-
-        else:
-            self.status = EventStatus.FAIL
-            print(self.fail_message)
-
-        if len(game.party) > 0:
+                print(f"You eliminated {eliminated_enemy.name} from the opposing team!")    
+      
+        if game.party:
             eliminated_player = random.choice(game.party)
             game.party.remove(eliminated_player)
             print(f"{eliminated_player.name} has been captured and removed from your team!")
 
-        if len(game.party) == 0:
+        if not game.party:
             print("❌ Your entire team has been captured! GAME OVER.")
             game.continue_playing = False
-
 
 class Location:
     def __init__(self, events: List[Event]):
@@ -129,6 +127,107 @@ class Game:
         self.opposing_team = opposing_team
         self.completed_events = 0  # Track how many events have been completed in the current location
         self.current_location = locations[0]  # Start with the first location
+        self.is_insisible = False 
+
+    def start(self):
+        self.check_team_synergy()
+
+        while self.continue_playing and self.round_count < self.max_rounds:
+            print(f"\n🔹 Round {self.round_count + 1} 🔹")
+            if self.round_count == 3:
+                self.trigger_mini_boss(boss_number=1)
+            elif self.round_count == 7:
+                self.trigger_mini_boss(boss_number=2)
+            elif self.round_count == self.max_rounds - 1:
+                self.trigger_final_boss()
+
+            location = random.choice(self.locations)
+            event = location.get_event()
+            event.execute(self.party, self.parser, self)
+
+            if self.round_count == 6:
+                self.trigger_special_event()
+            
+            self.check_game_over()
+            self.round_count += 1
+            if self.is_invisible:
+                self.deactivate_invisibility()
+        
+        print("Game Over.")
+
+    def check_team_synergy(self):
+        print("✨ Checking team synergy!")
+        if all(member.agility.value > 30 for member in self.party):
+            print("💨 Your team is highly agile! +5 agility boost.")
+            for member in self.party:
+                member.agility.modify(5)
+
+    def trigger_special_event(self):
+        surprise_events = [
+            {"description": "You stepped on a hidden trap! Lose 10 stamina.", "effect": lambda player: player.stamina.modify(-10)},
+            {"description": "You find a Speed Boost potion! Gain +10 agility.", "effect": lambda player: player.agility.modify(10)},
+            {"description": "An enemy sniper takes a shot! One teammate loses 15 stamina.", "effect": lambda _: self.random_team_damage(15)},
+            {"description": "You find an Ancient Amulet! ALL your stats increase by +5.", "effect": lambda player: (player.strength.modify(5), player.intelligence.modify(5), player.stamina.modify(5), player.agility.modify(5))}
+        ]
+        event = random.choice(surprise_events)
+        print(f"⚡ {event['description']}")
+        if "sniper" in event['description']:
+            event['effect'](None)
+        else:
+            for player in self.party:
+                event['effect'](player)
+
+    def trigger_mini_boss(self, boss_number=1):
+        print(f"\n⚔️ {'MINI-BOSS' if boss_number == 1 else 'FINAL MINI-BOSS'} BATTLE! ⚔️")
+        boss_strength = random.randint(75, 100) if boss_number == 1 else random.randint(100, 130)
+        total_team_strength = sum(member.strength.value for member in self.party)
+        print(f"Boss Strength: {boss_strength}, Your Team Strength: {total_team_strength}")
+
+        if total_team_strength > boss_strength:
+            print("🎉 You defeated the Mini-Boss! +10 stamina and agility!")
+            for player in self.party:
+                player.stamina.modify(10)
+                player.agility.modify(10)
+
+        else:
+            unlucky = random.choice(self.party)
+            print(f"{unlucky.name} was captured by the Mini-Boss!")
+            self.party.remove(unlucky)
+
+    def trigger_final_boss(self):
+        print("\n👑 THE FINAL BOSS HAS ARRIVED! 👑")
+        boss_strength = random.randint(150, 200)
+        total_team_strength = sum(member.strength.value for member in self.party)
+        print(f"Final Boss Strength: {boss_strength}, Your Team Strength: {total_team_strength}")
+
+        if total_team_strength > boss_strength:
+            print("🏆 You defeated the Final Boss and won the game!")
+        else:
+            print("💀 The Final Boss crushed your team!")
+            self.party.clear()
+        self.continue_playing = False
+
+
+    def check_game_over(self):
+        if not self.party:
+            self.continue_playing = False
+            print("Game Over - You have no team left.")
+
+    def random_team_damage(self, damage_amount):
+        if self.party:
+            unlucky = random.choice(self.party)
+            unlucky.stamina.modify(-damage_amount)
+            print(f"{unlucky.name} took {damage_amount} damage!")
+
+            
+
+
+
+
+
+
+
+
 
 
     def add_character_to_party(self):
@@ -254,57 +353,55 @@ class Game:
             member.is_invisible = False
 
 
-def activate_invisibility(self, player):
-    print(f"{player.name} becomes invisible! They avoid the next trap.")
-
-def random_team_damage(self, damage_amount):
-    if self.party:
-        unlucky_player = random.choice(self.party)
-        unlucky_player.stamina.modify(-damage_amount)
-        print(f"⚠️ {unlucky_player.name} was hit and lost {damage_amount} stamina!")
-        if unlucky_player.stamina.value <= 0:
-            print(f"💀 {unlucky_player.name} has collapsed from exhaustion and is out of the game!")
-            self.party.remove(unlucky_player)
-
-def trigger_mini_boss(self, boss_number=1):
-    if boss_number == 1:
-        print("\n⚔️ MINI-BOSS BATTLE! ⚔️")
-        boss_strength = random.randint(75, 100)
-    else:
-        print("\n🔥 FINAL MINI-BOSS APPROACHES! 🔥")
-        boss_strength = random.randint(100, 130)
-
-    print(f"The Mini-Boss has {boss_strength} strength!")
-
-    total_team_strength = sum([member.strength.value for member in self.party])
-
-    if total_team_strength > boss_strength:
-        print("🎉 You defeated the Mini-Boss and earned +10 stamina and +10 agility for everyone!")
-        for player in self.party:
-            player.stamina.modify(10)
-            player.agility.modify(10)
-    else:
-        print("💀 The Mini-Boss overpowered your team! You lose one random team member.")
+    def random_team_damage(self, damage_amount):
         if self.party:
-            unlucky = random.choice(self.party)
-            print(f"{unlucky.name} was captured by the Mini-Boss!")
-            self.party.remove(unlucky)
+            unlucky_player = random.choice(self.party)
+            unlucky_player.stamina.modify(-damage_amount)
+            print(f"⚠️ {unlucky_player.name} was hit and lost {damage_amount} stamina!")
+            if unlucky_player.stamina.value <= 0:
+                print(f"💀 {unlucky_player.name} has collapsed from exhaustion and is out of the game!")
+                self.party.remove(unlucky_player)
+
+    def trigger_mini_boss(self, boss_number=1):
+        if boss_number == 1:
+            print("\n⚔️ MINI-BOSS BATTLE! ⚔️")
+            boss_strength = random.randint(75, 100)
+        else:
+            print("\n🔥 FINAL MINI-BOSS APPROACHES! 🔥")
+            boss_strength = random.randint(100, 130)
+
+        print(f"The Mini-Boss has {boss_strength} strength!")
+
+        total_team_strength = sum([member.strength.value for member in self.party])
+
+        if total_team_strength > boss_strength:
+            print("🎉 You defeated the Mini-Boss and earned +10 stamina and +10 agility for everyone!")
+            for player in self.party:
+                player.stamina.modify(10)
+                player.agility.modify(10)
+        else:
+            print("💀 The Mini-Boss overpowered your team! You lose one random team member.")
+            if self.party:
+                unlucky = random.choice(self.party)
+                print(f"{unlucky.name} was captured by the Mini-Boss!")
+                self.party.remove(unlucky)
 
         
-def trigger_final_boss(self):
-    print("\n👑 THE FINAL BOSS HAS ARRIVED! 👑")
-    boss_strength = random.randint(150, 200)
-    print(f"The Final Boss has {boss_strength} strength!")
+    def trigger_final_boss(self):
+        print("\n👑 THE FINAL BOSS HAS ARRIVED! 👑")
+        boss_strength = random.randint(150, 200)
+        print(f"The Final Boss has {boss_strength} strength!")
 
-    total_team_strength = sum([member.strength.value for member in self.party])
+        total_team_strength = sum([member.strength.value for member in self.party])
 
-    if total_team_strength > boss_strength:
-        print("🏆 You defeated the Final Boss and won the game!")
-        self.continue_playing = False
-    else:
-        print("💀 The Final Boss crushes your team. GAME OVER.")
-        self.party.clear()
-        self.continue_playing = False
+        if total_team_strength > boss_strength:
+            print("🏆 You defeated the Final Boss and won the game!")
+            self.continue_playing = False
+
+        else:
+            print("💀 The Final Boss crushes your team. GAME OVER.")
+            self.party.clear()
+            self.continue_playing = False
 
 
 
@@ -316,37 +413,24 @@ class UserInputParser:
     def parse(self, prompt: str) -> str:
         return input(prompt)
 
+
     def make_your_party(self, total_characters: List[Character]) -> Tuple[List[Character], List[Character]]:
         unchosen_characters = total_characters.copy()
         while len(self.party) < self.max_party_size:
-            print(f"\nYour party has {len(self.party)} members. You can add {self.max_party_size - len(self.party)} more.")
-            print("Choose a character to add to your party:")
-            for idx, character in enumerate(total_characters):
-                print(f"{idx + 1}. {character.name}")
-            while True:  # Loop to ensure valid input
-                try:
-                    choice = int(self.parse("Enter the number of the character to add to your party: ")) - 1
-                    if 0 <= choice < len(total_characters):  # Check if choice is within valid range
-                        break
-                    else:
-                        print(f"Invalid choice. Please enter a number between 1 and {len(total_characters)}.")
-                except ValueError:
-                    print("Invalid input. Please enter a valid number.")
-            selected_character = total_characters[choice]
-            if selected_character in self.party:
-                print(f"{selected_character.name} is already in your party. Please choose a different character.")
-            else:
-                self.party.append(total_characters[choice])
-                unchosen_characters.remove(selected_character)
-                print(f"{selected_character.name} has been added to your party!")
-        print("\nYour party is now full!")
-        opposing_team = unchosen_characters
-        print("\nOpposing team consists of:")
-        for character in opposing_team:
-            print(f"{character.name}")
-
-        return self.party, opposing_team
-        
+            print(f"\nParty size: {len(self.party)}/{self.max_party_size}")
+            for idx, char in enumerate(total_characters):
+                print(f"{idx + 1}. {char.name}")
+            try:
+                choice = int(self.parse("Choose a character: ")) - 1
+                selected = total_characters[choice]
+                if selected in self.party:
+                    print("Already selected.")
+                    continue
+                self.party.append(selected)
+                unchosen_characters.remove(selected)
+            except (ValueError, IndexError):
+                print("Invalid input.")
+        return self.party, unchosen_characters
 
     def select_party_member(self, party: List[Character]) -> Character:
         print("Choose a party member:")
@@ -373,9 +457,25 @@ def load_events_from_json(file_path: str) -> List[Event]:
 def start_game():
     parser = UserInputParser(max_party_size=5)
     chosen_party, opposing_team = parser.make_your_party(total_characters)
+
+    events_data = [
+        {"primary_attribute": "Agility", "secondary_attribute": "Intelligence", "prompt_text": "Stealth mission!", "pass": {"message": "Success!"}, "partial_pass": {"message": "Partial success!"}, "fail": {"message": "Failure!"}}
+    ]
+
+    events = [Event(event) for event in events_data]
+    locations = [Location(events)]
+    game = Game(parser, total_characters, locations, chosen_party, opposing_team)
+    game.start()
+
+
     print(f"\nYou have chosen the following characters for your party:")
     for character in chosen_party:
         print(f"{character.name}")
+
+
+if __name__ == "__main__":
+    start_game()
+
 
     # Hardcoded event data instead of using JSON
 event_data_list = [
