@@ -143,22 +143,63 @@ class Game:
 
         print("Game Over.")
 
+
     def start(self):
+        self.check_team_synergy()  # optional fun synergy boost!
+
         while self.continue_playing and self.round_count < self.max_rounds:
-            location = random.choice(self.locations)
-            event = location.get_event()
 
-            event.execute(self.party, self.parser, self)
+        # Mini-Boss at round 4
+         if self.round_count == 3:
+            self.trigger_mini_boss(boss_number=1)
 
-            if self.round_count == 6:
-                self.trigger_special_event()
+            # Final Mini-Boss at round 8
+         if self.round_count == 7:
+            self.trigger_mini_boss(boss_number=2)
 
-            self.check_game_over()
+        # Final Boss at round 10 (last round)
+        if self.round_count == self.max_rounds - 1:
+            self.trigger_final_boss()
 
-            self.round_count += 1  # Increment round count
-            if self.is_invisible:
-                self.deactivate_invisibility()
-        print("Game Over.")
+        location = random.choice(self.locations)
+        event = location.get_event()
+
+        event.execute(self.party, self.parser, self)
+
+        if self.round_count == 6:
+            self.trigger_special_event()
+
+        self.check_game_over()
+
+        self.round_count += 1
+
+        if self.is_invisible:
+            self.deactivate_invisibility()
+
+    print("Game Over.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def move_to_new_location(self):
         print("\nYou have completed the required number of events. Moving to a new location...\n")
@@ -244,6 +285,31 @@ def random_team_damage(self, damage_amount):
         if unlucky_player.stamina.value <= 0:
             print(f"💀 {unlucky_player.name} has collapsed from exhaustion and is out of the game!")
             self.party.remove(unlucky_player)
+
+def trigger_mini_boss(self, boss_number=1):
+    if boss_number == 1:
+        print("\n⚔️ MINI-BOSS BATTLE! ⚔️")
+        boss_strength = random.randint(75, 100)
+    else:
+        print("\n🔥 FINAL MINI-BOSS APPROACHES! 🔥")
+        boss_strength = random.randint(100, 130)
+
+    print(f"The Mini-Boss has {boss_strength} strength!")
+
+    total_team_strength = sum([member.strength.value for member in self.party])
+
+    if total_team_strength > boss_strength:
+        print("🎉 You defeated the Mini-Boss and earned +10 stamina and +10 agility for everyone!")
+        for player in self.party:
+            player.stamina.modify(10)
+            player.agility.modify(10)
+    else:
+        print("💀 The Mini-Boss overpowered your team! You lose one random team member.")
+        if self.party:
+            unlucky = random.choice(self.party)
+            print(f"{unlucky.name} was captured by the Mini-Boss!")
+            self.party.remove(unlucky)
+
 
 
 class UserInputParser:
