@@ -178,30 +178,45 @@ class Game:
             self.trigger_special_event()
 
         return len(self.party) == 0
+    
     def trigger_special_event(self):
         print("\n💥 A surprise event has occurred! 💥")
 
-
-        # List of traps and power-ups
+    # List of traps and power-ups (expanded)
         surprise_events = [
             {"description": "You stepped on a hidden trap! Lose 10 stamina.", "effect": lambda player: player.stamina.modify(-10)},
             {"description": "You find a Speed Boost potion! Gain +10 agility.", "effect": lambda player: player.agility.modify(10)},
             {"description": "A spiked pit appears! Lose 5 agility escaping it.", "effect": lambda player: player.agility.modify(-5)},
             {"description": "You find a Strength Gauntlet! Gain +15 strength.", "effect": lambda player: player.strength.modify(15)},
             {"description": "A sudden rockslide hits you! Lose 10 stamina.", "effect": lambda player: player.stamina.modify(-10)},
-            {"description": "You discover an Invisibility Cloak! Sneak past obstacles next round.", "effect": lambda player: self.activate_invisibility()},
+            {"description": "You discover an Invisibility Cloak! Sneak past obstacles next round.", "effect": lambda _: self.activate_invisibility()},
             {"description": "A lightning strike charges you up! Gain +5 strength and +5 agility.", "effect": lambda player: (player.strength.modify(5), player.agility.modify(5))},
-        ]
+            {"description": "An enemy sniper takes a shot! One random teammate loses 15 stamina.", "effect": lambda _: self.random_team_damage(15)},
+            {"description": "You find a Medkit! Restore 20 stamina.", "effect": lambda player: player.stamina.modify(20)},
+            {"description": "An adrenaline rush hits you! Gain +10 stamina and +10 agility.", "effect": lambda player: (player.stamina.modify(10), player.agility.modify(10))},
+            {"description": "A bear suddenly appears! Lose 15 stamina while running away.", "effect": lambda player: player.stamina.modify(-15)},
+            {"description": "You find an Ancient Amulet! ALL your stats increase by +5.", "effect": lambda player: (
+                player.strength.modify(5), player.intelligence.modify(5),
+                player.stamina.modify(5), player.agility.modify(5))},
+        {"description": "You fall into a pit trap! Lose 5 agility and 5 stamina.", "effect": lambda player: (player.agility.modify(-5), player.stamina.modify(-5))},
+        {"description": "You drink mysterious water... Gain +10 intelligence!", "effect": lambda player: player.intelligence.modify(10)},
+    ]
 
-        # Pick a random event
-        selected_event = random.choice(surprise_events)
+    # Pick a random event
+    selected_event = random.choice(surprise_events)
 
-        # Print the event description
-        print(f"⚡ {selected_event['description']}")
+    # Print the event description
+    print(f"⚡ {selected_event['description']}")
 
-        # Apply the effect to the entire party (or you could choose just one player)
+    # Apply the effect to the party
+    if "Invisibility" in selected_event['description']:
+        selected_event['effect'](None)  # Invisibility affects the team, not individual players
+    elif "sniper" in selected_event['description']:
+        selected_event['effect'](None)  # Sniper targets one random teammate
+    else:
         for player in self.party:
             selected_event['effect'](player)
+
 
     def did_succeed(self):
         if self.round_count == 7:
