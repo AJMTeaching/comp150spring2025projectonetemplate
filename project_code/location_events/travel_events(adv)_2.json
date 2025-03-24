@@ -1,0 +1,98 @@
+[
+  {
+    "from_location": "Village",
+    "to_location": "Coastal Ruins",
+    "primary_attribute": "Intelligence",
+    "secondary_attribute": "Strength",
+    "prompt_text": "The path to the ancient coastal ruins requires navigating a series of flooded caves. Local legends speak of hidden air pockets and dangerous currents. How will you find your way through this underwater labyrinth?",
+    "pass": {
+      "message": "By carefully studying the patterns of water flow and remembering details from local legends, you identify the safest route through the caves. Your methodical approach to mapping the air pockets ensures you reach the coastal ruins without incident."
+    },
+    "fail": {
+      "message": "The underwater passages prove too confusing, and a moment of disorientation leads to panic. You barely make it back to the air pocket near the entrance and decide to return to the village for now."
+    },
+    "partial_pass": {
+      "message": "When navigation becomes difficult, you rely on your swimming strength to push through challenging currents. It's exhausting and you take in some water, but your physical power allows you to reach the coastal ruins despite the obstacles."
+    }
+  },
+  {
+    "from_location": "Coastal Ruins",
+    "to_location": "Mountain",
+    "primary_attribute": "Strength",
+    "secondary_attribute": "Intelligence",
+    "prompt_text": "An ancient stairway carved into the cliff face once connected the coastal ruins to the mountain temple above. Centuries of exposure to salt air have left the stairs crumbling and treacherous. How will you make this perilous climb?",
+    "pass": {
+      "message": "With impressive physical strength and balance, you carefully test each step before committing your weight. When sections have collapsed entirely, you confidently climb the rock face directly, reaching the mountain path without incident."
+    },
+    "fail": {
+      "message": "The deteriorated stairway proves too dangerous, with sections crumbling under even careful pressure. After a near fall, you wisely decide to retreat to the safety of the coastal ruins."
+    },
+    "partial_pass": {
+      "message": "Rather than testing your strength against the entire stairway, you carefully analyze the structure, identifying which sections remain solid and which must be avoided. Your methodical assessment allows you to pick a viable, if slow, path to the mountain."
+    }
+  },
+  {
+    "from_location": "Forest",
+    "to_location": "Swamplands",
+    "primary_attribute": "Intelligence",
+    "secondary_attribute": "Strength",
+    "prompt_text": "The border between forest and swamp is ill-defined, with gradually softening ground and deceptive pools of quicksand disguised by innocent-looking moss. How do you find a safe path into the swamplands?",
+    "pass": {
+      "message": "You carefully observe the vegetation patterns, recognizing which plants indicate solid ground beneath. By testing suspicious areas with a long stick and noting subtle differences in the moss coloration, you navigate safely into the swamplands."
+    },
+    "fail": {
+      "message": "The transition to swamp proves more treacherous than expected. After sinking knee-deep in what appeared to be solid ground, you struggle free but decide to return to the forest rather than risk worse dangers ahead."
+    },
+    "partial_pass": {
+      "message": "When your careful observations fail to reveal a clear path, you rely on your physical strength to power through difficult sections, using fallen logs as improvised bridges. It's exhausting work pulling yourself free from the clinging mud, but you eventually reach the swamplands."
+    }
+  },
+  {
+    "from_location": "Swamplands",
+    "to_location": "Coastal Ruins",
+    "primary_attribute": "Strength",
+    "secondary_attribute": "Intelligence",
+    "prompt_text": "The route from the fetid swamplands to the coastal ruins requires crossing a series of partially submerged stepping stones. The stones are slippery with algae and some shift under weight. The brackish water below teems with unseen creatures. How do you approach this crossing?",
+    "pass": {
+      "message": "With impressive balance and core strength, you leap confidently from stone to stone. When one shifts beneath you, your quick reflexes and physical power allow you to recover without falling. You reach the coastal ruins with dry feet and a sense of accomplishment."
+    },
+    "fail": {
+      "message": "The combination of slippery surfaces and unstable stones proves too challenging. After a fall that leaves you soaked and wary of the water's inhabitants, you decide to retreat to familiar swampland territory."
+    },
+    "partial_pass": {
+      "message": "Rather than testing each stone individually, you study the pattern and identify which ones are likely anchored to the bottom. By carefully planning your route in advance and observing subtle signs of stability, you make it to the coastal ruins with only minor mishaps."
+    }
+  },
+  {
+    "from_location": "Mountain",
+    "to_location": "Ice Peaks",
+    "primary_attribute": "Strength",
+    "secondary_attribute": "Intelligence",
+    "prompt_text": "Beyond the mountain's treeline lies the perpetually frozen realm of the ice peaks. The air grows thin as you climb, and hidden crevasses pose deadly threats beneath the snow. Halfway up, you encounter an ice wall that blocks the path. How do you proceed?",
+    "pass": {
+      "message": "With impressive strength and endurance, you carve handholds into the ice wall using your climbing tools. The thin air makes the work twice as difficult, but your physical conditioning allows you to scale the obstacle and continue safely to the ice peaks."
+    },
+    "fail": {
+      "message": "The combination of thin air and physical exertion quickly depletes your strength. After making little progress on the ice wall, you recognize the dangers of exhaustion at this altitude and wisely return to the mountain camp."
+    },
+    "partial_pass": {
+      "message": "Rather than attacking the ice wall directly, you search for alternatives, eventually discovering a narrow crevice that winds through the barrier. It's a tight squeeze requiring careful navigation, but your analytical approach reveals a path to the ice peaks that avoids the most strenuous climbing."
+    }
+  },
+  {
+    "from_location": "Ice Peaks",
+    "to_location": "Desert",
+    "primary_attribute": "Intelligence",
+    "secondary_attribute": "Strength",
+    "prompt_text": "From the frozen heights of the ice peaks, a treacherous path descends directly to the desert below - a journey through multiple climate zones in a single day. The rapid temperature changes can be physically shocking, and navigation is complicated by shifting weather patterns. How do you manage this extreme transition?",
+    "pass": {
+      "message": "You carefully plan each stage of the descent to gradually acclimatize your body. By calculating ideal rest periods and utilizing natural shelters, you navigate the changing environments with minimal stress. Your knowledge of weather patterns helps you avoid a developing storm, and you reach the desert safely."
+    },
+    "fail": {
+      "message": "The dramatic climate shift proves more challenging than anticipated. Snow blindness in the upper region leads to navigation errors, and you find yourself caught in a perilous position as visibility decreases. You wisely retreat to the ice peaks to wait for better conditions."
+    },
+    "partial_pass": {
+      "message": "When changing conditions render your planned route unsafe, you rely on physical endurance to push through challenging sections quickly. The rapid descent is taxing on your body, but your strength and determination see you through to the desert, albeit exhausted and mildly dehydrated."
+    }
+  }
+]
