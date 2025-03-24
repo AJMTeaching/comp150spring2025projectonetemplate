@@ -1,0 +1,44 @@
+"beyond_the_wall": [
+    {
+      "primary_attribute": "Endurance",
+      "secondary_attribute": "Intelligence",
+      "prompt_text": "Your party is caught in a deadly blizzard beyond the Wall. You need to find shelter quickly before freezing to death in the hostile wilderness.",
+      "pass": {
+        "message": "You lead your party through the blinding snow, using your knowledge of winter survival to find a hidden cave. Everyone survives the night as the blizzard rages outside."
+      },
+      "fail": {
+        "message": "The cold overwhelms your party. By morning, two companions have severe frostbite, and everyone's supplies are dangerously depleted."
+      },
+      "partial_pass": {
+        "message": "You find minimal shelter behind a rock formation. It's enough to survive the night, but everyone suffers from the cold, weakening the party for days to come."
+      }
+    },
+    {
+      "primary_attribute": "Stealth",
+      "secondary_attribute": "Cunning",
+      "prompt_text": "Your scouting party has spotted a wildling camp ahead. You need to observe their numbers and intentions without being discovered.",
+      "pass": {
+        "message": "You move like a ghost through the snow, getting close enough to count their warriors and overhear their plans to raid a village south of the Wall."
+      },
+      "fail": {
+        "message": "A wildling scout spots you. The alarm is raised, and your party must flee, gaining no information and revealing your presence in the area."
+      },
+      "partial_pass": {
+        "message": "You observe the camp from a distance, gauging their approximate numbers but unable to learn their intentions without getting closer."
+      }
+    },
+    {
+      "primary_attribute": "Strength",
+      "secondary_attribute": "Endurance",
+      "prompt_text": "A massive snow-covered ravine blocks your path. The nearest bridge is days away, but a fallen tree might serve as a crossing if it can be moved into position.",
+      "pass": {
+        "message": "You organize and lead the effort to move the massive tree trunk. With tremendous effort, you create a stable bridge, saving days of dangerous travel."
+      },
+      "fail": {
+        "message": "Despite your best efforts, the tree is too heavy to position properly. You must abandon the attempt and take the long route around, losing precious time."
+      },
+      "partial_pass": {
+        "message": "You manage to position the tree, but it's not entirely stable. Everyone crosses safely, but slowly and carefully, saving some but not all of the time a proper bridge would have."
+      }
+    }
+  ]
