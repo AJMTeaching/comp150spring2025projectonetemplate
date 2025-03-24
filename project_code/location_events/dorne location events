@@ -1,0 +1,44 @@
+ "dorne": [
+    {
+      "primary_attribute": "Endurance",
+      "secondary_attribute": "Cunning",
+      "prompt_text": "You must cross the harsh Dornish desert to deliver an urgent message to Sunspear. The heat is merciless, water is scarce, and sand vipers are common.",
+      "pass": {
+        "message": "You navigate the desert expertly, rationing water and traveling during the cooler hours. You reach Sunspear well ahead of schedule, your message intact."
+      },
+      "fail": {
+        "message": "The desert overwhelms you. Dehydrated and disoriented, you're found by a Dornish patrol and brought to Sunspear, your mission delayed and your reputation damaged."
+      },
+      "partial_pass": {
+        "message": "You reach Sunspear, but barely—exhausted, sunburnt, and days behind schedule. The message is delivered, but your condition raises questions about your capabilities."
+      }
+    },
+    {
+      "primary_attribute": "Charisma",
+      "secondary_attribute": "Intelligence",
+      "prompt_text": "Prince Doran is hosting a feast in Sunspear. You need to gain his ear without attracting attention from those who might oppose your mission.",
+      "pass": {
+        "message": "You charm your way through the feast, making the right allies and skillfully navigating court etiquette. Prince Doran grants you a private audience, impressed by your diplomacy."
+      },
+      "fail": {
+        "message": "Your attempts to reach Prince Doran are obvious and clumsy. House Martell's guards politely but firmly escort you from the feast, barring your return."
+      },
+      "partial_pass": {
+        "message": "You manage to exchange brief words with Prince Doran during the feast, but in such a public setting, he can only promise to consider your words, not act on them immediately."
+      }
+    },
+    {
+      "primary_attribute": "Cunning",
+      "secondary_attribute": "Stealth",
+      "prompt_text": "You've learned that a conspiracy against your allies is brewing in the Water Gardens. You need to identify the conspirators without revealing your own intentions.",
+      "pass": {
+        "message": "Through careful observation and subtle manipulation, you uncover the full details of the plot and the identities of all involved, without raising suspicion."
+      },
+      "fail": {
+        "message": "Your investigation is noticed by the conspirators. They feed you false information and use your interest to further their plans, making the situation worse."
+      },
+      "partial_pass": {
+        "message": "You identify some of the conspirators, but sense that key players remain hidden. Your investigation provides useful but incomplete intelligence."
+      }
+    }
+  ]
