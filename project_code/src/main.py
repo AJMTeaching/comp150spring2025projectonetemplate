@@ -360,13 +360,18 @@ def create_location_json_files():
 
 
 def update_main_game_file():
-    """Update the main.py file with Game of Thrones specific code."""
-    # Here you would add code to update main.py
-    # This would involve reading in the existing file and modifying it,
-    # or completely replacing it with a new version
-    print("Updating main game file...")
-    # For a full implementation, you would include the entire
-    # main.py code from the got-main-update artifact
+    """Update the main.py file with Game of Thrones specific code and integrate travel system."""
+    main_path = os.path.join(PROJECT_DIR, 'src', 'main.py')
+    
+    # Get the travel system integration code
+    from src.travel_system import integrate_travel_system
+    main_game_updates = integrate_travel_system()
+    
+    # Write the updated main.py
+    with open(main_path, 'w') as f:
+        f.write(main_game_updates)
+    
+    print(f"Updated {main_path} with travel system integration")
 
 
 def setup():
