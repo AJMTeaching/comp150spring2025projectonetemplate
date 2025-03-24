@@ -1,0 +1,44 @@
+"braavos": [
+    {
+      "primary_attribute": "Stealth",
+      "secondary_attribute": "Cunning",
+      "prompt_text": "You need information from inside the House of Black and White, the temple of the Faceless Men. Few enter this place and leave unchanged—if they leave at all.",
+      "pass": {
+        "message": "You slip into the temple unnoticed during a ceremony, hiding in the shadows as the Faceless Men perform their rituals. You learn their secrets and escape before anyone notices your presence."
+      },
+      "fail": {
+        "message": "A Faceless Man spots you immediately upon entry. You awaken outside the temple with no memory of what happened inside, your task utterly failed."
+      },
+      "partial_pass": {
+        "message": "You observe the outer chambers of the temple but cannot penetrate deeper without risking detection. You gather some information about their customs but nothing truly valuable."
+      }
+    },
+    {
+      "primary_attribute": "Charisma",
+      "secondary_attribute": "Intelligence",
+      "prompt_text": "You need a loan from the Iron Bank of Braavos for your important mission. The bankers are notoriously strict and skeptical, especially with foreigners.",
+      "pass": {
+        "message": "Your eloquent presentation and compelling arguments convince the Iron Bank representatives of the value of your venture. They grant you the loan with reasonable terms."
+      },
+      "fail": {
+        "message": "The bankers dismiss your request outright. Your reputation in Braavos is damaged, and no financial institution will deal with you."
+      },
+      "partial_pass": {
+        "message": "The Iron Bank offers you a loan, but with such harsh terms and high interest that it may cause more problems than it solves."
+      }
+    },
+    {
+      "primary_attribute": "Cunning",
+      "secondary_attribute": "Stealth",
+      "prompt_text": "You must navigate the political intrigues of Braavos to secure an alliance with an influential merchant prince. Many seek his favor, and he is known for testing potential allies.",
+      "pass": {
+        "message": "You deftly maneuver through the complex web of Braavosi politics, identifying the merchant prince's true desires and leveraging them to secure his support."
+      },
+      "fail": {
+        "message": "You misjudge the political landscape and offend the merchant prince. Not only do you fail to secure his alliance, but he actively works against your interests."
+      },
+      "partial_pass": {
+        "message": "The merchant prince remains neutral toward you, neither hindering nor helping your cause. He offers a minor trade agreement as a gesture of respect for your efforts."
+      }
+    }
+  ]
