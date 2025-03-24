@@ -379,6 +379,13 @@ def setup():
     # Create game map module
     create_game_map_module()
     
+    # Create travel system module
+    create_travel_system_module()
+    
+    # Create travel events directory
+    travel_events_dir = os.path.join(PROJECT_DIR, 'travel_events')
+    os.makedirs(travel_events_dir, exist_ok=True)
+    
     # Update main game file
     update_main_game_file()
     
