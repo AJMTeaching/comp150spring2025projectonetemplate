@@ -83,7 +83,9 @@ Here is the project directory structure:
 
 ```
 .
-adventure-game/                      # Root directory of your repository
+adventure-game/
+├── .devcontainer
+├── .idea                     # Root directory of your repository
 ├── README.md                        # Project documentation (at root)
 ├── requirements.txt                 # Python dependencies (at root)
 ├── setup.py                         # Installation configuration (at root)
