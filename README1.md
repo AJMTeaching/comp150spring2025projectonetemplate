@@ -83,29 +83,37 @@ Here is the project directory structure:
 
 ```
 .
-├── PROJECT_INSTRUCTIONS.md
-├── README.md
-├── __init__.py
-└── project_code
-    ├── __init__.py
-    ├── location_events
-    │   └── location_1.json
-    ├── src
-    │   ├── __init__.py
-    │   └── main.py
-    └── test
-        ├── __init__.py
-        └── test_game.py
+adventure-game/                      # Root directory of your repository
+├── README.md                        # Project documentation (at root)
+├── requirements.txt                 # Python dependencies (at root)
+├── setup.py                         # Installation configuration (at root)
+├── adventure_game/                  # Main package directory
+│   ├── __init__.py
+│   ├── src/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── game_map.py
+│   │   ├── travel_system.py
+│   │   └── character_system.py
+│   ├── location_events/
+│   │   ├── __init__.py
+│   │   └── ... (json files)
+│   ├── travel_events/
+│   │   ├── __init__.py
+│   │   └── ... (json files)
+│   └── test/
+│       ├── __init__.py
+│       └── ... (test files)
 ```
 
 - `project_code/` - The main directory containing all the code for the project.
     - `location_events/` - Directory containing the JSON files with events for the game.
     - `src/` - Source code for the project.
     - `test/` - Directory for tests to ensure the game functions correctly.
-- `README.md` - This file, with instructions on how to run the project.
+- `README1.md` - This file, with instructions on how to run the project.
 - `PROJECT_INSTRUCTIONS.md` - Additional instructions or guidelines for the project.
 
 ---
 
-Enjoy your adventure!
+Have Fun!!
 
