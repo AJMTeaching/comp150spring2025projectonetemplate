@@ -5,7 +5,7 @@ import random
 from typing import List, Dict, Optional
 from enum import Enum
 
-from .main import Event, Character, EventStatus, Statistic
+from .models import Event, Character, EventStatus, Statistic
 
 class TravelEvent(Event):
     """Event that occurs when traveling between locations."""
