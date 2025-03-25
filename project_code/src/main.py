@@ -199,7 +199,15 @@ def play_game():
             enemy = Enemy("Sunning Saboteur", 7, random.randint(2, 4))
         elif location == "Felis Elysium":
             enemy = Enemy("Halo Pouncer", 9, random.randint(3, 6))
-        combat(player, enemy)
+            victory = victory = combat(player, enemy)
+        if victory:
+            player.max_health += 1
+            player.health = player.max_health
+            print(f"{player.name} has grown stronger! Max health is now {player.max_health}.")
+        if victory:
+            player.max_health += 1
+            player.health = player.max_health
+            print(f"{player.name} has grown stronger! Max health is now {player.max_health}.")
 
     print("Final Battle: The Barking Kitten War General appears!")
     final_boss = Enemy("Barking Kitten War General", 14, 5)
