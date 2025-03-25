@@ -30,7 +30,7 @@ class UserInputHandler:
             if user_input in options:
                 return user_input
             print("Invalid input! Please choose a valid option.")
-    
+
     @staticmethod
     def get_valid_number(prompt: str, min_val: int, max_val: int):
         while True:
@@ -47,16 +47,25 @@ class Character:
     def __init__(self, name: str, health: int = 10, coins: int = 0):
         self.name = name
         self.health = health
+        self.max_health = health
         self.inventory = []
         self.strength = Statistic("Strength", value=5)
         self.intelligence = Statistic("Intelligence", value=5)
         self.abilities = []
         self.coins = coins
-    
+
     def take_damage(self, amount: int):
         self.health = max(0, self.health - amount)
         print(f"{self.name} took {amount} damage! Remaining Health: {self.health}")
-    
+
+    def heal(self):
+        if random.random() < (2 / 3):
+            heal_amount = random.randint(5, 10)
+            self.health = min(self.max_health, self.health + heal_amount)
+            print(f"{self.name} healed for {heal_amount} health! Current Health: {self.health}")
+        else:
+            print(f"{self.name} tried to heal, but it failed!")
+
     def add_ability(self, ability):
         self.abilities.append(ability)
 
@@ -94,7 +103,7 @@ class Enemy:
         self.name = name
         self.health = health
         self.damage = damage
-    
+
     def take_damage(self, amount: int):
         self.health = max(0, self.health - amount)
         print(f"{self.name} took {amount} damage! Remaining Health: {self.health}")
@@ -103,18 +112,26 @@ class Enemy:
 def combat(player: Character, enemy: Enemy):
     print(f"{player.name} engages in battle with {enemy.name}!")
     while player.health > 0 and enemy.health > 0:
-        print(f"\n{player.name}'s turn! Choose an ability:")
-        for idx, ability in enumerate(player.abilities):
-            print(f"{idx + 1}. {ability}")
-        choice = UserInputHandler.get_valid_number("Enter ability number: ", 1, len(player.abilities)) - 1
-        damage = random.randint(3, 7)
-        print(f"{player.name} used {player.abilities[choice]} and dealt {damage} damage!")
-        enemy.take_damage(damage)
-        
+        print(f"\n{player.name}'s turn! Choose an action:")
+        print("1. Use Ability")
+        print("2. Attempt to Heal")
+        action = UserInputHandler.get_valid_number("Enter action number: ", 1, 2)
+
+        if action == 1:
+            print("Choose an ability:")
+            for idx, ability in enumerate(player.abilities):
+                print(f"{idx + 1}. {ability}")
+            choice = UserInputHandler.get_valid_number("Enter ability number: ", 1, len(player.abilities)) - 1
+            damage = random.randint(3, 7)
+            print(f"{player.name} used {player.abilities[choice]} and dealt {damage} damage!")
+            enemy.take_damage(damage)
+        elif action == 2:
+            player.heal()
+
         if enemy.health <= 0:
             print(f"{enemy.name} is defeated!")
             return True
-        
+
         print(f"{enemy.name} attacks!")
         player.take_damage(enemy.damage)
         if player.health <= 0:
@@ -152,23 +169,29 @@ def choose_character():
 
 def play_game():
     print("Welcome to Exploding Kittens: The RPG!")
+    print("The Kitten Military Forces have defended their territory with precision and finesse.")
+    print("However, there has been a security breach detected at the main base!")
+    print("You are a new recruit, ready to serve. The whole base is on lockdown and Sergeant Barking Kitten takes you under his paw!")
+    print("With a tiny meow, he demands you to: >\"There's an intruder in our ranks, rookie! If you want to survive, you need to learn some skills fast!\"")
+    print("Your mission is clear: Find the Intruder and eliminate the threat!\n")
+
     player = choose_character()
     print(f"You have chosen: {player.name}\n")
-    
+
     locations = ["The Clawed Goblet", "Felis Infernum", "The Witherwild Thicket"]
     for _ in range(3):
         location = random.choice(locations)
         print(f"Exploring {location}...")
         enemy = Enemy("Claw Bandit", 7, random.randint(2, 5))
         combat(player, enemy)
-    
+
     print("Final Battle: The Barking Kitten War General appears!")
     final_boss = Enemy("Barking Kitten War General", 14, 5)
     if combat(player, final_boss):
         print("Congratulations! You defeated the Barking Kitten War General.")
     else:
         print("Game Over! You were defeated by the Barking Kitten War General. Rest in Peace, soldier.")
-    
+
 # --- START GAME ---
 if __name__ == "__main__":
     play_game()
