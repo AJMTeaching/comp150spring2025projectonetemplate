@@ -1,44 +1,44 @@
-"winterfell": [
-    {
-      "primary_attribute": "Intelligence",
-      "secondary_attribute": "Stealth",
-      "prompt_text": "The Godswood of Winterfell holds many secrets. You've heard whispers of hidden Stark treasures beneath the Heart Tree. How will you discover them?",
-      "pass": {
-        "message": "Through your knowledge of Old Northern legends and careful observation, you uncover a small opening beneath the Heart Tree, revealing a cache of Valyrian steel daggers and ancient scrolls."
-      },
-      "fail": {
-        "message": "Your clumsy search alerts the guards. They escort you from the Godswood, warning never to disturb the sacred place again."
-      },
-      "partial_pass": {
-        "message": "You find markings that suggest something is hidden, but can't quite determine how to access it. Perhaps someone with knowledge of Stark history could help."
-      }
+[
+  {
+    "primary_attribute": "Intelligence",
+    "secondary_attribute": "Stealth",
+    "prompt_text": "The Godswood of Winterfell holds many secrets. You've heard whispers of hidden Stark treasures beneath the Heart Tree. How will you discover them?",
+    "pass": {
+      "message": "Through your knowledge of Old Northern legends and careful observation, you uncover a small opening beneath the Heart Tree, revealing a cache of Valyrian steel daggers and ancient scrolls."
     },
-    {
-      "primary_attribute": "Strength",
-      "secondary_attribute": "Endurance",
-      "prompt_text": "Winter has come to Winterfell. The battlements need clearing of dangerous ice before they collapse. The task requires working in the biting cold for hours.",
-      "pass": {
-        "message": "You clear the ice systematically, saving the battlements from collapse and earning the respect of the Stark household guards."
-      },
-      "fail": {
-        "message": "The cold proves too much, and your hands grow numb. You retreat inside before completing the task, leaving the battlements vulnerable."
-      },
-      "partial_pass": {
-        "message": "You clear the most dangerous sections before the cold forces you to stop. The battlements are safer, but not completely secure."
-      }
+    "fail": {
+      "message": "Your clumsy search alerts the guards. They escort you from the Godswood, warning never to disturb the sacred place again."
     },
-    {
-      "primary_attribute": "Charisma",
-      "secondary_attribute": "Intelligence",
-      "prompt_text": "Lord Stark is holding court to settle a dispute between two Northern houses. You have information that could help, but speaking out of turn is frowned upon.",
-      "pass": {
-        "message": "You respectfully request permission to speak and present your information clearly. Lord Stark thanks you for your contribution, which helps settle the dispute justly."
-      },
-      "fail": {
-        "message": "Your interruption is seen as disrespectful. Lord Stark has you removed from the hall, and your information goes unheard."
-      },
-      "partial_pass": {
-        "message": "You manage to convey your information, but your delivery lacks tact. The information helps, but Lord Stark reminds you to mind courtly protocols in the future."
-      }
+    "partial_pass": {
+      "message": "You find markings that suggest something is hidden, but can't quite determine how to access it. Perhaps someone with knowledge of Stark history could help."
     }
-  ]
+  },
+  {
+    "primary_attribute": "Strength",
+    "secondary_attribute": "Endurance",
+    "prompt_text": "Winter has come to Winterfell. The battlements need clearing of dangerous ice before they collapse. The task requires working in the biting cold for hours.",
+    "pass": {
+      "message": "You clear the ice systematically, saving the battlements from collapse and earning the respect of the Stark household guards."
+    },
+    "fail": {
+      "message": "The cold proves too much, and your hands grow numb. You retreat inside before completing the task, leaving the battlements vulnerable."
+    },
+    "partial_pass": {
+      "message": "You clear the most dangerous sections before the cold forces you to stop. The battlements are safer, but not completely secure."
+    }
+  },
+  {
+    "primary_attribute": "Charisma",
+    "secondary_attribute": "Intelligence",
+    "prompt_text": "Lord Stark is holding court to settle a dispute between two Northern houses. You have information that could help, but speaking out of turn is frowned upon.",
+    "pass": {
+      "message": "You respectfully request permission to speak and present your information clearly. Lord Stark thanks you for your contribution, which helps settle the dispute justly."
+    },
+    "fail": {
+      "message": "Your interruption is seen as disrespectful. Lord Stark has you removed from the hall, and your information goes unheard."
+    },
+    "partial_pass": {
+      "message": "You manage to convey your information, but your delivery lacks tact. The information helps, but Lord Stark reminds you to mind courtly protocols in the future."
+    }
+  }
+]
