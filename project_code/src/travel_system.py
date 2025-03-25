@@ -72,4 +72,8 @@ class TravelSystem:
         print(travel_event.prompt_text)
         
         character = parser.select_party_member(party)
-        c
+        chosen_stat = parser.select_stat(character)
+        travel_event.resolve_choice(character, chosen_stat)
+        
+        # Return True if the travel was successful (PASS or PARTIAL_PASS)
+        return travel_event.status != EventStatus.FAIL
