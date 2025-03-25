@@ -81,9 +81,8 @@ class UserInputHandler:
 
 # --- ITEM CLASS ---
 class Item:
-    def __init__(self, name: str, price: int, description: str):
+    def __init__(self, name: str, description: str):
         self.name = name
-        self.price = price
         self.description = description
 
     def use(self, character: 'Character') -> bool:
@@ -92,7 +91,7 @@ class Item:
 
 class HealthPotion(Item):
     def __init__(self, healing_range: tuple = (5, 10)):
-        super().__init__(name="Health Potion", price=3, description="Restores health")
+        super().__init__(name="Health Potion", description="Restores health")
         self.healing_range = healing_range
 
     def use(self, character: 'Character') -> bool:
@@ -109,13 +108,12 @@ class HealthPotion(Item):
 
 # --- CHARACTER CLASSES ---
 class Character(GameEntity):
-    def __init__(self, name: str, health: int = 10, coins: int = 0):
+    def __init__(self, name: str, health: int = 10):
         super().__init__(name, health)
         self.inventory: List[Item] = []
         self.strength = Statistic("Strength", value=5)
         self.intelligence = Statistic("Intelligence", value=5)
         self.abilities: List[Ability] = []
-        self.coins = coins
 
     def heal(self) -> bool:
         if random.random() < (2 / 3):
@@ -132,20 +130,6 @@ class Character(GameEntity):
     def add_ability(self, ability: Ability) -> None:
         self.abilities.append(ability)
 
-    def earn_coins(self, amount: int) -> int:
-        self.coins += amount
-        print(f"{self.name} earned {amount} coins! Total: {self.coins}")
-        return self.coins
-
-    def spend_coins(self, amount: int) -> bool:
-        if self.coins >= amount:
-            self.coins -= amount
-            print(f"{self.name} spent {amount} coins. Remaining: {self.coins}")
-            return True
-        else:
-            print("Not enough coins!")
-            return False
-
     def use_item_from_inventory(self, item_index: int) -> bool:
         if 0 <= item_index < len(self.inventory):
             item = self.inventory[item_index]
@@ -156,30 +140,29 @@ class Character(GameEntity):
 
 class WizardCat(Character):
     def __init__(self):
-        super().__init__(name="Wizard Cat", health=12, coins=5)
+        super().__init__(name="Wizard Cat", health=12)
         self.intelligence.value = 8
         self.add_ability(Ability("Fireball", damage_range=(4, 8)))
         self.add_ability(Ability("Magic Shield", damage_range=(2, 5)))
 
 class FeralCat(Character):
     def __init__(self):
-        super().__init__(name="Feral Cat", health=15, coins=3)
+        super().__init__(name="Feral Cat", health=15)
         self.strength.value = 8
         self.add_ability(Ability("Forsaken Furball", damage_range=(5, 9)))
         self.add_ability(Ability("Cowardice", damage_range=(3, 6)))
 
 class ExplodingKitten(Character):
     def __init__(self):
-        super().__init__(name="Exploding Kitten", health=10, coins=7)
+        super().__init__(name="Exploding Kitten", health=10)
         self.add_ability(Ability("Nuclear Reactivity", damage_range=(4, 10)))
         self.add_ability(Ability("Controlled Explosion", damage_range=(3, 7)))
 
 # --- ENEMY CLASS ---
 class Enemy(GameEntity):
-    def __init__(self, name: str, health: int, damage_range: tuple = (2, 5), coins_reward: int = 5):
+    def __init__(self, name: str, health: int, damage_range: tuple = (2, 5)):
         super().__init__(name, health)
         self.damage_range = damage_range
-        self.coins_reward = coins_reward
 
     def attack(self, target: Character) -> int:
         damage = random.randint(*self.damage_range)
@@ -190,6 +173,7 @@ class Enemy(GameEntity):
 # --- COMBAT SYSTEM ---
 def combat(player: Character, enemy: Enemy) -> bool:
     print(f"{player.name} engages in battle with {enemy.name}!")
+    print(f"{enemy.name}: 'You shall not claw past me so easily!'")
     while player.is_alive() and enemy.is_alive():
         print(f"\n{player.name}'s turn! Health: {player.health}/{player.max_health}")
         print("Choose an action:")
@@ -220,16 +204,14 @@ def combat(player: Character, enemy: Enemy) -> bool:
 
         if not enemy.is_alive():
             print(f"{enemy.name} is defeated!")
-            reward = enemy.coins_reward
-            player.earn_coins(reward)
-            print(f"You found {reward} coins!")
+            print(f"{player.name}: 'Another one bites the fur!'")
             return True
 
         print(f"\n{enemy.name}'s turn! Health: {enemy.health}")
         enemy.attack(player)
 
         if not player.is_alive():
-            print(f"{player.name} has been defeated...")
+            print(f"{player.name} has been defeated... The intruder still roams free.")
             return False
 
     return player.is_alive()
@@ -244,17 +226,17 @@ class GameState:
 # --- LOCATION AND ENEMY GENERATION ---
 def get_location_enemy(location: str) -> Enemy:
     if location == "The Clawed Goblet":
-        return Enemy("Claw Bandit", 7, damage_range=(2, 5), coins_reward=4)
+        return Enemy("Claw Bandit", 7, damage_range=(2, 5))
     elif location == "Felis Infernum":
-        return Enemy("Flame Paw", 8, damage_range=(3, 6), coins_reward=6)
+        return Enemy("Flame Paw", 8, damage_range=(3, 6))
     elif location == "The Witherwild Thicket":
-        return Enemy("Ghost Whisker", 6, damage_range=(2, 5), coins_reward=3)
+        return Enemy("Ghost Whisker", 6, damage_range=(2, 5))
     elif location == "The Purrgola":
-        return Enemy("Sunning Saboteur", 7, damage_range=(2, 4), coins_reward=5)
+        return Enemy("Sunning Saboteur", 7, damage_range=(2, 4))
     elif location == "Felis Elysium":
-        return Enemy("Halo Pouncer", 9, damage_range=(3, 6), coins_reward=7)
+        return Enemy("Halo Pouncer", 9, damage_range=(3, 6))
     else:
-        return Enemy("Mysterious Cat", 7, damage_range=(2, 5), coins_reward=5)
+        return Enemy("Mysterious Cat", 7, damage_range=(2, 5))
 
 # --- GAME LOGIC ---
 def choose_character() -> Character:
@@ -315,7 +297,8 @@ def play_game() -> None:
 
     if game_state.player.is_alive():
         print("\nFinal Battle: The Barking Kitten War General appears from the shadows!")
-        final_boss = Enemy("Barking Kitten War General", 14, damage_range=(4, 7), coins_reward=10)
+        print("Barking Kitten War General: 'You've made it far, but this is where your journey ends, rookie!'")
+        final_boss = Enemy("Barking Kitten War General", 14, damage_range=(4, 7))
         if combat(game_state.player, final_boss):
             print("Congratulations! You defeated the Barking Kitten War General.")
             print("The Kitten Military Forces are saved, and you become a hero among cats!")
@@ -324,4 +307,3 @@ def play_game() -> None:
 
 if __name__ == "__main__":
     play_game()
- 
