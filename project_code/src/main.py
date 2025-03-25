@@ -241,12 +241,5 @@ def start_game():
         import traceback
         traceback.print_exc()
 
-def show_map(self):
-    """Display the ASCII map of Westeros."""
-    from .game_map import GameMap
-    game_map = GameMap()
-    game_map.set_location(self.current_location)
-    print(game_map.show_map())
-
 if __name__ == '__main__':
     start_game()
