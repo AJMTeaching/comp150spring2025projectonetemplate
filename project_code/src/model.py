@@ -49,11 +49,31 @@ class Event:
         self.partial_pass_message = data['partial_pass']['message']
         self.status = EventStatus.UNKNOWN
 
-    def execute(self, party: List[Character], parser):
-        print(self.prompt_text)
-        character = parser.select_party_member(party)
-        chosen_stat = parser.select_stat(character)
-        self.resolve_choice(character, chosen_stat)
+def execute(self, party: List[Character], parser):
+    print(self.prompt_text)
+    
+    # Select party member with error handling
+    while True:
+        try:
+            character = parser.select_party_member(party)
+            break
+        except (ValueError, IndexError) as e:
+            print("Invalid selection. Please enter a number from the list.")
+        except Exception as e:
+            print(f"An error occurred: {str(e)}. Please try again.")
+    
+    # Select stat with error handling
+    while True:
+        try:
+            chosen_stat = parser.select_stat(character)
+            break
+        except (ValueError, IndexError) as e:
+            print("Invalid selection. Please enter a number from the list.")
+        except Exception as e:
+            print(f"An error occurred: {str(e)}. Please try again.")
+    
+    # Resolve the choice now that we have valid inputs
+    self.resolve_choice(character, chosen_stat)
 
     def resolve_choice(self, character: Character, chosen_stat: Statistic):
         if chosen_stat.name == self.primary_attribute:
