@@ -12,6 +12,8 @@ class EventStatus(Enum):
     PARTIAL_PASS = "partial_pass"
 
 
+
+
 class Statistic:
     def __init__(self, name: str, value: int = 0, description: str = "", min_value: int = 0, max_value: int = 100):
         self.name = name
@@ -69,6 +71,9 @@ class Event:
             print(self.fail_message)
 
 
+
+
+
 class Location:
     def __init__(self, events: List[Event]):
         self.events = events
@@ -77,21 +82,55 @@ class Location:
         return random.choice(self.events)
 
 
+
+
+class GameState:
+    def __init__(self):
+        self.visited_locations = set()  # Tracks unique locations visited
+        self.successful_events = 0      # Counts successful events
+        self.party = []                 # Reference to the party members
+
+
+
+
 class Game:
-    def __init__(self, parser, characters: List[Character], locations: List[Location]):
+     def __init__(self, parser, characters: List[Character], locations: Dict[str, Location], travel_system: TravelSystem):
         self.parser = parser
         self.party = characters
         self.locations = locations
+        self.travel_system = travel_system
+        self.current_location = None
         self.continue_playing = True
+        
+        # Initialize game state tracking
+        self.game_state = GameState()
+        self.game_state.party = self.party
 
     def start(self):
-        while self.continue_playing:
-            location = random.choice(self.locations)
-            event = location.get_event()
-            event.execute(self.party, self.parser)
-            if self.check_game_over():
-                self.continue_playing = False
-        print("Game Over.")
+    while self.continue_playing:
+        # Randomly select a location and trigger an event
+        location = random.choice(self.locations)
+        event = location.get_event()
+        event.execute(self.party, self.parser)        
+        
+        # Track visited locations
+        if self.current_location:
+            self.game_state.visited_locations.add(self.current_location)
+        
+        # Check for victory condition
+        victory = check_win_condition(self.game_state)
+        if victory:
+            self.display_victory()
+            self.continue_playing = False
+            break
+        
+        # Check for game over condition
+        if self.check_game_over():
+            self.continue_playing = False
+
+    print("Game Over.")
+
+
 
     def check_game_over(self):
         return len(self.party) == 0
