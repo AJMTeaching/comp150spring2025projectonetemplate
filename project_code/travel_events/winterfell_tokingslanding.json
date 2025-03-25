@@ -1,0 +1,50 @@
+[
+  {
+    "from_location": "winterfell",
+    "to_location": "kings_landing",
+    "primary_attribute": "Endurance",
+    "secondary_attribute": "Cunning",
+    "prompt_text": "The Kingsroad stretches long before you. Bandits are known to prey on travelers, and the journey will take weeks. How will you make this dangerous journey south?",
+    "pass": {
+      "message": "You lead your party through the long march south, carefully rationing supplies and maintaining a steady pace. Despite the length of the journey, you arrive at King's Landing in good health and spirits."
+    },
+    "fail": {
+      "message": "The journey proves more difficult than anticipated. Your party is ambushed by bandits, losing valuable supplies. By the time you reach King's Landing, you are exhausted, injured, and low on resources."
+    },
+    "partial_pass": {
+      "message": "You cleverly avoid the main routes when bandits are spotted ahead, though the detours cost you time. You arrive at King's Landing later than planned but without any major incidents."
+    }
+  },
+  {
+    "from_location": "winterfell",
+    "to_location": "kings_landing",
+    "primary_attribute": "Stealth",
+    "secondary_attribute": "Intelligence",
+    "prompt_text": "Word reaches you that Lannister soldiers are searching for northern travelers along the Kingsroad. You need to reach King's Landing without being identified.",
+    "pass": {
+      "message": "You lead your party through forests and farmlands parallel to the Kingsroad, moving by night when necessary. You slip past Lannister patrols undetected and reach King's Landing without incident."
+    },
+    "fail": {
+      "message": "A Lannister patrol spots your party near the Trident. Though you escape, word of northerners heading to King's Landing precedes you, and you arrive to find the city gates under heavy scrutiny."
+    },
+    "partial_pass": {
+      "message": "You deduce the patrol patterns of the Lannister forces and plan your journey accordingly. Though you have a close call near the Crossroads Inn, you ultimately reach King's Landing without being identified."
+    }
+  },
+  {
+    "from_location": "winterfell",
+    "to_location": "kings_landing",
+    "primary_attribute": "Charisma",
+    "secondary_attribute": "Strength",
+    "prompt_text": "As you travel south, you encounter a large wedding party of Riverlands nobles heading to King's Landing. They could provide safe passage, but they're suspicious of strangers in these troubled times.",
+    "pass": {
+      "message": "You charm the noble party with courtly manners and entertaining stories of the North. They welcome you into their convoy, providing safety in numbers and speeding your journey with their well-provisioned caravan."
+    },
+    "fail": {
+      "message": "Your attempts to join the wedding party are rebuffed. Worse, your interest raises suspicions, and they send riders ahead to King's Landing with news of suspicious northerners on the road."
+    },
+    "partial_pass": {
+      "message": "Though the nobles remain wary, your impressive stature and martial bearing convince them that having you along might deter bandits. They allow you to travel alongside their convoy, though not as honored guests."
+    }
+  }
+]
