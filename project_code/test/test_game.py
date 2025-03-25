@@ -149,4 +149,60 @@ class TestGame(unittest.TestCase):
         # Test each menu option
         
         # 1. Explore location
-        self.mock_parser.parse.return_value
+        self.mock_parser.parse.return_value = "1"
+        self.game.explore_location = MagicMock()
+        self.game.location_menu()
+        self.game.explore_location.assert_called_once()
+        
+        # 2. Travel to another location
+        self.mock_parser.parse.return_value = "2"
+        self.game.travel_menu = MagicMock()
+        self.game.location_menu()
+        self.game.travel_menu.assert_called_once()
+        
+        # 3. View party status
+        self.mock_parser.parse.return_value = "3"
+        self.game.show_party_status = MagicMock()
+        self.game.location_menu()
+        self.game.show_party_status.assert_called_once()
+        
+        # 4. Quit game
+        self.mock_parser.parse.return_value = "4"
+        self.game.location_menu()
+        self.assertFalse(self.game.continue_playing)
+        
+        # Invalid choice
+        self.mock_parser.parse.return_value = "999"
+        self.game.continue_playing = True
+        self.game.location_menu()
+        mock_print.assert_any_call("Invalid choice, please try again.")
+    
+    @patch('builtins.print')
+    @patch.object(Game, 'location_menu')
+    def test_start_game(self, mock_location_menu, mock_print):
+        """Test starting the game."""
+        # Mock user selecting a starting location
+        self.mock_parser.parse.return_value = "1"  # Select first location
+        
+        # Mock location_menu to count calls and then set continue_playing to False
+        def side_effect():
+            self.game.continue_playing = False
+        mock_location_menu.side_effect = side_effect
+        
+        # Start game
+        self.game.start()
+        
+        # Check that starting location was set
+        self.assertEqual(self.game.current_location, "winterfell")
+        
+        # Check welcome message was printed
+        mock_print.assert_any_call("\nYou begin your adventure in Winterfell.\n")
+        
+        # Check location_menu was called
+        mock_location_menu.assert_called_once()
+        
+        # Check game over message was printed
+        mock_print.assert_any_call("Game Over.")
+
+if __name__ == '__main__':
+    unittest.main()
