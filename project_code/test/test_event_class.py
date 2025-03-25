@@ -6,7 +6,8 @@ from unittest.mock import patch, MagicMock
 # Add the root directory of the project to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from project_code.src.main import Event, Character, Statistic, EventStatus
+from project_code.src.model import Event, EventStatus
+from project_code.src.model import Character, Statistic
 
 class TestEvent(unittest.TestCase):
     """Tests for the Event class."""
@@ -85,7 +86,7 @@ class TestEvent(unittest.TestCase):
         # Create test party
         party = [self.character]
         
-        # Mock parser responses
+        # Mock parser responses for both selection prompts
         self.mock_parser.select_party_member.return_value = self.character
         self.mock_parser.select_stat.return_value = self.character.intelligence
         
@@ -99,6 +100,25 @@ class TestEvent(unittest.TestCase):
         # Check print was called with prompt_text and pass_message
         mock_print.assert_any_call(self.event_data["prompt_text"])
         mock_print.assert_any_call(self.event_data["pass"]["message"])
+        
+        # Check final status
+        self.assertEqual(self.event.status, EventStatus.PASS)
+    
+    @patch('builtins.print')
+    def test_execute_event_with_errors(self, mock_print):
+        """Test executing an event with invalid inputs that trigger error handling."""
+        # Create test party
+        party = [self.character]
+        
+        # Mock parser to raise an error first, then succeed
+        self.mock_parser.select_party_member.side_effect = [ValueError("Invalid input"), self.character]
+        self.mock_parser.select_stat.side_effect = [IndexError("Out of range"), self.character.intelligence]
+        
+        # Execute event
+        self.event.execute(party, self.mock_parser)
+        
+        # Verify error messages were printed
+        mock_print.assert_any_call("Invalid selection. Please enter a number from the list.")
         
         # Check final status
         self.assertEqual(self.event.status, EventStatus.PASS)
