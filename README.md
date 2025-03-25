@@ -110,7 +110,7 @@ adventure-game/                      # Root directory of your repository
     - `location_events/` - Directory containing the JSON files with events for the game.
     - `src/` - Source code for the project.
     - `test/` - Directory for tests to ensure the game functions correctly.
-- `README1.md` - This file, with instructions on how to run the project.
+- `README.md` - This file, with instructions on how to run the project.
 - `PROJECT_INSTRUCTIONS.md` - Additional instructions or guidelines for the project.
 
 ---
