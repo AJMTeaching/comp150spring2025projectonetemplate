@@ -167,6 +167,13 @@ def choose_character():
     user_choice = UserInputHandler.get_valid_input("1. Wizard Cat\n2. Feral Cat\n3. Exploding Kitten\nEnter your choice: ", choices.keys())
     return choices[user_choice]()
 
+def choose_location(locations: List[str]) -> str:
+    print("Choose a location to explore:")
+    for idx, loc in enumerate(locations, 1):
+        print(f"{idx}. {loc}")
+    choice = UserInputHandler.get_valid_number("Enter location number: ", 1, len(locations)) - 1
+    return locations[choice]
+
 def play_game():
     print("Welcome to Exploding Kittens: The RPG!")
     print("The Kitten Military Forces have defended their territory with precision and finesse.")
@@ -178,9 +185,9 @@ def play_game():
     player = choose_character()
     print(f"You have chosen: {player.name}\n")
 
-    locations = ["The Clawed Goblet", "Felis Infernum", "The Witherwild Thicket"]
+    locations = ["The Clawed Goblet", "Felis Infernum", "The Witherwild Thicket", "The Purrgola", "Felis Elysium"]
     for _ in range(3):
-        location = random.choice(locations)
+        location = choose_location(locations)
         print(f"Exploring {location}...")
         enemy = Enemy("Claw Bandit", 7, random.randint(2, 5))
         combat(player, enemy)
@@ -195,4 +202,4 @@ def play_game():
 # --- START GAME ---
 if __name__ == "__main__":
     play_game()
-    
+ 
