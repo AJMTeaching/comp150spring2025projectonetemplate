@@ -189,7 +189,16 @@ def play_game():
     for _ in range(3):
         location = choose_location(locations)
         print(f"Exploring {location}...")
-        enemy = Enemy("Claw Bandit", 7, random.randint(2, 5))
+        if location == "The Clawed Goblet":
+            enemy = Enemy("Claw Bandit", 7, random.randint(2, 5))
+        elif location == "Felis Infernum":
+            enemy = Enemy("Flame Paw", 8, random.randint(3, 6))
+        elif location == "The Witherwild Thicket":
+            enemy = Enemy("Ghost Whisker", 6, random.randint(2, 5))
+        elif location == "The Purrgola":
+            enemy = Enemy("Sunning Saboteur", 7, random.randint(2, 4))
+        elif location == "Felis Elysium":
+            enemy = Enemy("Halo Pouncer", 9, random.randint(3, 6))
         combat(player, enemy)
 
     print("Final Battle: The Barking Kitten War General appears!")
@@ -202,4 +211,3 @@ def play_game():
 # --- START GAME ---
 if __name__ == "__main__":
     play_game()
- 
