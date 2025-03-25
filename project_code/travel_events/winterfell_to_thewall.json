@@ -1,0 +1,50 @@
+[
+  {
+    "from_location": "winterfell",
+    "to_location": "the_wall",
+    "primary_attribute": "Endurance",
+    "secondary_attribute": "Strength",
+    "prompt_text": "The journey north to the Wall grows increasingly harsh as the Kingsroad deteriorates and the climate becomes bitter. Snow begins to fall heavily, slowing your progress.",
+    "pass": {
+      "message": "You press on through snowdrifts and freezing winds, setting a steady pace that preserves your strength while making consistent progress. Your resilience sees the party safely to Castle Black before supplies run low."
+    },
+    "fail": {
+      "message": "The cold saps your strength and slows your progress to a crawl. When a blizzard hits, you lose the road entirely and wander for days, arriving at Castle Black frostbitten and half-starved."
+    },
+    "partial_pass": {
+      "message": "The journey tests your physical limits, but your strength allows you to break trail through deep snow for the others. Though the journey takes longer than expected, you reach the Wall without serious harm."
+    }
+  },
+  {
+    "from_location": "winterfell",
+    "to_location": "the_wall",
+    "primary_attribute": "Intelligence",
+    "secondary_attribute": "Cunning",
+    "prompt_text": "The route to the Wall passes through territories where wildling raiders have been spotted recently. You need to choose your path carefully to avoid an ambush.",
+    "pass": {
+      "message": "You recall the patrol reports from Winterfell and identify likely wildling crossing points. By plotting a route that avoids these areas and traveling at strategic times, you reach the Wall without encountering any raiders."
+    },
+    "fail": {
+      "message": "Your party blunders into a wildling scouting party. Though you escape the immediate threat, the raiders shadow your journey, forcing you to make a desperate final push to Castle Black through treacherous terrain."
+    },
+    "partial_pass": {
+      "message": "When you spot signs of wildling activity, you cunningly alter your route and adopt tactics to conceal your numbers and direction. A few tense moments occur, but you ultimately avoid direct confrontation."
+    }
+  },
+  {
+    "from_location": "winterfell",
+    "to_location": "the_wall",
+    "primary_attribute": "Charisma",
+    "secondary_attribute": "Stealth",
+    "prompt_text": "At a small northern holdfast, you learn that a group of Night's Watch deserters has been terrorizing travelers on the road ahead. The local lord is preparing to hunt them down.",
+    "pass": {
+      "message": "You convince the northern lord that joining forces would be mutually beneficial. His men escort you to the Wall, and your combined party is too strong for the deserters to risk attacking."
+    },
+    "fail": {
+      "message": "The lord is unmoved by your request and remains focused on his own concerns. Days later, your party is ambushed by the deserters, resulting in injuries and lost provisions before you fight them off."
+    },
+    "partial_pass": {
+      "message": "Unable to secure an escort, you gather crucial information about the deserters' habits and slip past their known locations by traveling at night with minimal firelight, reaching the Wall undetected."
+    }
+  }
+]

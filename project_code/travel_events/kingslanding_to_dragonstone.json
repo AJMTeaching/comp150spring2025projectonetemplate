@@ -1,0 +1,50 @@
+[
+  {
+    "from_location": "kings_landing",
+    "to_location": "dragonstone",
+    "primary_attribute": "Stealth",
+    "secondary_attribute": "Cunning",
+    "prompt_text": "You need to leave King's Landing for Dragonstone, but the harbor is closely watched by the City Watch. How will you secure passage without drawing attention?",
+    "pass": {
+      "message": "Under cover of night, you slip through the back alleys to a small fishing vessel you arranged earlier. The captain smuggles you past the royal fleet's patrols, and you make landfall on Dragonstone undetected."
+    },
+    "fail": {
+      "message": "Your suspicious behavior attracts a Gold Cloak patrol. Though you eventually find a ship, the delay means you must sail during daylight, and a royal galley stops your vessel for inspection before you reach Dragonstone."
+    },
+    "partial_pass": {
+      "message": "You cleverly bribe a merchant captain to list you as crew members. The manifest is given only a cursory check, and though the journey is delayed by a storm, you eventually reach Dragonstone safely."
+    }
+  },
+  {
+    "from_location": "kings_landing",
+    "to_location": "dragonstone",
+    "primary_attribute": "Charisma",
+    "secondary_attribute": "Intelligence",
+    "prompt_text": "The narrow sea is treacherous with storms and pirates. You need to convince a reliable captain to take you to Dragonstone, despite the risks and political tensions.",
+    "pass": {
+      "message": "With eloquent persuasion and promises of generous payment, you secure passage on a sturdy trading galley. The captain even knows a safe cove for landing away from the main harbor's prying eyes."
+    },
+    "fail": {
+      "message": "No reputable captain will take your offer. You're forced to bargain with a disreputable smuggler who demands an exorbitant fee, then abandons you on a rocky shore miles from Dragonstone's castle."
+    },
+    "partial_pass": {
+      "message": "Through careful questioning at the docks, you identify a captain with knowledge of Dragonstone's waters. He agrees to take you, though the price is steep and the vessel is smaller than you'd prefer."
+    }
+  },
+  {
+    "from_location": "kings_landing",
+    "to_location": "dragonstone",
+    "primary_attribute": "Endurance",
+    "secondary_attribute": "Strength",
+    "prompt_text": "A sudden storm hits as you cross Blackwater Bay toward Dragonstone. The small fishing boat struggles against massive waves, and water pours in faster than it can be bailed.",
+    "pass": {
+      "message": "You work tirelessly through the night, bailing water and helping the crew secure rigging as the storm rages. Your stamina keeps the vessel afloat until dawn breaks, revealing Dragonstone's shores ahead."
+    },
+    "fail": {
+      "message": "The relentless storm overwhelms your efforts. The boat begins to break apart, forcing you to abandon ship miles from shore. You wash up on Dragonstone's beach, half-drowned and having lost most of your possessions."
+    },
+    "partial_pass": {
+      "message": "Your physical strength allows you to help the crew reinforce the damaged hull with spare planking. The boat stays afloat, though waterlogged, and limps into a cove on Dragonstone's southern shore."
+    }
+  }
+]

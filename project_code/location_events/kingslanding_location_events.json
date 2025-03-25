@@ -1,0 +1,44 @@
+[
+  {
+    "primary_attribute": "Cunning",
+    "secondary_attribute": "Charisma",
+    "prompt_text": "A feast is being held in the Red Keep. You overhear whispers of a plot against the crown. How do you handle this sensitive information?",
+    "pass": {
+      "message": "Through subtle conversation and careful maneuvering, you identify the conspirators and discreetly inform the appropriate authorities without revealing your source."
+    },
+    "fail": {
+      "message": "Your clumsy inquiries alert the conspirators. They spread false rumors about you, and you find yourself unwelcome at court."
+    },
+    "partial_pass": {
+      "message": "You learn some details of the plot but not enough to identify the conspirators. The information you provide helps increase security, but the threat remains."
+    }
+  },
+  {
+    "primary_attribute": "Stealth",
+    "secondary_attribute": "Intelligence",
+    "prompt_text": "Important documents are kept in the Tower of the Hand. You need to view them without permission to uncover the truth about a matter of grave importance.",
+    "pass": {
+      "message": "You successfully slip past the guards, locate the documents, memorize their contents, and leave without detection, gaining crucial information."
+    },
+    "fail": {
+      "message": "You're caught by the guards and thrown into the Black Cells, accused of espionage against the crown."
+    },
+    "partial_pass": {
+      "message": "You reach the documents but only have time to glimpse them before nearly being discovered. You escape, but with incomplete information."
+    }
+  },
+  {
+    "primary_attribute": "Charisma",
+    "secondary_attribute": "Cunning",
+    "prompt_text": "You need to gain access to a closed Small Council meeting. The guards at the door are strictly following orders about who may enter.",
+    "pass": {
+      "message": "With a combination of confidence, persuasive half-truths, and knowledge of courtly protocols, you convince the guards you have legitimate business inside."
+    },
+    "fail": {
+      "message": "The guards see through your deception and threaten to report you to the City Watch for attempting to interfere with royal business."
+    },
+    "partial_pass": {
+      "message": "You cannot get inside, but you convince one of the guards to deliver a message to someone within, partially achieving your goal."
+    }
+  }
+]

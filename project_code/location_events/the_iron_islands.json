@@ -1,0 +1,44 @@
+[
+    {
+      "primary_attribute": "Endurance",
+      "secondary_attribute": "Strength",
+      "prompt_text": "A fierce storm has hit the Iron Islands while you're at sea. Your ship is in danger of capsizing as massive waves crash over the deck.",
+      "pass": {
+        "message": "You work tirelessly at the rigging and sails, guiding the ship through the tempest with exceptional seamanship. Your ship reaches Pyke largely intact."
+      },
+      "fail": {
+        "message": "The storm overwhelms you and your crew. Your ship is badly damaged and barely limps to shore. The Ironborn mock your poor seamanship."
+      },
+      "partial_pass": {
+        "message": "You keep the ship afloat but lose much of your cargo to the sea. The Ironborn respect your survival but note that a true ironborn would have saved the cargo too."
+      }
+    },
+    {
+      "primary_attribute": "Cunning",
+      "secondary_attribute": "Charisma",
+      "prompt_text": "You must negotiate with the Ironborn captain for passage to the mainland. Ironborn respect strength and cunning, not gold.",
+      "pass": {
+        "message": "You challenge the captain to a game of wits, impressing him with your cunning. He agrees to take you to the mainland, considering it an interesting diversion."
+      },
+      "fail": {
+        "message": "The captain finds your approach dishonorable and weak. He refuses your request and shares the tale of your failure with other captains, who also refuse you passage."
+      },
+      "partial_pass": {
+        "message": "The captain agrees to take you part of the way, but insists you prove yourself by working as part of his crew during the journey."
+      }
+    },
+    {
+      "primary_attribute": "Strength",
+      "secondary_attribute": "Endurance",
+      "prompt_text": "A rivalry between Ironborn crews erupts into a brawl at the harbor. You're caught in the middle and must prove your worth or be seen as weak.",
+      "pass": {
+        "message": "You hold your own in the fight, demonstrating strength that earns the respect of the Ironborn. They begin to treat you as a worthy warrior."
+      },
+      "fail": {
+        "message": "You're quickly overwhelmed in the brawl. The Ironborn laugh at your weakness, and your reputation suffers throughout the Iron Islands."
+      },
+      "partial_pass": {
+        "message": "You avoid the worst of the fighting while landing a few good blows. The Ironborn neither respect nor mock you—you're simply not worth their notice."
+      }
+    }
+  ]

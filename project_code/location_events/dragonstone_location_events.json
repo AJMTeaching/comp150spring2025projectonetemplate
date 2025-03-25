@@ -1,0 +1,44 @@
+[
+  {
+    "primary_attribute": "Intelligence",
+    "secondary_attribute": "Cunning",
+    "prompt_text": "The ancient libraries of Dragonstone contain tomes about Valyrian dragonlore. You seek information about controlling dragons in these forbidden texts.",
+    "pass": {
+      "message": "You find and translate a previously overlooked Valyrian scroll detailing the bonding process between dragon and rider, knowledge that could prove invaluable."
+    },
+    "fail": {
+      "message": "The complex Valyrian texts confound you, and you waste days finding nothing of value. A suspicious maester reports your activities to the castle's lord."
+    },
+    "partial_pass": {
+      "message": "You discover fragments of useful information about dragon behaviors, but nothing specific about controlling them. The knowledge is interesting but limited in practical use."
+    }
+  },
+  {
+    "primary_attribute": "Stealth",
+    "secondary_attribute": "Intelligence",
+    "prompt_text": "Rumor has it that there's a hidden chamber beneath Dragonstone containing dragon eggs. The entrance is said to be somewhere in the lower levels of the castle.",
+    "pass": {
+      "message": "Moving silently through the castle's underbelly, you discover a hidden passage behind an ancient Targaryen sigil. It leads to a small chamber with what appear to be petrified dragon eggs."
+    },
+    "fail": {
+      "message": "Your searching attracts the attention of the castle guards. You're apprehended and questioned about your suspicious activities."
+    },
+    "partial_pass": {
+      "message": "You find evidence of a sealed passage that might lead to the chamber, but cannot determine how to open it without tools and more time."
+    }
+  },
+  {
+    "primary_attribute": "Endurance",
+    "secondary_attribute": "Strength",
+    "prompt_text": "A powerful storm has damaged the docks of Dragonstone. Ships cannot land with crucial supplies unless repairs are made quickly in the harsh weather.",
+    "pass": {
+      "message": "You work tirelessly through the storm, directing the repair efforts and participating in the heavy labor. The dock is repaired in time for the supply ships to land."
+    },
+    "fail": {
+      "message": "The combination of wind, rain, and exhaustion defeats you. The repairs remain incomplete, and the supply ships are forced to return to the mainland."
+    },
+    "partial_pass": {
+      "message": "You manage to repair enough of the dock for small boats to land, but larger ships with the bulk of the supplies must wait for better conditions."
+    }
+  }
+]

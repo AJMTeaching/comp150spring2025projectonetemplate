@@ -1,0 +1,44 @@
+[
+    {
+      "primary_attribute": "Strength",
+      "secondary_attribute": "Endurance",
+      "prompt_text": "The High Road to the Eyrie is treacherous, especially with mountain clans attacking travelers. Your party must reach the Gates of the Moon safely.",
+      "pass": {
+        "message": "You lead your party skillfully through the mountains, fighting off a mountain clan ambush with impressive strength. You arrive at the Gates of the Moon without casualties."
+      },
+      "fail": {
+        "message": "Your party is scattered by an ambush from the Stone Crows. By the time you regroup, you've lost valuable time and resources, and some members bear injuries."
+      },
+      "partial_pass": {
+        "message": "You repel the mountain clan attack, but not without cost. Your party reaches the Gates of the Moon, though with minor injuries and depleted supplies."
+      }
+    },
+    {
+      "primary_attribute": "Intelligence",
+      "secondary_attribute": "Charisma",
+      "prompt_text": "Lady Arryn is known for her paranoia and overprotection of her son. You need her permission to continue your mission in the Vale.",
+      "pass": {
+        "message": "You carefully frame your request to appeal to Lady Arryn's concern for her son's future, convincing her that your mission serves House Arryn's interests."
+      },
+      "fail": {
+        "message": "Lady Arryn becomes convinced you pose a threat to her son. She refuses your request and orders you to leave the Eyrie immediately."
+      },
+      "partial_pass": {
+        "message": "Lady Arryn remains suspicious but allows you limited access to the Vale, under constant supervision by House Arryn guards."
+      }
+    },
+    {
+      "primary_attribute": "Stealth",
+      "secondary_attribute": "Intelligence",
+      "prompt_text": "You need to retrieve an important document from the Eyrie's maester without drawing attention. The maester is loyal to House Arryn and watches his archives carefully.",
+      "pass": {
+        "message": "Under cover of night, you slip into the maester's study, locate the document, make a copy, and return everything exactly as you found it, leaving no trace of your visit."
+      },
+      "fail": {
+        "message": "The maester catches you in his study. Your excuses fall flat, and you're brought before Lady Arryn to answer for your suspicious behavior."
+      },
+      "partial_pass": {
+        "message": "You find the document but only have time to read it quickly, not copy it fully, before you must leave to avoid detection. You gain partial knowledge of its contents."
+      }
+    }
+  ]
