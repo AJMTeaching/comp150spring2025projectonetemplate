@@ -1,44 +1,44 @@
-[
+ [
   {
-    "primary_attribute": "Cunning",
-    "secondary_attribute": "Charisma",
-    "prompt_text": "A feast is being held in the Red Keep. You overhear whispers of a plot against the crown. How do you handle this sensitive information?",
+    "primary_attribute": "Endurance",
+    "secondary_attribute": "Strength",
+    "prompt_text": "A ferocious blizzard has hit Castle Black. The Night's Watch must patrol the top of the Wall despite the dangerous conditions to watch for wildling activity.",
     "pass": {
-      "message": "Through subtle conversation and careful maneuvering, you identify the conspirators and discreetly inform the appropriate authorities without revealing your source."
+      "message": "You complete your patrol despite the brutal cold, spotting a small wildling scouting party and alerting the Watch in time to prepare."
     },
     "fail": {
-      "message": "Your clumsy inquiries alert the conspirators. They spread false rumors about you, and you find yourself unwelcome at court."
+      "message": "The cold overwhelms you, and you're forced to return early, missing the approach of wildling scouts who gather valuable intelligence on Castle Black's defenses."
     },
     "partial_pass": {
-      "message": "You learn some details of the plot but not enough to identify the conspirators. The information you provide helps increase security, but the threat remains."
+      "message": "You endure most of your patrol but must cut it short. You spot signs of wildling activity but cannot determine their numbers or exact location."
     }
   },
   {
-    "primary_attribute": "Stealth",
-    "secondary_attribute": "Intelligence",
-    "prompt_text": "Important documents are kept in the Tower of the Hand. You need to view them without permission to uncover the truth about a matter of grave importance.",
-    "pass": {
-      "message": "You successfully slip past the guards, locate the documents, memorize their contents, and leave without detection, gaining crucial information."
-    },
-    "fail": {
-      "message": "You're caught by the guards and thrown into the Black Cells, accused of espionage against the crown."
-    },
-    "partial_pass": {
-      "message": "You reach the documents but only have time to glimpse them before nearly being discovered. You escape, but with incomplete information."
-    }
-  },
-  {
-    "primary_attribute": "Charisma",
+    "primary_attribute": "Intelligence",
     "secondary_attribute": "Cunning",
-    "prompt_text": "You need to gain access to a closed Small Council meeting. The guards at the door are strictly following orders about who may enter.",
+    "prompt_text": "The Lord Commander has received a cryptic message from Eastwatch-by-the-Sea. It seems to be in code, and understanding it quickly could be vital.",
     "pass": {
-      "message": "With a combination of confidence, persuasive half-truths, and knowledge of courtly protocols, you convince the guards you have legitimate business inside."
+      "message": "You decipher the code, revealing that a fleet of wildling ships has been spotted heading for Eastwatch. The Watch has time to send reinforcements."
     },
     "fail": {
-      "message": "The guards see through your deception and threaten to report you to the City Watch for attempting to interfere with royal business."
+      "message": "The message remains a mystery to you. Days later, news arrives that Eastwatch was attacked, and the Watch was unprepared."
     },
     "partial_pass": {
-      "message": "You cannot get inside, but you convince one of the guards to deliver a message to someone within, partially achieving your goal."
+      "message": "You understand parts of the message, enough to know there's danger at Eastwatch, but not the nature or timing of the threat."
+    }
+  },
+  {
+    "primary_attribute": "Strength", 
+    "secondary_attribute": "Endurance",
+    "prompt_text": "The winch elevator to the top of the Wall has broken. Urgent supplies need to be carried up the steps to the sentries above before they freeze.",
+    "pass": {
+      "message": "You carry the heavy supplies all the way up the hundreds of ice-carved steps, ensuring the sentries can maintain their vital watch."
+    },
+    "fail": {
+      "message": "The burden proves too much. You cannot make it more than halfway up. Some sentries are forced to abandon their posts due to lack of supplies."
+    },
+    "partial_pass": {
+      "message": "You manage to carry the most essential supplies to the top, though you have to leave some behind. The sentries can continue their watch but with limited resources."
     }
   }
 ]
