@@ -189,6 +189,7 @@ def play_game():
     for _ in range(3):
         location = choose_location(locations)
         print(f"Exploring {location}...")
+
         if location == "The Clawed Goblet":
             enemy = Enemy("Claw Bandit", 7, random.randint(2, 5))
         elif location == "Felis Infernum":
@@ -201,18 +202,6 @@ def play_game():
             enemy = Enemy("Halo Pouncer", 9, random.randint(3, 6))
 
         victory = combat(player, enemy)
-        elif location == "Felis Infernum":
-        enemy = Enemy("Flame Paw", 8, random.randint(3, 6))
-        elif location == "The Witherwild Thicket":
-        enemy = Enemy("Ghost Whisker", 6, random.randint(2, 5))
-        elif location == "The Purrgola":
-        enemy = Enemy("Sunning Saboteur", 7, random.randint(2, 4))
-        elif location == "Felis Elysium":
-        enemy = Enemy("Halo Pouncer", 9, random.randint(3, 6))
-        if victory:
-            player.max_health += 1
-            player.health = player.max_health
-            print(f"{player.name} has grown stronger! Max health is now {player.max_health}.")
         if victory:
             player.max_health += 1
             player.health = player.max_health
