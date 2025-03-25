@@ -4,7 +4,7 @@ import random
 import os
 from typing import List, Optional, Dict
 from enum import Enum
-from .models import EventStatus, Statistic, Character, Event
+from .model import EventStatus, Statistic, Character, Event
 from .travel_system import TravelSystem, TravelEvent
 
 class TravelEvent(Event):
