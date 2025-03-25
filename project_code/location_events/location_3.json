@@ -1,32 +1,20 @@
 [{
-    "primary_attribute": "Intelligence",
-    "secondary_attribute": "Strength",
-    "prompt_text": "A mysterious door blocks your path, with a riddle inscribed. What will you do?",
-    "pass": {
-      "message": "You solved the riddle and pushed the door open. You may proceed."
-    },
-    "fail": {
-      "message": "You failed to solve the riddle and push the door open. You must find another way."
-    },
-    "partial_pass": {
-      "message": "You managed to solve the riddle or push the door, but not both. You made some progress, but the door remains closed."
-    }
-  },
-    {
-      "primary_attribute": "Intelligence",
-      "secondary_attribute": "Strength",
-      "prompt_text": "A mysterious door blocks your path, with a riddle inscribed. What will you do?",
-      "pass": {
-        "message": "You solved the riddle and pushed the door open. You may proceed."
-      },
-      "fail": {
-        "message": "You failed to solve the riddle and push the door open. You must find another way."
-      },
-      "partial_pass": {
-        "message": "You managed to solve the riddle or push the door, but not both. You made some progress, but the door remains closed."
-      }
-    }
-  
+  "primary_attribute": "Agility",
+  "secondary_attribute": "Intelligence",
+  "prompt_text": "You attempt to stealthily infiltrate the enemy camp to steal their flag. What stat do you rely on?",
+  "pass": {"message": "You slip in unnoticed, grab the flag, and make it back safely!"},
+  "partial_pass": {"message": "You grab the flag but trigger an alarm! Be careful!"},
+  "fail": {"message": "You’re caught! One of your party members is captured!"}
+},
+{
+  "primary_attribute": "Strength",
+  "secondary_attribute": "Stamina",
+  "prompt_text": "A boulder blocks your path! How do you get past?",
+  "pass": {"message": "You lift the boulder like a champ! Clear path ahead."},
+  "partial_pass": {"message": "You shove it aside, but you’re exhausted. Lose 10 stamina."},
+  "fail": {"message": "You can't move it, and your delay costs a team member!"}
+}
+    
   
   
   ]

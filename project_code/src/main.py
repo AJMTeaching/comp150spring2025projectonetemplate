@@ -3,6 +3,7 @@ import sys
 import random
 from typing import List, Optional, Tuple
 from enum import Enum
+import os
 
 
 class EventStatus(Enum):
@@ -56,13 +57,13 @@ total_characters = [
 ]
 
 class Event:
-    def __init__(self, data: dict):
-        self.primary_attribute = data['primary_attribute']
-        self.secondary_attribute = data['secondary_attribute']
-        self.prompt_text = data['prompt_text']
-        self.pass_message = data['pass']['message']
-        self.fail_message = data['fail']['message']
-        self.partial_pass_message = data['partial_pass']['message']
+    def __init__(self, primary_attribute, secondary_attribute, prompt_text, pass_message, fail_message, partial_pass_message):
+        self.primary_attribute = primary_attribute,
+        self.secondary_attribute = secondary_attribute,
+        self.prompt_text = prompt_text,
+        self.pass_message = pass_message,
+        self.fail_message = fail_message,
+        self.partial_pass_message = partial_pass_message,
         self.status = EventStatus.UNKNOWN
 
     def execute(self, party: List[Character], parser, game):
@@ -83,11 +84,11 @@ class Event:
             print(self.fail_message)
 
         # Winning condition
-        if "win the game" in self.pass_message.lower():
+        if "win the game" in self.pass_message:
             print("🏆 You captured the flag and WON the game!")
             game.continue_playing = False
 
-        if "eliminate" in self.pass_message.lower():
+        if "eliminate" in self.pass_message:
             if game.opposing_team:
                 eliminated_enemy = random.choice(game.opposing_team)
                 game.opposing_team.remove(eliminated_enemy)
@@ -112,6 +113,98 @@ class Location:
     
     def is_completed(self, completed_events: int) -> bool:
         return completed_events >= self.max_events
+
+def create_recon_events():
+    return [
+        Event(primary_attribute="Intelligence",
+            secondary_attribute="Agility",
+            prompt_text="You need to send a party member to do recon on the other team, who will you send?",
+            pass_message="Your party member was successful in collecting info and returned safely, here is what they learned: "
+            "Jonathan Davis; Strength: 50 Intelligence: 50 Stamina: 10 Agility: 10 /"
+            "/ Fred Durst; Strength: 50 Intelligence: 10 Stamina: 30 Agility: 30 /"
+            "/ Solana SZA; Strength: 30 Intelligence: 40 Stamina: 20 Agility: 30 /"
+            "/ Soobin Choi; Strength: 20 Intelligence: 20 Stamina: 45 Agility: 35 /"
+            "/ Chappell Roan; Strength: 30 Intelligence: 30 Stamina: 30 Agility: 30 /"
+            "/ Sabrina Carpenter; Strength: 40 Intelligence: 20 Stamina: 30 Agility: 30 /"
+            "/ Beyoncé; Strength: 30 Intelligence: 30 Stamina: 30 Agility_: 30 /"
+            "/ Ariana Grande; Strength: 50 Intelligence: 30 Stamina: 20 Agility: 30 /"
+            "/ Theo James; Strength: 30 Intelligence: 40 Stamina: 30 Agility: 30 /"
+            "/ Anne Hathaway; Strength: 20 Intelligence: 20 Stamina: 30 Agility: 50",
+            fail_message="Your party member failed to collect information and was captured by the other team!",
+            partial_pass_message="Your party member returned safely but was unable to learn anything."
+                ),
+        Event(
+            primary_attribute="Intelligence",
+            secondary_attribute="Agility",
+            prompt_text="You decipher enemy signals to predict their moves. What stat do you rely on?",
+            pass_message="You outsmart the enemy, avoiding their trap entirely!",
+            fail_message="You walk right into their ambush. One team member is taken!",
+            partial_pass_message="You evade the trap but they know you're nearby!"
+        ),
+        Event(
+            primary_attribute="Strength",
+            secondary_attribute="Intelligence",
+            prompt_text="You encounter a guard while reconning. Do you engage?",
+            pass_message="You successfully bypass the guard.",
+            fail_message="The guard catches you and you are thrown out.",
+            partial_pass_message="You manage to sneak past, but the guard notices you."
+        )
+    ]
+
+def create_mid_events():
+        return [
+        Event(
+            primary_attribute="Agility",
+            secondary_attribute="Strength",
+            prompt_text="You sneak through a minefield guarding the enemy base. What stat do you rely on?",
+            pass_message="You make it through the minefield without a scratch!",
+            fail_message="BOOM! You trigger a mine and lose a teammate!",
+            partial_pass_message="You get through but take a minor hit. Lose 10 stamina."
+        ),
+        Event(
+            primary_attribute="Strength",
+            secondary_attribute="Agility",
+            prompt_text="You attempt to ambush a member of the enemy team. Which stat do you rely on?",
+            pass_message="You overpower your opponent and eliminate them from the game!",
+            fail_message="They turn the tables and capture one of your team members!",
+            partial_pass_message="You surprise them, but they escape injured!"
+        ),
+        Event(
+            primary_attribute="Stealth",
+            secondary_attribute="Agility",
+            prompt_text="You attempt to hide in the shadows. Do you succeed?",
+            pass_message="You blend perfectly into the shadows.",
+            fail_message="You fail and are noticed.",
+            partial_pass_message="You hide, but not completely, and are half-noticed."
+            )
+        ]
+
+def create_final_events():
+    return [
+        Event(
+            primary_attribute="Agility",
+            secondary_attribute="Intelligence",
+            prompt_text="You attempt to stealthily infiltrate the enemy camp to steal their flag. What stat do you rely on?",
+            pass_message="You slip in unnoticed, grab the flag, and make it back safely!",
+            fail_message="You're caught! One of your party members is captured!",
+            partial_pass_message="You grab the flag but trigger an alarm! Be careful!"
+        ),
+        Event(
+            primary_attribute="Strength",
+            secondary_attribute="Stamina",
+            prompt_text="A boulder blocks your path! How do you get past?",
+            pass_message="You lift the boulder like a champ! Clear path ahead.",
+            fail_message="You can't move it, and your delay costs a team member!",
+            partial_pass_message="You shove it aside, but you’re exhausted. Lose 10 stamina."
+        ),
+        Event( 
+            primary_attribute="Stamina",
+            secondary_attribute="Agility",
+            prompt_text="With the flag in hand, you sprint back toward your base. How do you push through?",
+            pass_message="You cross the finish line! Your team wins the game!",
+            partial_pass_message="You’re close but get surrounded. Time to fight!",
+            fail_message="You’re tackled, lose the flag, and one teammate is captured!")
+    ]
 
 class Game:
     def __init__(self, parser, characters: List[Character], locations: List[Location], chosen_party, opposing_team):
@@ -219,17 +312,6 @@ class Game:
             unlucky.stamina.modify(-damage_amount)
             print(f"{unlucky.name} took {damage_amount} damage!")
 
-            
-
-
-
-
-
-
-
-
-
-
     def add_character_to_party(self):
         chosen_character = self.parser.make_your_party(self.total_characters)
         self.party.append(chosen_character)  # Add the selected character to the party
@@ -276,9 +358,6 @@ class Game:
                 self.deactivate_invisibility()
 
         print("Game Over.")
-
-
-
 
     def move_to_new_location(self):
         print("\nYou have completed the required number of events. Moving to a new location...\n")
@@ -448,22 +527,20 @@ class UserInputParser:
         return stats[choice]
 
 
-def load_events_from_json(file_path: str) -> List[Event]:
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-    return [Event(event_data) for event_data in data]
-
 
 def start_game():
     parser = UserInputParser(max_party_size=5)
     chosen_party, opposing_team = parser.make_your_party(total_characters)
+    recon_events = create_recon_events()
+    mid_events = create_mid_events()
+    final_events = create_final_events()
 
-    events_data = [
-        {"primary_attribute": "Agility", "secondary_attribute": "Intelligence", "prompt_text": "Stealth mission!", "pass": {"message": "Success!"}, "partial_pass": {"message": "Partial success!"}, "fail": {"message": "Failure!"}}
+    # Create locations with their respective events
+    locations = [
+        Location(recon_events), 
+        Location(mid_events), 
+        Location(final_events)
     ]
-
-    events = [Event(event) for event in events_data]
-    locations = [Location(events)]
     game = Game(parser, total_characters, locations, chosen_party, opposing_team)
     game.start()
 
@@ -474,68 +551,4 @@ def start_game():
 
 
 if __name__ == "__main__":
-    start_game()
-
-
-    # Hardcoded event data instead of using JSON
-event_data_list = [
-    {
-        "primary_attribute": "Agility",
-        "secondary_attribute": "Intelligence",
-        "prompt_text": "You attempt to stealthily infiltrate the enemy camp to steal their flag. What stat do you rely on?",
-        "pass": {"message": "You slip in unnoticed, grab the flag, and make it back safely!"},
-        "partial_pass": {"message": "You grab the flag but trigger an alarm! Be careful!"},
-        "fail": {"message": "You’re caught! One of your party members is captured!"}
-    },
-    {
-        "primary_attribute": "Strength",
-        "secondary_attribute": "Agility",
-        "prompt_text": "You attempt to ambush a member of the enemy team. Which stat do you rely on?",
-        "pass": {"message": "You overpower your opponent and eliminate them from the game!"},
-        "partial_pass": {"message": "You surprise them, but they escape injured!"},
-        "fail": {"message": "They turn the tables and capture one of your team members!"}
-    },
-    {
-        "primary_attribute": "Stamina",
-        "secondary_attribute": "Agility",
-        "prompt_text": "With the flag in hand, you sprint back toward your base. How do you push through?",
-        "pass": {"message": "You cross the finish line! Your team wins the game!"},
-        "partial_pass": {"message": "You’re close but get surrounded. Time to fight!"},
-        "fail": {"message": "You’re tackled, lose the flag, and one teammate is captured!"}
-    },
-    {
-        "primary_attribute": "Intelligence",
-        "secondary_attribute": "Agility",
-        "prompt_text": "You decipher enemy signals to predict their moves. What stat do you rely on?",
-        "pass": {"message": "You outsmart the enemy, avoiding their trap entirely!"},
-        "partial_pass": {"message": "You evade the trap but they know you’re nearby!"},
-        "fail": {"message": "You walk right into their ambush. One team member is taken!"}
-    },
-    {
-        "primary_attribute": "Agility",
-        "secondary_attribute": "Strength",
-        "prompt_text": "You sneak through a minefield guarding the enemy base. What stat do you rely on?",
-        "pass": {"message": "You make it through the minefield without a scratch!"},
-        "partial_pass": {"message": "You get through but take a minor hit. Lose 10 stamina."},
-        "fail": {"message": "BOOM! You trigger a mine and lose a teammate!"}
-    },
-    {
-        "primary_attribute": "Strength",
-        "secondary_attribute": "Stamina",
-        "prompt_text": "A boulder blocks your path! How do you get past?",
-        "pass": {"message": "You lift the boulder like a champ! Clear path ahead."},
-        "partial_pass": {"message": "You shove it aside, but you’re exhausted. Lose 10 stamina."},
-        "fail": {"message": "You can't move it, and your delay costs a team member!"}
-    }
-]
-    
-
-# Convert data to Event objects
-events = [Event(data) for data in event_data_list]
-
-
-
-
-
-if __name__ == '__main__':
     start_game()
