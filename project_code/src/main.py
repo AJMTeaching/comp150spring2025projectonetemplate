@@ -3,6 +3,7 @@ import random
 from typing import List, Dict, Optional
 from enum import Enum
 from abc import ABC, abstractmethod
+import sys
 
 # --- ENUMS ---
 class EventStatus(Enum):
@@ -305,5 +306,147 @@ def play_game() -> None:
         else:
             print("Game Over! You were defeated by the Barking Kitten War General. Rest in Peace, soldier.")
 
-if __name__ == "__main__":
-    play_game()
+# --- UNIT TESTS ---
+import unittest
+from unittest.mock import patch
+
+class TestStatistic(unittest.TestCase):
+    def test_modify_increase_within_bounds(self):
+        stat = Statistic("Test", value=50, min_value=0, max_value=100)
+        new_val = stat.modify(10)
+        self.assertEqual(new_val, 60)
+
+    def test_modify_lower_bound(self):
+        stat = Statistic("Test", value=5, min_value=0, max_value=100)
+        new_val = stat.modify(-10)
+        self.assertEqual(new_val, 0)
+
+    def test_modify_upper_bound(self):
+        stat = Statistic("Test", value=95, min_value=0, max_value=100)
+        new_val = stat.modify(10)
+        self.assertEqual(new_val, 100)
+
+class TestGameEntity(unittest.TestCase):
+    def test_take_damage_and_is_alive(self):
+        enemy = Enemy("Dummy", 10, damage_range=(2, 5))
+        new_health = enemy.take_damage(3)
+        self.assertEqual(new_health, 7)
+        self.assertTrue(enemy.is_alive())
+        new_health = enemy.take_damage(10)
+        self.assertEqual(new_health, 0)
+        self.assertFalse(enemy.is_alive())
+
+class TestAbility(unittest.TestCase):
+    @patch('random.random', return_value=0.0)  # always hit
+    @patch('random.randint', return_value=4)   # fixed damage from randint
+    def test_use_ability_hit(self, mock_randint, mock_random):
+        ability = Ability("TestAbility", damage_range=(3, 7), chance_to_hit=0.9)
+        char = Character("Tester", health=10)
+        char.strength = Statistic("Strength", value=6)  # bonus = 6//3 = 2
+        enemy = Enemy("Dummy", 10)
+        result = ability.use(char, enemy)
+        self.assertTrue(result)
+        self.assertEqual(enemy.health, 4)  # 10 - (4+2) = 4
+
+    @patch('random.random', return_value=0.95)  # force a miss (chance_to_hit=0.9)
+    def test_use_ability_miss(self, mock_random):
+        ability = Ability("TestAbility", damage_range=(3, 7), chance_to_hit=0.9)
+        char = Character("Tester", health=10)
+        enemy = Enemy("Dummy", 10)
+        result = ability.use(char, enemy)
+        self.assertFalse(result)
+        self.assertEqual(enemy.health, 10)
+
+class TestUserInputHandler(unittest.TestCase):
+    @patch('builtins.input', side_effect=['invalid', 'Option1'])
+    def test_get_valid_input(self, mock_input):
+        options = ['Option1', 'Option2']
+        result = UserInputHandler.get_valid_input("Prompt: ", options)
+        self.assertEqual(result, 'Option1')
+
+    @patch('builtins.input', side_effect=['abc', '5', '3'])
+    def test_get_valid_number(self, mock_input):
+        result = UserInputHandler.get_valid_number("Prompt: ", 1, 4)
+        self.assertEqual(result, 3)
+
+class TestHealthPotion(unittest.TestCase):
+    @patch('random.randint', return_value=7)
+    def test_use_health_potion_heals(self, mock_randint):
+        char = Character("Tester", health=5)
+        char.max_health = 10
+        potion = HealthPotion(healing_range=(5, 10))
+        result = potion.use(char)
+        self.assertTrue(result)
+        self.assertEqual(char.health, 10)
+
+    def test_use_health_potion_full_health(self):
+        char = Character("Tester", health=10)
+        char.max_health = 10
+        potion = HealthPotion(healing_range=(5, 10))
+        result = potion.use(char)
+        self.assertFalse(result)
+        self.assertEqual(char.health, 10)
+
+class TestCharacterHeal(unittest.TestCase):
+    @patch('random.random', return_value=0.5)  # below 2/3 threshold so heal succeeds
+    @patch('random.randint', return_value=6)
+    def test_heal_success(self, mock_randint, mock_random):
+        char = Character("Tester", health=4)
+        char.max_health = 10
+        result = char.heal()
+        self.assertTrue(result)
+        self.assertEqual(char.health, 10)
+
+    @patch('random.random', return_value=0.8)  # above 2/3 threshold so heal fails
+    def test_heal_failure(self, mock_random):
+        char = Character("Tester", health=4)
+        char.max_health = 10
+        result = char.heal()
+        self.assertFalse(result)
+        self.assertEqual(char.health, 4)
+
+class TestUseItemFromInventory(unittest.TestCase):
+    @patch.object(Item, 'use', return_value=True)
+    def test_use_item_success(self, mock_use):
+        char = Character("Tester", health=10)
+        dummy_item = Item("Dummy", "A dummy item")
+        char.inventory.append(dummy_item)
+        result = char.use_item_from_inventory(0)
+        self.assertTrue(result)
+        self.assertEqual(len(char.inventory), 0)
+
+    def test_use_item_invalid_index(self):
+        char = Character("Tester", health=10)
+        result = char.use_item_from_inventory(0)
+        self.assertFalse(result)
+
+class TestEnemyAttack(unittest.TestCase):
+    @patch('random.randint', return_value=3)
+    def test_enemy_attack(self, mock_randint):
+        char = Character("Tester", health=10)
+        enemy = Enemy("Enemy", 10, damage_range=(2, 5))
+        damage = enemy.attack(char)
+        self.assertEqual(damage, 3)
+        self.assertEqual(char.health, 7)
+
+class TestCombat(unittest.TestCase):
+    @patch('random.random', return_value=0.0)  # ensure ability always hits
+    @patch('random.randint', return_value=10)  # ability deals 10 damage
+    @patch('builtins.input', side_effect=['1', '1'])
+    def test_combat_victory(self, mock_input, mock_randint, mock_random):
+        char = Character("Tester", health=10)
+        ability = Ability("Fatal Strike", damage_range=(10, 10), chance_to_hit=1.0)
+        char.add_ability(ability)
+        enemy = Enemy("Weak Enemy", 10, damage_range=(1, 1))
+        result = combat(char, enemy)
+        self.assertTrue(result)
+        self.assertFalse(enemy.is_alive())
+
+# --- MAIN ENTRY POINT ---
+if __name__ == '__main__':
+    # If "test" is passed as a command-line argument, run the unit tests.
+    if len(sys.argv) > 1 and sys.argv[1] == "test":
+        sys.argv.pop(1)  # Remove the "test" argument so unittest doesn't get confused.
+        unittest.main()
+    else:
+        play_game()
