@@ -247,9 +247,9 @@ def choose_character() -> Character:
         "3": ExplodingKitten
     }
     descriptions = {
-        "1": "Wizard Cat - Higher intelligence, magical abilities",
-        "2": "Feral Cat - Higher strength, physical prowess",
-        "3": "Exploding Kitten - Balanced stats, explosive abilities"
+        "1": "Wizard Cat - A house cat by day, enchanting it's enemies by night!",
+        "2": "Feral Cat - Defeats enemies not so elegantly...",
+        "3": "Exploding Kitten - Exploding hearts every time they walk into the room!"
     }
 
     for key, desc in descriptions.items():
