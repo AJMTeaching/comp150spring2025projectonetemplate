@@ -75,16 +75,6 @@ class TravelSystem:
         # Return True if the travel was successful (PASS or PARTIAL_PASS)
         return travel_event.status != EventStatus.FAIL
 
-def integrate_travel_system():
-    """Generate code to integrate the travel system with the main game."""
-    code = """
-import json
-import sys
-import random
-import os
-from typing import List, Optional, Dict
-from enum import Enum
-
 
 class EventStatus(Enum):
     UNKNOWN = "unknown"
