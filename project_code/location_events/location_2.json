@@ -1,0 +1,20 @@
+[{
+    "primary_attribute": "Agility",
+    "secondary_attribute": "Strength",
+    "prompt_text": "You sneak through a minefield guarding the enemy base. What stat do you rely on?",
+    "pass": {"message": "You make it through the minefield without a scratch!"},
+    "partial_pass": {"message": "You get through but take a minor hit. Lose 10 stamina."},
+    "fail": {"message": "BOOM! You trigger a mine and lose a teammate!"}
+},
+{
+  "primary_attribute": "Strength",
+  "secondary_attribute": "Agility",
+  "prompt_text": "You attempt to ambush a member of the enemy team. Which stat do you rely on?",
+  "pass": {"message": "You overpower your opponent and eliminate them from the game!"},
+  "partial_pass": {"message": "You surprise them, but they escape injured!"},
+  "fail": {"message": "They turn the tables and capture one of your team members!"}
+}
+  
+  
+  
+  ]
