@@ -266,12 +266,32 @@ def choose_character() -> Character:
     return choices[user_choice]()
 
 def choose_location(locations: List[str], visited: List[str]) -> str:
-    print("Choose a location to explore:")
-    for idx, loc in enumerate(locations, 1):
-        status = " (visited)" if loc in visited else ""
-        print(f"{idx}. {loc}{status}")
-    choice = UserInputHandler.get_valid_number("Enter location number: ", 1, len(locations)) - 1
-    return locations[choice]
+    while True:
+        print("Choose a location to explore:")
+        available_locations = []
+        
+        for idx, loc in enumerate(locations, 1):
+            status = " (visited)" if loc in visited else ""
+            print(f"{idx}. {loc}{status}")
+            if loc not in visited:
+                available_locations.append((idx, loc))
+        
+        # Check if there are any unvisited locations left
+        if not available_locations:
+            print("\nYou have visited all locations! Time for the final battle.")
+            # Return any location to continue the game flow (it won't be used anyway)
+            return locations[0]
+            
+        choice = UserInputHandler.get_valid_number("Enter location number: ", 1, len(locations)) - 1
+        selected_location = locations[choice]
+        
+        # If location was already visited, prompt to choose again
+        if selected_location in visited:
+            print(f"\nThis location is the same way you last left it!")
+            print("Please choose a different location you haven't visited yet.")
+            input("Press Enter to continue...\n")
+        else:
+            return selected_location
 
 def play_game() -> None:
     print("Welcome to Exploding Kittens: The RPG!")
@@ -297,10 +317,11 @@ def play_game() -> None:
         location = choose_location(locations, visited_locations)
         visited_locations.append(location)
         game_state.locations_visited += 1
-
+        
         print(f"\nExploring {location}...")
         enemy = get_location_enemy(location)
         victory = combat(game_state.player, enemy)
+            
         if victory:
             game_state.player.max_health += 1
             game_state.player.health = game_state.player.max_health
