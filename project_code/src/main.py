@@ -238,6 +238,13 @@ def get_location_enemy(location: str) -> Enemy:
     else:
         return Enemy("Mysterious Cat", 7, damage_range=(2, 5))
 
+# --- INTRODUCTION SCENE ---
+def introduction_scene() -> None:
+    print("\n*ALARM SOUNDS* BEEP! BEEP! BEEP!")
+    print("As the alarm is triggered, you awake to find the Barking Kitten War General in your barrack.")
+    print("Barking Kitten War General: 'Get up, rookie! There's an intruder in the colony and you need to get out there!'")
+    input("Press Enter to continue...")
+
 # --- GAME LOGIC ---
 def choose_character() -> Character:
     print("Choose your kitten:")
@@ -268,11 +275,18 @@ def choose_location(locations: List[str], visited: List[str]) -> str:
 
 def play_game() -> None:
     print("Welcome to Exploding Kittens: The RPG!")
-    print("Your mission is clear: Find the Intruder and eliminate the threat!\n")
+    
+    introduction_scene()
+    
+    print("\nYour mission is clear: Find the Intruder and eliminate the threat!\n")
 
     game_state = GameState()
     game_state.player = choose_character()
-    print(f"You have chosen: {game_state.player.name}\n")
+    print(f"\nYou have chosen: {game_state.player.name}")
+    
+    print("\nBarking Kitten War General: 'Now that you're ready, go save the colony!'")
+    input("Press Enter to continue...\n")
+    
     game_state.player.inventory.append(HealthPotion())
     print(f"You received a Health Potion to start your journey!")
 
