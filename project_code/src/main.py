@@ -4,6 +4,7 @@ from typing import List, Dict, Optional
 from enum import Enum
 from abc import ABC, abstractmethod
 
+
 # --- ENUMS ---
 class EventStatus(Enum):
     UNKNOWN = "unknown"
