@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Exploding Kittens Web App</title>
+  <!-- Link to your CSS file -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Exploding Kittens: The Web RPG!</h1>
+    
+    <!-- Button for the click counter -->
+    <button id="myButton">Click Me</button>
+    <p>Button clicked <span id="clickCount">0</span> times.</p>
+    
+    <!-- Input area and button for text flip -->
+    <textarea id="inputText" placeholder="Enter text"></textarea>
+    <button id="flipButton">Flip Case</button>
+    <p>Flipped Text: <span id="result"></span></p>
+  </div>
+  
+  <!-- Load axios from a CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- Link to your JS file -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
