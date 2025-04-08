@@ -3,7 +3,7 @@ from src.characters import WizardCat, FeralCat, ExplodingKitten
 from src.entities import Enemy
 import random
 
-# --- UTILS (moved here so it's defined before use) ---
+# --- UTILS (placed first so it's defined before use) ---
 def get_random_enemy() -> Enemy:
     enemies = [
         Enemy("Claw Bandit", 7, (2, 5)),
@@ -15,7 +15,6 @@ def get_random_enemy() -> Enemy:
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Needed for session handling
-
 
 # --- ROUTES ---
 
@@ -89,10 +88,15 @@ def attack():
     # Rebuild enemy from session
     enemy = Enemy(session["enemy_name"], int(session["enemy_health"]))
 
-    # Use selected ability
+    # Use selected ability and generate log message
+    message = "Something went wrong."
     for ability in player.abilities:
         if ability.name == selected_ability:
-            ability.use(player, enemy)
+            success = ability.use(player, enemy)
+            if success:
+                message = f"{player.name} used {ability.name} and dealt damage!"
+            else:
+                message = f"{player.name} used {ability.name} but missed!"
             break
 
     # Update session
@@ -103,8 +107,10 @@ def attack():
         "player_health": player.health,
         "player_max_health": player.max_health,
         "enemy_health": enemy.health,
-        "enemy_max_health": enemy.max_health
+        "enemy_max_health": enemy.max_health,
+        "message": message
     }
+
 
 # --- EXTRA ROUTES FOR SCRIPT.JS DEMO ---
 

@@ -1,58 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Game Start</title>
-
-    <!-- External Stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-    <!-- Axios Library -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-    <!-- Custom Script -->
     <script src="{{ url_for('static', filename='Script.js') }}" defer></script>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
-
-        h1, h2 {
-            margin-bottom: 10px;
-        }
-
-        .section {
-            margin-bottom: 30px;
-        }
-
-        button {
-            margin: 5px 0;
-        }
-    </style>
 </head>
 <body>
 
     <div class="section">
         <h1>{{ name }} has entered the battlefield!</h1>
-        <p><strong>Health:</strong> {{ health }} / {{ max_health }}</p>
+        <p><strong>Health:</strong> <span id="player-health">{{ health }} / {{ max_health }}</span></p>
     </div>
 
     <div class="section">
         <h3>Attack with an ability:</h3>
-        <form method="POST" action="{{ url_for('attack') }}">
+        <div id="ability-buttons">
             {% for ability in abilities %}
-                <button type="submit" name="ability" value="{{ ability }}">{{ ability }}</button><br>
+                <button onclick="useAbility('{{ ability }}')">{{ ability }}</button><br>
             {% endfor %}
-        </form>
+        </div>
     </div>
 
     <hr>
 
     <div class="section">
         <h2>Enemy: {{ enemy_name }}</h2>
-        <p><strong>Health:</strong> {{ enemy_health }} / {{ enemy_max_health }}</p>
+        <p><strong>Health:</strong> <span id="enemy-health">{{ enemy_health }} / {{ enemy_max_health }}</span></p>
+    </div>
+
+    <div class="section" id="combat-log">
+        <h3>Combat Log:</h3>
+        <div id="log-messages" style="white-space: pre-wrap; background: #f1f1f1; padding: 10px; border-radius: 5px;"></div>
     </div>
 
 </body>
