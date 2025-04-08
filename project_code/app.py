@@ -71,7 +71,8 @@ def game_start():
 
 @app.route("/attack", methods=["POST"])
 def attack():
-    selected_ability = request.form.get("ability")
+    data = request.get_json()
+    selected_ability = data.get("ability")
 
     # Rebuild character from session
     name = session["character_name"]
@@ -94,12 +95,16 @@ def attack():
             ability.use(player, enemy)
             break
 
-    # Update session with new health values
+    # Update session
     session["health"] = player.health
     session["enemy_health"] = enemy.health
 
-    return redirect(url_for("game_start"))
-
+    return {
+        "player_health": player.health,
+        "player_max_health": player.max_health,
+        "enemy_health": enemy.health,
+        "enemy_max_health": enemy.max_health
+    }
 
 # --- EXTRA ROUTES FOR SCRIPT.JS DEMO ---
 
