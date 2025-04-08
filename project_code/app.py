@@ -3,6 +3,16 @@ from src.characters import WizardCat, FeralCat, ExplodingKitten
 from src.entities import Enemy
 import random
 
+# --- UTILS (moved here so it's defined before use) ---
+def get_random_enemy() -> Enemy:
+    enemies = [
+        Enemy("Claw Bandit", 7, (2, 5)),
+        Enemy("Flame Paw", 8, (3, 6)),
+        Enemy("Ghost Whisker", 6, (2, 5)),
+        Enemy("Halo Pouncer", 9, (3, 6))
+    ]
+    return random.choice(enemies)
+
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Needed for session handling
 
@@ -91,16 +101,22 @@ def attack():
     return redirect(url_for("game_start"))
 
 
-# --- UTILS ---
+# --- EXTRA ROUTES FOR SCRIPT.JS DEMO ---
 
-def get_random_enemy() -> Enemy:
-    enemies = [
-        Enemy("Claw Bandit", 7, (2, 5)),
-        Enemy("Flame Paw", 8, (3, 6)),
-        Enemy("Ghost Whisker", 6, (2, 5)),
-        Enemy("Halo Pouncer", 9, (3, 6))
-    ]
-    return random.choice(enemies)
+@app.route("/increment", methods=["POST"])
+def increment():
+    if "count" not in session:
+        session["count"] = 0
+    session["count"] += 1
+    return {"count": session["count"]}
+
+
+@app.route("/flip_case", methods=["POST"])
+def flip_case():
+    data = request.get_json()
+    text = data.get("text", "")
+    flipped = ''.join([c.upper() if c.islower() else c.lower() for c in text])
+    return {"flipped_text": flipped}
 
 
 # --- LOCAL DEV ---
