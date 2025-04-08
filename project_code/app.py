@@ -72,19 +72,19 @@ def attack():
     else:
         player = ExplodingKitten()
 
-    player.health = session["health"]
-    player.max_health = session["max_health"]
+    player.health = int(session["health"])
+    player.max_health = int(session["max_health"])
 
-    # Rebuild enemy
-    enemy = Enemy(session["enemy_name"], session["enemy_health"])
+    # Rebuild enemy from session
+    enemy = Enemy(session["enemy_name"], int(session["enemy_health"]))
 
-    # Use ability
+    # Use selected ability
     for ability in player.abilities:
         if ability.name == selected_ability:
             ability.use(player, enemy)
             break
 
-    # Update session
+    # Update session with new health values
     session["health"] = player.health
     session["enemy_health"] = enemy.health
 
