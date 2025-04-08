@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Start</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        h1, h2 {
+            margin-bottom: 10px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        button {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="section">
+        <h1>{{ name }} has entered the battlefield!</h1>
+        <p><strong>Health:</strong> {{ health }} / {{ max_health }}</p>
+    </div>
+
+    <div class="section">
+        <h3>Attack with an ability:</h3>
+        <form method="POST" action="{{ url_for('attack') }}">
+            {% for ability in abilities %}
+                <button type="submit" name="ability" value="{{ ability }}">{{ ability }}</button><br>
+            {% endfor %}
+        </form>
+    </div>
+
+    <hr>
+
+    <div class="section">
+        <h2>Enemy: {{ enemy_name }}</h2>
+        <p><strong>Health:</strong> {{ enemy_health }} / {{ enemy_max_health }}</p>
+    </div>
+
+</body>
+</html>

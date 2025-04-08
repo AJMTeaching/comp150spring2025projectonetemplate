@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exploding Kittens RPG</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #fafafa;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to <em>Exploding Kittens: The Web RPG</em></h1>
+    <p>Choose your cat warrior and begin your journey!</p>
+
+    <form action="/choose-character" method="post">
+        <label><input type="radio" name="character" value="wizard" required> 🧙‍♂️ Wizard Cat</label>
+        <label><input type="radio" name="character" value="feral"> 🐾 Feral Cat</label>
+        <label><input type="radio" name="character" value="exploding"> 💥 Exploding Kitten</label>
+        <br>
+        <button type="submit">Start Game</button>
+    </form>
+
+</body>
+</html>
