@@ -88,7 +88,7 @@ def attack():
     # Rebuild enemy from session
     enemy = Enemy(session["enemy_name"], int(session["enemy_health"]))
 
-    # Use selected ability and generate log message
+    # Player attack
     message = "Something went wrong."
     for ability in player.abilities:
         if ability.name == selected_ability:
@@ -99,6 +99,13 @@ def attack():
                 message = f"{player.name} used {ability.name} but missed!"
             break
 
+    # Enemy counterattack
+    if enemy.is_alive():
+        damage = enemy.attack(player)
+        enemy_message = f"{enemy.name} attacks back for {damage} damage!"
+    else:
+        enemy_message = f"{enemy.name} has been defeated!"
+
     # Update session
     session["health"] = player.health
     session["enemy_health"] = enemy.health
@@ -108,9 +115,9 @@ def attack():
         "player_max_health": player.max_health,
         "enemy_health": enemy.health,
         "enemy_max_health": enemy.max_health,
-        "message": message
+        "message": message,
+        "enemy_message": enemy_message
     }
-
 
 # --- EXTRA ROUTES FOR SCRIPT.JS DEMO ---
 
