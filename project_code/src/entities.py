@@ -96,3 +96,17 @@ class Enemy(GameEntity):
         damage = random.randint(*self.damage_range)
         target.take_damage(damage)
         return damage
+
+
+# --- HEALTH POTION ---
+class HealthPotion(Item):
+    def __init__(self, healing_range: tuple = (5, 10)):
+        super().__init__(name="Health Potion", description="Restores health")
+        self.healing_range = healing_range
+
+    def use(self, character: 'Character') -> bool:
+        if character.health < character.max_health:
+            heal_amount = random.randint(*self.healing_range)
+            character.health = min(character.max_health, character.health + heal_amount)
+            return True
+        return False
