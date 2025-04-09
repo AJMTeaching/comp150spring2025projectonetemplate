@@ -44,10 +44,10 @@ function useAbility(abilityName) {
       document.getElementById("enemy-health").textContent =
         `${data.enemy_health} / ${data.enemy_max_health}`;
 
-      // Update combat log
+      // Update combat log with both player + enemy messages
       const logBox = document.getElementById("log-messages");
-      const logMessage = `[You used ${abilityName}] ${data.message}`;
-      logBox.textContent = logMessage + "\n" + logBox.textContent;
+      const logMessage = `${data.message}\n${data.enemy_message}`;
+      logBox.textContent = logMessage + "\n\n" + logBox.textContent;
 
       // Optional: Auto-scroll log to top
       logBox.scrollTop = 0;
