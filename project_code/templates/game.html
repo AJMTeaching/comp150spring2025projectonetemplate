@@ -51,7 +51,9 @@
         <h3>🛠️ Choose an Ability:</h3>
         <div id="ability-buttons">
             {% for ability in abilities %}
-                <button onclick="useAbility('{{ ability }}')" title="{{ ability }}">{{ ability }}</button><br>
+                <button onclick="useAbility('{{ ability.name }}')" title="{{ ability.description }}">
+                    {{ ability.name }} - {{ ability.description }}
+                </button><br>
             {% endfor %}
         </div>
     </div>
