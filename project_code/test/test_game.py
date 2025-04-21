@@ -1,75 +1,98 @@
 import sys
 import os
+import unittest
+import random
 
-# Add the root directory of the project to the Python path
-# so Python can find your main game module in project_code/src/main.py.
+# Add the root directory to the Python path so imports work
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from project_code.src.main import Statistic, Character, Event
-import unittest
+from project_code.src.entities import Statistic, Character, Ability, Enemy, HealthPotion
+
 
 class TestStatistic(unittest.TestCase):
 
     def setUp(self):
-        self.strength = Statistic("Strength", value=10)
+        self.stat = Statistic("Strength", value=10)
 
-    def test_statistic_initialization(self):
-        self.assertEqual(self.strength.name, "Strength")
-        self.assertEqual(self.strength.value, 10)
+    def test_initialization(self):
+        self.assertEqual(self.stat.name, "Strength")
+        self.assertEqual(self.stat.value, 10)
 
-    def test_statistic_modify(self):
-        self.strength.modify(5)
-        self.assertEqual(self.strength.value, 15)
-        self.strength.modify(-10)
-        self.assertEqual(self.strength.value, 5)
+    def test_modify_within_bounds(self):
+        self.stat.modify(5)
+        self.assertEqual(self.stat.value, 15)
 
-    def test_statistic_min_max_bounds(self):
-        # Modify above max_value
-        self.strength.modify(1000)
-        self.assertEqual(self.strength.value, self.strength.max_value)
-        # Modify below min_value
-        self.strength.modify(-1000)
-        self.assertEqual(self.strength.value, self.strength.min_value)
+    def test_modify_above_max(self):
+        self.stat.modify(1000)
+        self.assertEqual(self.stat.value, self.stat.max_value)
+
+    def test_modify_below_min(self):
+        self.stat.modify(-1000)
+        self.assertEqual(self.stat.value, self.stat.min_value)
 
 
 class TestCharacter(unittest.TestCase):
 
     def setUp(self):
-        self.character = Character(name="Hero")
+        self.char = Character("Test Cat", health=20)
 
-    def test_character_initialization(self):
-        self.assertEqual(self.character.name, "Hero")
-        self.assertEqual(self.character.strength.name, "Strength")
-        self.assertEqual(self.character.intelligence.name, "Intelligence")
+    def test_initialization(self):
+        self.assertEqual(self.char.name, "Test Cat")
+        self.assertEqual(self.char.health, 20)
+        self.assertEqual(self.char.strength.value, 5)
+        self.assertEqual(self.char.intelligence.value, 5)
+
+    def test_healing_success(self):
+        self.char.health = 10
+        healed = self.char.heal()
+        self.assertTrue(self.char.health >= 10)
+        self.assertIsInstance(healed, bool)
+
+    def test_add_ability(self):
+        ability = Ability(name="Test Claw", damage_range=(1, 3))
+        self.char.add_ability(ability)
+        self.assertIn(ability, self.char.abilities)
+
+    def test_use_item_from_inventory(self):
+        potion = HealthPotion()
+        self.char.health = 5
+        self.char.inventory.append(potion)
+        used = self.char.use_item_from_inventory(0)
+        self.assertTrue(used)
+        self.assertGreater(self.char.health, 5)
 
 
-class TestEvent(unittest.TestCase):
+class TestAbility(unittest.TestCase):
 
     def setUp(self):
-        # Example event data similar to your location JSON structure
-        self.event_data = {
-            "primary_attribute": "Intelligence",
-            "secondary_attribute": "Strength",
-            "prompt_text": "A mysterious door blocks your path, with a riddle inscribed. What will you do?",
-            "pass": {
-                "message": "You solved the riddle and pushed the door open. You may proceed."
-            },
-            "fail": {
-                "message": "You failed to solve the riddle and push the door open. You must find another way."
-            },
-            "partial_pass": {
-                "message": "You managed to solve the riddle or push the door, but not both."
-            }
-        }
-        self.event = Event(self.event_data)
+        self.user = Character("Wizard")
+        self.enemy = Enemy("Dog", 10)
+        self.ability = Ability("Whisker Blast", damage_range=(3, 5), chance_to_hit=1.0)  # Always hits
 
-    def test_event_initialization(self):
-        self.assertEqual(self.event.primary_attribute, "Intelligence")
-        self.assertEqual(self.event.secondary_attribute, "Strength")
-        self.assertEqual(self.event.prompt_text, self.event_data["prompt_text"])
-        self.assertEqual(self.event.pass_message, self.event_data["pass"]["message"])
-        self.assertEqual(self.event.fail_message, self.event_data["fail"]["message"])
-        self.assertEqual(self.event.partial_pass_message, self.event_data["partial_pass"]["message"])
+    def test_use_hits(self):
+        old_health = self.enemy.health
+        result = self.ability.use(self.user, self.enemy)
+        self.assertTrue(result)
+        self.assertLess(self.enemy.health, old_health)
+
+    def test_use_misses(self):
+        ability = Ability("Miss Move", damage_range=(1, 2), chance_to_hit=0.0)  # Always misses
+        result = ability.use(self.user, self.enemy)
+        self.assertFalse(result)
+        self.assertEqual(self.enemy.health, 10)
+
+
+class TestEnemy(unittest.TestCase):
+
+    def setUp(self):
+        self.enemy = Enemy("Puppy Intruder", 10, damage_range=(2, 4))
+        self.target = Character("Cat Defender", health=20)
+
+    def test_attack_damage_range(self):
+        old_health = self.target.health
+        damage = self.enemy.attack(self.target)
+        self.assertTrue(2 <= damage <= 4)
+        self.assertEqual(self.target.health, old_health - damage)
 
 
 if __name__ == '__main__':
