@@ -5,14 +5,14 @@ class WizardCat(Character):
         super().__init__(name="Wizard Cat", health=12)
         self.intelligence.value = 8
         self.add_ability(Ability(
-            name="Fireball",
+            name="Arcane Blast",
             damage_range=(4, 8),
-            description="A flaming burst of arcane energy. Deals moderate magic damage."
+            description="Unleashes a wave of mystical energy. Strong against dog illusions and fast attackers."
         ))
         self.add_ability(Ability(
-            name="Magic Shield",
-            damage_range=(2, 5),
-            description="A reactive shield of mana. Reflects minor damage while reducing incoming hits."
+            name="Teleport Puff",
+            damage_range=(3, 6),
+            description="Vanish and reappear with a puff of smoke, dealing surprise damage."
         ))
 
 class FeralCat(Character):
@@ -20,26 +20,26 @@ class FeralCat(Character):
         super().__init__(name="Feral Cat", health=15)
         self.strength.value = 8
         self.add_ability(Ability(
-            name="Forsaken Furball",
+            name="Savage Pounce",
             damage_range=(5, 9),
-            description="A wild, scrappy barrage. Deals strong physical damage—chaotic but effective."
+            description="A frenzied leap that slams the enemy. Highly effective in close combat."
         ))
         self.add_ability(Ability(
-            name="Cowardice",
+            name="Alley Swipe",
             damage_range=(3, 6),
-            description="A fake retreat followed by a sneak attack. Less predictable but still fierce."
+            description="Quick claw strikes from the shadows. Balanced damage output."
         ))
 
 class ExplodingKitten(Character):
     def __init__(self):
         super().__init__(name="Exploding Kitten", health=10)
         self.add_ability(Ability(
-            name="Nuclear Reactivity",
+            name="Nuclear Furball",
             damage_range=(4, 10),
-            description="Volatile core surges with energy. High-risk, high-damage attack."
+            description="Unstable attack with unpredictable explosion radius. High risk, high reward."
         ))
         self.add_ability(Ability(
-            name="Controlled Explosion",
+            name="Detonation Dash",
             damage_range=(3, 7),
-            description="A tactical blast. Medium-range damage with less risk of self-destruction."
+            description="Explode while dashing past enemies. Medium damage to all in the path."
         ))
