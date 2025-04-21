@@ -146,11 +146,6 @@ def attack():
         "message": message
     }
 
-@app.route("/victory")
-def victory():
-    name = session.get("character_name", "Unknown Cat")
-    return render_template("victory.html", name=name)
-
 @app.route("/heal", methods=["POST"])
 def heal():
     player = _rebuild_player_from_session()
@@ -179,18 +174,14 @@ def use_item():
         "message": message
     }
 
-def _rebuild_player_from_session():
-    if session["character_name"] == "Wizard Cat":
-        p = WizardCat()
-    elif session["character_name"] == "Feral Cat":
-        p = FeralCat()
-    else:
-        p = ExplodingKitten()
-    p.health = session["health"]
-    p.max_health = session["max_health"]
-    p.strength.value = session["strength"]
-    p.intelligence.value = session["intelligence"]
-    return p
+@app.route("/victory")
+def victory():
+    return render_template("victory.html", name=session.get("character_name", "Unknown Cat"))
+
+@app.route("/reset")
+def reset():
+    session.clear()
+    return redirect(url_for("home"))
 
 # --- Demo Routes ---
 @app.route("/increment", methods=["POST"])
@@ -204,6 +195,19 @@ def flip_case():
     text = data.get("text", "")
     flipped = ''.join(c.upper() if c.islower() else c.lower() for c in text)
     return {"flipped_text": flipped}
+
+def _rebuild_player_from_session():
+    if session["character_name"] == "Wizard Cat":
+        p = WizardCat()
+    elif session["character_name"] == "Feral Cat":
+        p = FeralCat()
+    else:
+        p = ExplodingKitten()
+    p.health = session["health"]
+    p.max_health = session["max_health"]
+    p.strength.value = session["strength"]
+    p.intelligence.value = session["intelligence"]
+    return p
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -3,14 +3,52 @@
 <head>
     <title>Victory!</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 80px;
+        }
+        .victory-box {
+            background-color: #fefae0;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #5e6472;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 25px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <div class="section">
-        <h1>🏆 You Defeated the Barking Kitten War General!</h1>
-        <p>You’ve saved the colony and proven yourself a true legend among cats.</p>
-        <form action="/" method="get">
+
+    <div class="victory-box">
+        <h1>🎉 Victory! 🎉</h1>
+        <p>You defeated the Barking Kitten War General and saved the colony!</p>
+        <p>Your name will echo in the halls of feline legends.</p>
+        <form action="/reset" method="GET">
             <button type="submit">Play Again</button>
         </form>
     </div>
+
 </body>
 </html>
