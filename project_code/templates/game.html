@@ -38,8 +38,8 @@
         <h3>Attack with an ability:</h3>
         <div id="ability-buttons">
             {% for ability in abilities %}
-                <button onclick="useAbility('{{ ability }}')">{{ ability }}</button><br>
-            {% endfor %}
+            <button onclick="useAbility('{{ ability.name }}')" title="{{ ability.description }}">{{ ability.name }}</button><br>
+          {% endfor %}          
         </div>
     </div>
 
