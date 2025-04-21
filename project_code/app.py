@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from src.characters import WizardCat, FeralCat, ExplodingKitten
-from src.entities import Enemy, HealthPotion
+from src.entities import (
+    Enemy, HealthPotion,
+    ClawedGobletDog, FelisInfernumDog, WitherwildThicketDog,
+    PurrgolaDog, FelisElysiumDog, FinalBossDog
+)
 import random, os, json
 
 app = Flask(__name__)
@@ -26,31 +30,17 @@ def load_location_intro(location_name: str) -> str:
         data = json.load(f)
         return data.get("intro", "This place is mysterious and silent...")
 
-# --- Enemys  ---
+# --- Enemy Factory ---
 def get_enemy_for_location(location: str) -> Enemy:
     return random.choice(LOCATION_ENEMIES.get(location, [Enemy("Unknown Puppy", 6, (2, 4))]))
+
 LOCATION_ENEMIES = {
-    "The Clawed Goblet": [
-        Enemy("Claw Bandit", 7, (2, 5)),
-        Enemy("Goblet Growler", 8, (3, 6))
-    ],
-    "Felis Infernum": [
-        Enemy("Flame Paw", 8, (3, 6)),
-        Enemy("Inferno Pup", 9, (4, 7))
-    ],
-    "The Witherwild Thicket": [
-        Enemy("Ghost Whisker", 6, (2, 5)),
-        Enemy("Thicket Howler", 7, (3, 5))
-    ],
-    "The Purrgola": [
-        Enemy("Sunnapper", 6, (2, 4)),
-        Enemy("Purring Menace", 7, (2, 5))
-    ],
-    "Felis Elysium": [
-        Enemy("Halo Pouncer", 9, (3, 6)),
-        Enemy("Blessed Barker", 10, (4, 6))
-    ]
-    }  
+    "The Clawed Goblet": [ClawedGobletDog()],
+    "Felis Infernum": [FelisInfernumDog()],
+    "The Witherwild Thicket": [WitherwildThicketDog()],
+    "The Purrgola": [PurrgolaDog()],
+    "Felis Elysium": [FelisElysiumDog()]
+}
 
 # --- Home & Character Select ---
 @app.route("/")
@@ -90,10 +80,11 @@ def select_location():
     unvisited = [loc for loc in LOCATIONS if loc not in visited]
 
     if not unvisited or len(visited) >= 3:
+        boss = FinalBossDog()
         session.update({
-            "enemy_name": "Barking Kitten War General",
-            "enemy_health": 14,
-            "enemy_max_health": 14
+            "enemy_name": boss.name,
+            "enemy_health": boss.health,
+            "enemy_max_health": boss.max_health
         })
         return redirect(url_for("game"))
 
@@ -152,7 +143,6 @@ def attack():
 
     session["enemy_health"] = enemy.health
 
-    # 🧱 Check for enemy defeat before they get to counterattack
     if not enemy.is_alive():
         session["locations_visited"] += 1
         loot_messages = []
@@ -182,10 +172,9 @@ def attack():
             "message": "🌍 Zone cleared!\n" + "\n".join(loot_messages)
         }
 
-    # 🐶 Enemy counterattack happens here
+    # Enemy counterattack
     damage = enemy.attack(player)
     message += f"\n{enemy.name} counterattacked and dealt {damage} damage to {player.name}!"
-
     session["health"] = player.health
 
     if not player.is_alive():
@@ -255,7 +244,7 @@ def reset():
     session.clear()
     return redirect(url_for("home"))
 
-# --- Debug/Demo Routes ---
+# --- Debug Utilities ---
 @app.route("/increment", methods=["POST"])
 def increment():
     session["count"] = session.get("count", 0) + 1
@@ -267,7 +256,7 @@ def flip_case():
     flipped = ''.join(c.upper() if c.islower() else c.lower() for c in data.get("text", ""))
     return {"flipped_text": flipped}
 
-# --- Reconstruct Character From Session ---
+# --- Character Reconstruction ---
 def _rebuild_player_from_session():
     if session["character_name"] == "Wizard Cat":
         p = WizardCat()
