@@ -7,7 +7,9 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin-top: 80px;
+            margin-top: 60px;
+            background-color: #fffdf5;
+            color: #333;
         }
         .victory-box {
             background-color: #fefae0;
@@ -15,14 +17,31 @@
             border-radius: 12px;
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
             display: inline-block;
+            max-width: 650px;
         }
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             color: #5e6472;
         }
         p {
             font-size: 1.2rem;
             margin-top: 10px;
+        }
+        .stats {
+            margin-top: 20px;
+            text-align: left;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .stats h3 {
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        .post-credits {
+            margin-top: 40px;
+            font-style: italic;
+            color: #555;
         }
         button {
             margin-top: 25px;
@@ -37,17 +56,36 @@
         button:hover {
             background-color: #45a049;
         }
+        .button-group {
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
 
     <div class="victory-box">
-        <h1>🎉 Victory! 🎉</h1>
-        <p>You defeated the Barking Kitten War General and saved the colony!</p>
-        <p>Your name will echo in the halls of feline legends.</p>
-        <form action="/reset" method="GET">
-            <button type="submit">Play Again</button>
-        </form>
+        <h1>🏆 VICTORY, {{ name }}! 🏆</h1>
+        <p>You defeated the Barking Kitten War General and saved the Kitten Military Forces!</p>
+        <p>Your bravery and strength will echo in the legends of feline history.</p>
+
+        <div class="stats">
+            <h3>Final Stats:</h3>
+            <p><strong>Locations Visited:</strong> {{ visited_locations | length }} / 5</p>
+            <p><strong>Strength:</strong> {{ strength }} | <strong>Intelligence:</strong> {{ intelligence }}</p>
+            <p><strong>Inventory:</strong> {{ inventory | join(', ') if inventory else 'Empty' }}</p>
+        </div>
+
+        <div class="button-group">
+            <form action="{{ url_for('reset') }}" method="GET" style="display:inline;">
+                <button type="submit">🐾 Play Again</button>
+            </form>
+            <button onclick="alert('You would share this epic win with your friends!')">📣 Share Your Win</button>
+        </div>
+
+        <div class="post-credits">
+            <p>As the dust settles and the colony rebuilds, whispers rise...</p>
+            <p>“But what if the War General was only the beginning?”</p>
+        </div>
     </div>
 
 </body>

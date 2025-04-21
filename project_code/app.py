@@ -176,7 +176,13 @@ def use_item():
 
 @app.route("/victory")
 def victory():
-    return render_template("victory.html", name=session.get("character_name", "Unknown Cat"))
+    return render_template("victory.html",
+        name=session.get("character_name", "Unknown Cat"),
+        visited_locations=session.get("visited_locations", []),
+        strength=session.get("strength", 0),
+        intelligence=session.get("intelligence", 0),
+        inventory=session.get("inventory", [])
+    )
 
 @app.route("/reset")
 def reset():
