@@ -67,7 +67,7 @@ def choose_character():
 
     return redirect(url_for("select_location"))
 
-# --- Location Selection and Entry ---
+# --- Location Selection ---
 @app.route("/select-location")
 def select_location():
     visited = session.get("visited_locations", [])
@@ -79,7 +79,7 @@ def select_location():
             "enemy_health": 14,
             "enemy_max_health": 14
         })
-        return redirect(url_for("game_start"))
+        return redirect(url_for("game"))
 
     return render_template("select_location.html", locations=unvisited)
 
@@ -95,11 +95,11 @@ def enter_location():
         "enemy_health": enemy.health,
         "enemy_max_health": enemy.max_health
     })
-    return redirect(url_for("game_start"))
+    return redirect(url_for("game"))
 
-# --- Main Game Screen ---
+# --- Game Screen ---
 @app.route("/game")
-def game_start():
+def game():
     if "character_name" not in session:
         return redirect(url_for("home"))
 
@@ -118,7 +118,7 @@ def game_start():
         location_intro=location_intro
     )
 
-# --- Combat Handler ---
+# --- Combat Route ---
 @app.route("/attack", methods=["POST"])
 def attack():
     data = request.get_json()
@@ -137,7 +137,7 @@ def attack():
     session["health"] = player.health
     session["enemy_health"] = enemy.health
 
-    # --- Post-Defeat Loot Logic ---
+    # --- Post-defeat Logic ---
     if enemy.health <= 0:
         session["locations_visited"] += 1
         loot_messages = []
@@ -149,11 +149,11 @@ def attack():
         if random.random() < 0.3:
             stat_choice = random.choice(["strength", "intelligence"])
             session[stat_choice] += 1
-            loot_messages.append(f"✨ {stat_choice.capitalize()} increased by 1!")
+            loot_messages.append(f"{stat_choice.capitalize()} increased by 1!")
 
         session["max_health"] += 1
         session["health"] = session["max_health"]
-        loot_messages.append("❤️ Max Health increased by 1!")
+        loot_messages.append("Max Health increased by 1!")
 
         session["inventory"] = inventory
 
@@ -165,7 +165,7 @@ def attack():
 
         return {
             "redirect": url_for("select_location"),
-            "message": "Zone cleared! Choose your next location.\n" + "\n.join(loot_messages)
+            "message": "Zone cleared! Choose your next location.\n" + "\n".join(loot_messages)
         }
 
     return {
@@ -176,7 +176,7 @@ def attack():
         "message": message
     }
 
-# --- Healing ---
+# --- Heal Route ---
 @app.route("/heal", methods=["POST"])
 def heal():
     player = _rebuild_player_from_session()
@@ -188,7 +188,7 @@ def heal():
         "message": f"{player.name} healed successfully!" if success else f"{player.name} tried to heal but failed!"
     }
 
-# --- Item Usage ---
+# --- Item Route ---
 @app.route("/use-item", methods=["POST"])
 def use_item():
     inventory = session.get("inventory", [])
@@ -206,7 +206,7 @@ def use_item():
         "message": message
     }
 
-# --- Victory Page ---
+# --- Victory ---
 @app.route("/victory")
 def victory():
     return render_template("victory.html",
@@ -236,7 +236,7 @@ def flip_case():
     flipped = ''.join(c.upper() if c.islower() else c.lower() for c in text)
     return {"flipped_text": flipped}
 
-# --- Player Rebuilder from Session ---
+# --- Utility: Player Rebuilder ---
 def _rebuild_player_from_session():
     if session["character_name"] == "Wizard Cat":
         p = WizardCat()
