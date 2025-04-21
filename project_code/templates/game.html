@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Game Start</title>
+    <title>Exploding Kittens RPG - Battle</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="{{ url_for('static', filename='Script.js') }}" defer></script>
@@ -9,7 +9,6 @@
         .flash-hit {
             animation: flash-red 0.3s;
         }
-
         @keyframes flash-red {
             0% { background-color: rgba(255, 0, 0, 0.3); }
             100% { background-color: transparent; }
@@ -18,10 +17,24 @@
         .fade-log {
             animation: fade-in 0.4s ease-out;
         }
-
         @keyframes fade-in {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .combat-panel {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            margin: 20px 0;
+        }
+
+        .combat-panel .section {
+            width: 50%;
         }
     </style>
 </head>
@@ -35,7 +48,7 @@
     </div>
 
     <div class="section">
-        <h3>Attack with an ability:</h3>
+        <h3>🛠️ Choose an Ability:</h3>
         <div id="ability-buttons">
             {% for ability in abilities %}
                 <button onclick="useAbility('{{ ability }}')" title="{{ ability }}">{{ ability }}</button><br>
@@ -44,7 +57,7 @@
     </div>
 
     <div class="section">
-        <h3>Other actions:</h3>
+        <h3>🩺 Other Actions:</h3>
         <button onclick="heal()">💖 Attempt to Heal</button>
         <button onclick="useItem()">🧪 Use Health Potion</button>
     </div>
@@ -52,20 +65,28 @@
     <hr>
 
     <div class="section" id="location-intro">
-        <h2>🗺️ Zone Introduction</h2>
+        <h2>🗺️ Zone Intel</h2>
         <p>{{ location_intro }}</p>
     </div>
 
-    <div class="section">
-        <h2>Enemy: {{ enemy_name }}</h2>
-        <p><strong>Health:</strong> <span id="enemy-health">{{ enemy_health }} / {{ enemy_max_health }}</span></p>
-        {% if enemy_name == "Barking Kitten War General" %}
-            <div style="color: red; font-weight: bold;">⚠️ FINAL BOSS BATTLE! ⚠️</div>
-        {% endif %}
+    <div class="combat-panel">
+        <div class="section">
+            <h2>🐾 Player</h2>
+            <p><strong>{{ name }}</strong></p>
+            <p><strong>Health:</strong> <span id="player-health">{{ health }} / {{ max_health }}</span></p>
+        </div>
+
+        <div class="section">
+            <h2>🐶 Enemy: {{ enemy_name }}</h2>
+            <p><strong>Health:</strong> <span id="enemy-health">{{ enemy_health }} / {{ enemy_max_health }}</span></p>
+            {% if enemy_name == "Barking Kitten War General" %}
+                <div style="color: red; font-weight: bold;">⚠️ FINAL BOSS BATTLE! ⚠️</div>
+            {% endif %}
+        </div>
     </div>
 
     <div class="section" id="combat-log">
-        <h3>Combat Log:</h3>
+        <h3>📜 Combat Log:</h3>
         <div id="log-messages" style="white-space: pre-wrap; background: #f1f1f1; padding: 10px; border-radius: 5px;"></div>
     </div>
 
