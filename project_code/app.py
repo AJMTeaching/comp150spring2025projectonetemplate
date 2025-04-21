@@ -136,20 +136,24 @@ def attack():
         session["locations_visited"] += 1
         loot_messages = []
 
-        # 💊 50% chance of Health Potion
+        # 🎒 50% chance to get a Health Potion
         if random.random() < 0.5:
             inventory.append("Health Potion")
             loot_messages.append("You found a Health Potion!")
 
-        # 💪 30% chance to increase Strength OR Intelligence
+        # 🧠 30% chance to gain +1 INT or STR
         if random.random() < 0.3:
             stat_choice = random.choice(["strength", "intelligence"])
             session[stat_choice] += 1
-            loot_messages.append(f"+1 {stat_choice.capitalize()}!")
+            loot_messages.append(f"✨ {stat_choice.capitalize()} increased by 1!")
+
+        # ❤️ Always gain +1 Max Health
+        session["max_health"] += 1
+        session["health"] = session["max_health"]
+        loot_messages.append("❤️ Max Health increased by 1!")
 
         session["inventory"] = inventory
 
-        # Final Boss Defeated
         if session["enemy_name"] == "Barking Kitten War General":
             return {
                 "redirect": url_for("victory"),
