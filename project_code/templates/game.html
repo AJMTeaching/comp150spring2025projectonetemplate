@@ -1,10 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Exploding Kittens RPG</title>
+    <title>Game Start</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="{{ url_for('static', filename='Script.js') }}" defer></script>
+    <style>
+        .flash-hit {
+            animation: flash-red 0.3s;
+        }
+
+        @keyframes flash-red {
+            0% { background-color: rgba(255, 0, 0, 0.3); }
+            100% { background-color: transparent; }
+        }
+
+        .fade-log {
+            animation: fade-in 0.4s ease-out;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
 
