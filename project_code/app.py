@@ -119,6 +119,7 @@ def attack():
     selected_ability = data.get("ability")
     player = _rebuild_player_from_session()
     enemy = Enemy(session["enemy_name"], int(session["enemy_health"]))
+    inventory = session.get("inventory", [])
 
     message = "Something went wrong."
     for ability in player.abilities:
@@ -130,13 +131,35 @@ def attack():
     session["health"] = player.health
     session["enemy_health"] = enemy.health
 
+    # --- Post-Defeat Logic ---
     if enemy.health <= 0:
         session["locations_visited"] += 1
+        loot_messages = []
 
+        # 💊 50% chance of Health Potion
+        if random.random() < 0.5:
+            inventory.append("Health Potion")
+            loot_messages.append("You found a Health Potion!")
+
+        # 💪 30% chance to increase Strength OR Intelligence
+        if random.random() < 0.3:
+            stat_choice = random.choice(["strength", "intelligence"])
+            session[stat_choice] += 1
+            loot_messages.append(f"+1 {stat_choice.capitalize()}!")
+
+        session["inventory"] = inventory
+
+        # Final Boss Defeated
         if session["enemy_name"] == "Barking Kitten War General":
-            return {"redirect": url_for("victory"), "message": "You defeated the Final Boss! 🏆"}
+            return {
+                "redirect": url_for("victory"),
+                "message": "You defeated the Final Boss! 🏆\n" + "\n".join(loot_messages)
+            }
 
-        return {"redirect": url_for("select_location"), "message": "Zone cleared! Choose your next location."}
+        return {
+            "redirect": url_for("select_location"),
+            "message": "Zone cleared! Choose your next location.\n" + "\n".join(loot_messages)
+        }
 
     return {
         "player_health": player.health,
