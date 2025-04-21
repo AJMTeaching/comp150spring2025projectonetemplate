@@ -43,3 +43,8 @@ function disableButtons() {
 function enableButtons() {
   document.querySelectorAll("button").forEach(btn => btn.disabled = false);
 }
+
+if (data.redirect) {
+  window.location.href = data.redirect;
+  return;
+}

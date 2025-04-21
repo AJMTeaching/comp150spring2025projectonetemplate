@@ -52,3 +52,18 @@
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Choose Your Next Zone</title>
+</head>
+<body>
+    <h1>Select Your Next Location</h1>
+    <form action="/enter-location" method="POST">
+        {% for location in locations %}
+            <button type="submit" name="location" value="{{ location }}">{{ location }}</button><br>
+        {% endfor %}
+    </form>
+</body>
+</html>
