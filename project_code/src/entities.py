@@ -2,7 +2,6 @@ import random
 from typing import List
 from abc import ABC, abstractmethod
 
-
 # --- STATISTIC ---
 class Statistic:
     def __init__(self, name: str, value: int = 0, min_value: int = 0, max_value: int = 100):
@@ -15,8 +14,7 @@ class Statistic:
         self.value = max(self.min_value, min(self.max_value, self.value + amount))
         return self.value
 
-
-# --- BASE GAME ENTITY ---
+# --- BASE ENTITY ---
 class GameEntity(ABC):
     def __init__(self, name: str, health: int):
         self.name = name
@@ -30,13 +28,13 @@ class GameEntity(ABC):
     def is_alive(self) -> bool:
         return self.health > 0
 
-
 # --- ABILITY ---
 class Ability:
-    def __init__(self, name: str, damage_range: tuple = (3, 7), chance_to_hit: float = 0.9):
+    def __init__(self, name: str, damage_range: tuple = (3, 7), chance_to_hit: float = 0.9, description: str = ""):
         self.name = name
         self.damage_range = damage_range
         self.chance_to_hit = chance_to_hit
+        self.description = description
 
     def use(self, user: 'Character', target: GameEntity) -> bool:
         if random.random() <= self.chance_to_hit:
@@ -47,7 +45,6 @@ class Ability:
             return True
         return False
 
-
 # --- ITEM ---
 class Item:
     def __init__(self, name: str, description: str):
@@ -56,7 +53,6 @@ class Item:
 
     def use(self, character: 'Character') -> bool:
         return True
-
 
 # --- CHARACTER ---
 class Character(GameEntity):
@@ -85,7 +81,6 @@ class Character(GameEntity):
                 return True
         return False
 
-
 # --- ENEMY ---
 class Enemy(GameEntity):
     def __init__(self, name: str, health: int, damage_range: tuple = (2, 5)):
@@ -97,11 +92,10 @@ class Enemy(GameEntity):
         target.take_damage(damage)
         return damage
 
-
 # --- HEALTH POTION ---
 class HealthPotion(Item):
     def __init__(self, healing_range: tuple = (5, 10)):
-        super().__init__(name="Health Potion", description="Restores health")
+        super().__init__(name="Health Potion", description="Restores a bit of health.")
         self.healing_range = healing_range
 
     def use(self, character: 'Character') -> bool:
