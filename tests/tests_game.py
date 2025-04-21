@@ -1,14 +1,14 @@
 import sys
 import os
 import unittest
-import random
 
-# Add the root directory to the Python path so imports work
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+# Ensure correct pathing to project source
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 from project_code.src.entities import Statistic, Character, Ability, Enemy, HealthPotion
 
 
+# --- STATISTIC TESTS ---
 class TestStatistic(unittest.TestCase):
 
     def setUp(self):
@@ -31,24 +31,25 @@ class TestStatistic(unittest.TestCase):
         self.assertEqual(self.stat.value, self.stat.min_value)
 
 
+# --- CHARACTER TESTS ---
 class TestCharacter(unittest.TestCase):
 
     def setUp(self):
         self.char = Character("Test Cat", health=20)
 
-    def test_initialization(self):
+    def test_initialization_defaults(self):
         self.assertEqual(self.char.name, "Test Cat")
         self.assertEqual(self.char.health, 20)
         self.assertEqual(self.char.strength.value, 5)
         self.assertEqual(self.char.intelligence.value, 5)
 
-    def test_healing_success(self):
+    def test_healing_behavior(self):
         self.char.health = 10
         healed = self.char.heal()
-        self.assertTrue(self.char.health >= 10)
+        self.assertGreaterEqual(self.char.health, 10)
         self.assertIsInstance(healed, bool)
 
-    def test_add_ability(self):
+    def test_add_ability_to_character(self):
         ability = Ability(name="Test Claw", damage_range=(1, 3))
         self.char.add_ability(ability)
         self.assertIn(ability, self.char.abilities)
@@ -62,6 +63,7 @@ class TestCharacter(unittest.TestCase):
         self.assertGreater(self.char.health, 5)
 
 
+# --- ABILITY TESTS ---
 class TestAbility(unittest.TestCase):
 
     def setUp(self):
@@ -69,26 +71,27 @@ class TestAbility(unittest.TestCase):
         self.enemy = Enemy("Dog", 10)
         self.ability = Ability("Whisker Blast", damage_range=(3, 5), chance_to_hit=1.0)  # Always hits
 
-    def test_use_hits(self):
+    def test_ability_hits_and_damages(self):
         old_health = self.enemy.health
         result = self.ability.use(self.user, self.enemy)
         self.assertTrue(result)
         self.assertLess(self.enemy.health, old_health)
 
-    def test_use_misses(self):
+    def test_ability_misses(self):
         ability = Ability("Miss Move", damage_range=(1, 2), chance_to_hit=0.0)  # Always misses
         result = ability.use(self.user, self.enemy)
         self.assertFalse(result)
         self.assertEqual(self.enemy.health, 10)
 
 
+# --- ENEMY TESTS ---
 class TestEnemy(unittest.TestCase):
 
     def setUp(self):
         self.enemy = Enemy("Puppy Intruder", 10, damage_range=(2, 4))
         self.target = Character("Cat Defender", health=20)
 
-    def test_attack_damage_range(self):
+    def test_attack_deals_expected_damage(self):
         old_health = self.target.health
         damage = self.enemy.attack(self.target)
         self.assertTrue(2 <= damage <= 4)
