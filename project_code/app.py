@@ -1,5 +1,3 @@
-# 🧠 Updates include /select-location route and tracking visited locations
-
 from flask import Flask, render_template, request, redirect, url_for, session
 from src.characters import WizardCat, FeralCat, ExplodingKitten
 from src.entities import Enemy, HealthPotion
@@ -70,8 +68,15 @@ def choose_character():
 def select_location():
     visited = session.get("visited_locations", [])
     unvisited = [loc for loc in LOCATIONS if loc not in visited]
-    if not unvisited:
+
+    if not unvisited or len(visited) >= 3:
+        session.update({
+            "enemy_name": "Barking Kitten War General",
+            "enemy_health": 14,
+            "enemy_max_health": 14
+        })
         return redirect(url_for("game_start"))
+
     return render_template("select_location.html", locations=unvisited)
 
 @app.route("/enter-location", methods=["POST"])
@@ -81,9 +86,11 @@ def enter_location():
     session["visited_locations"].append(location)
 
     enemy = get_random_enemy()
-    session["enemy_name"] = enemy.name
-    session["enemy_health"] = enemy.health
-    session["enemy_max_health"] = enemy.max_health
+    session.update({
+        "enemy_name": enemy.name,
+        "enemy_health": enemy.health,
+        "enemy_max_health": enemy.max_health
+    })
     return redirect(url_for("game_start"))
 
 @app.route("/game")
@@ -125,16 +132,7 @@ def attack():
 
     if enemy.health <= 0:
         session["locations_visited"] += 1
-        if session["locations_visited"] >= 3:
-            final_boss = Enemy("Barking Kitten War General", 14, (4, 7))
-            session.update({
-                "enemy_name": final_boss.name,
-                "enemy_health": final_boss.health,
-                "enemy_max_health": final_boss.max_health
-            })
-            message += "\nYou have defeated all enemies! Prepare for the final battle!"
-        else:
-            return {"redirect": url_for("select_location"), "message": "Zone cleared! Choose your next location."}
+        return {"redirect": url_for("select_location"), "message": "Zone cleared! Choose your next location."}
 
     return {
         "player_health": player.health,
@@ -185,7 +183,7 @@ def _rebuild_player_from_session():
     p.intelligence.value = session["intelligence"]
     return p
 
-# Demo routes remain unchanged...
+# --- Demo Routes ---
 @app.route("/increment", methods=["POST"])
 def increment():
     session["count"] = session.get("count", 0) + 1

@@ -1,3 +1,4 @@
+// --- Game Ability Attack ---
 function useAbility(abilityName) {
   disableButtons();
   axios.post('/attack', { ability: abilityName })
@@ -12,6 +13,7 @@ function useAbility(abilityName) {
     .finally(enableButtons);
 }
 
+// --- Heal Action ---
 function heal() {
   disableButtons();
   axios.post('/heal')
@@ -20,6 +22,7 @@ function heal() {
     .finally(enableButtons);
 }
 
+// --- Use Item Action ---
 function useItem() {
   disableButtons();
   axios.post('/use-item')
@@ -28,23 +31,28 @@ function useItem() {
     .finally(enableButtons);
 }
 
+// --- Shared Update Handler ---
 function updateGameState(response) {
   const data = response.data;
-  document.getElementById("player-health").textContent = `${data.player_health} / ${data.player_max_health}`;
-  document.getElementById("enemy-health").textContent = `${data.enemy_health} / ${data.enemy_max_health}`;
+
+  // Update health bars
+  document.getElementById("player-health").textContent =
+    `${data.player_health} / ${data.player_max_health}`;
+  document.getElementById("enemy-health").textContent =
+    `${data.enemy_health} / ${data.enemy_max_health}`;
+
+  // Add to combat log
   const logBox = document.getElementById("log-messages");
-  logBox.textContent = (data.message || "[No message]") + "\n" + logBox.textContent;
+  const logMessage = data.message || "[No message]";
+  logBox.textContent = logMessage + "\n" + logBox.textContent;
   logBox.scrollTop = 0;
 }
 
+// --- Button State Management ---
 function disableButtons() {
   document.querySelectorAll("button").forEach(btn => btn.disabled = true);
 }
+
 function enableButtons() {
   document.querySelectorAll("button").forEach(btn => btn.disabled = false);
-}
-
-if (data.redirect) {
-  window.location.href = data.redirect;
-  return;
 }

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Choose Your Next Zone</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Select Your Next Location</h1>
+        <form action="/enter-location" method="POST">
+            {% for location in locations %}
+                <button type="submit" name="location" value="{{ location }}">{{ location }}</button><br><br>
+            {% endfor %}
+        </form>
+    </div>
+
+</body>
+</html>
