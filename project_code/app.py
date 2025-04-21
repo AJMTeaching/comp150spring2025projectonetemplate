@@ -132,6 +132,10 @@ def attack():
 
     if enemy.health <= 0:
         session["locations_visited"] += 1
+
+        if session["enemy_name"] == "Barking Kitten War General":
+            return {"redirect": url_for("victory"), "message": "You defeated the Final Boss! 🏆"}
+
         return {"redirect": url_for("select_location"), "message": "Zone cleared! Choose your next location."}
 
     return {
@@ -141,6 +145,11 @@ def attack():
         "enemy_max_health": session["enemy_max_health"],
         "message": message
     }
+
+@app.route("/victory")
+def victory():
+    name = session.get("character_name", "Unknown Cat")
+    return render_template("victory.html", name=name)
 
 @app.route("/heal", methods=["POST"])
 def heal():

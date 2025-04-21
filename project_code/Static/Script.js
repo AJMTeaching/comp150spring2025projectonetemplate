@@ -3,10 +3,11 @@ function useAbility(abilityName) {
   disableButtons();
   axios.post('/attack', { ability: abilityName })
     .then(response => {
-      if (response.data.redirect) {
-        window.location.href = response.data.redirect;
+      const data = response.data;
+      if (data.redirect) {
+        window.location.href = data.redirect;
       } else {
-        updateGameState(response);
+        updateGameState(data);
       }
     })
     .catch(console.error)
@@ -17,7 +18,7 @@ function useAbility(abilityName) {
 function heal() {
   disableButtons();
   axios.post('/heal')
-    .then(updateGameState)
+    .then(response => updateGameState(response.data))
     .catch(console.error)
     .finally(enableButtons);
 }
@@ -26,22 +27,18 @@ function heal() {
 function useItem() {
   disableButtons();
   axios.post('/use-item')
-    .then(updateGameState)
+    .then(response => updateGameState(response.data))
     .catch(console.error)
     .finally(enableButtons);
 }
 
 // --- Shared Update Handler ---
-function updateGameState(response) {
-  const data = response.data;
-
-  // Update health bars
+function updateGameState(data) {
   document.getElementById("player-health").textContent =
     `${data.player_health} / ${data.player_max_health}`;
   document.getElementById("enemy-health").textContent =
     `${data.enemy_health} / ${data.enemy_max_health}`;
 
-  // Add to combat log
   const logBox = document.getElementById("log-messages");
   const logMessage = data.message || "[No message]";
   logBox.textContent = logMessage + "\n" + logBox.textContent;
