@@ -11,6 +11,8 @@
     <div class="section">
         <h1>{{ name }} has entered the battlefield!</h1>
         <p><strong>Health:</strong> <span id="player-health">{{ health }} / {{ max_health }}</span></p>
+        <p><strong>Strength:</strong> {{ strength }} | <strong>Intelligence:</strong> {{ intelligence }}</p>
+        <p><strong>Inventory:</strong> {{ inventory | join(', ') if inventory else 'Empty' }}</p>
     </div>
 
     <div class="section">
@@ -33,6 +35,9 @@
     <div class="section">
         <h2>Enemy: {{ enemy_name }}</h2>
         <p><strong>Health:</strong> <span id="enemy-health">{{ enemy_health }} / {{ enemy_max_health }}</span></p>
+        {% if enemy_name == "Barking Kitten War General" %}
+            <div style="color: red; font-weight: bold;">⚠️ FINAL BOSS BATTLE! ⚠️</div>
+        {% endif %}
     </div>
 
     <div class="section" id="combat-log">

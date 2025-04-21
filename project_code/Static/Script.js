@@ -30,23 +30,29 @@ if (flipButton && inputText && result) {
 
 // --- Game Ability Attack ---
 function useAbility(abilityName) {
+  disableButtons();
   axios.post('/attack', { ability: abilityName })
     .then(updateGameState)
-    .catch(error => console.error("Attack failed:", error));
+    .catch(error => console.error("Attack failed:", error))
+    .finally(enableButtons);
 }
 
 // --- Heal Route ---
 function heal() {
+  disableButtons();
   axios.post('/heal')
     .then(updateGameState)
-    .catch(error => console.error("Heal failed:", error));
+    .catch(error => console.error("Heal failed:", error))
+    .finally(enableButtons);
 }
 
 // --- Use Item Route ---
 function useItem() {
+  disableButtons();
   axios.post('/use-item')
     .then(updateGameState)
-    .catch(error => console.error("Item use failed:", error));
+    .catch(error => console.error("Item use failed:", error))
+    .finally(enableButtons);
 }
 
 // --- Shared Update Handler ---
@@ -65,4 +71,12 @@ function updateGameState(response) {
   logBox.textContent = logMessage + "\n" + logBox.textContent;
 
   logBox.scrollTop = 0;
+}
+
+// --- Disable/Enable Buttons During Actions ---
+function disableButtons() {
+  document.querySelectorAll("button").forEach(btn => btn.disabled = true);
+}
+function enableButtons() {
+  document.querySelectorAll("button").forEach(btn => btn.disabled = false);
 }
