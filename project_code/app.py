@@ -2,6 +2,22 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from src.characters import WizardCat, FeralCat, ExplodingKitten
 from src.entities import Enemy, Item, HealthPotion
 import random
+import os
+import json
+
+# --- Load Location Event Text ---
+def load_location_intro(location_name: str) -> str:
+    folder_path = os.path.join(os.path.dirname(__file__), "location_events")
+    filename = location_name.lower().replace(" ", "_") + ".json"
+    filepath = os.path.join(folder_path, filename)
+
+    if not os.path.exists(filepath):
+        return "You arrive at an unknown location."
+
+    with open(filepath, "r") as f:
+        data = json.load(f)
+        return data.get("intro", "This place is mysterious and silent...")
+
 
 # --- UTILS ---
 def get_random_enemy() -> Enemy:
@@ -17,6 +33,28 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # --- ROUTES ---
+@app.route("/game")
+def game_start():
+    if "character_name" not in session:
+        return redirect(url_for("home"))
+
+    location_intro = load_location_intro(session.get("current_location", "location_1"))
+
+    return render_template(
+        "game.html",
+        name=session["character_name"],
+        health=session["health"],
+        max_health=session["max_health"],
+        abilities=session["abilities"],
+        strength=session["strength"],
+        intelligence=session["intelligence"],
+        inventory=session.get("inventory", []),
+        enemy_name=session["enemy_name"],
+        enemy_health=session["enemy_health"],
+        enemy_max_health=session["enemy_max_health"],
+        location_intro=location_intro
+    )
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -34,6 +72,9 @@ def choose_character():
         return redirect(url_for("home"))
 
     # Initialize session
+        session["visited_locations"] = []
+    session["current_location"] = "the_clawed_goblet"
+
     session.update({
         "character_name": character.name,
         "health": character.health,
