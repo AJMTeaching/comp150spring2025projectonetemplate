@@ -150,12 +150,9 @@ def attack():
             message = f"{player.name} used {ability.name} and dealt damage!" if success else f"{player.name} used {ability.name} but missed!"
             break
 
-    session["health"] = player.health
     session["enemy_health"] = enemy.health
 
-    if not player.is_alive():
-        return {"redirect": url_for("defeated"), "message": f"{player.name} has fallen in battle..."}
-
+    # 🧱 Check for enemy defeat before they get to counterattack
     if not enemy.is_alive():
         session["locations_visited"] += 1
         loot_messages = []
@@ -183,6 +180,18 @@ def attack():
         return {
             "redirect": url_for("select_location"),
             "message": "🌍 Zone cleared!\n" + "\n".join(loot_messages)
+        }
+
+    # 🐶 Enemy counterattack happens here
+    damage = enemy.attack(player)
+    message += f"\n{enemy.name} counterattacked and dealt {damage} damage to {player.name}!"
+
+    session["health"] = player.health
+
+    if not player.is_alive():
+        return {
+            "redirect": url_for("defeated"),
+            "message": f"{player.name} has fallen in battle..."
         }
 
     return {

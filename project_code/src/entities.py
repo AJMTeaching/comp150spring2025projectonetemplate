@@ -83,14 +83,15 @@ class Character(GameEntity):
 
 # --- ENEMY ---
 class Enemy(GameEntity):
-    def __init__(self, name: str, health: int, damage_range: tuple = (2, 5)):
+    def __init__(self, name: str, health: int, damage_range: tuple = (2, 5), special_name: str = "Chomp"):
         super().__init__(name, health)
         self.damage_range = damage_range
+        self.special_name = special_name  # name of the attack
 
-    def attack(self, target: Character) -> int:
+    def attack(self, target: Character) -> str:
         damage = random.randint(*self.damage_range)
         target.take_damage(damage)
-        return damage
+        return f"{self.name} used {self.special_name} and dealt {damage} damage!"
 
 # --- HEALTH POTION ---
 class HealthPotion(Item):
