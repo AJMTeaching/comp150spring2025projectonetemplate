@@ -26,15 +26,31 @@ def load_location_intro(location_name: str) -> str:
         data = json.load(f)
         return data.get("intro", "This place is mysterious and silent...")
 
-# --- Random Enemy Placeholder ---
-def get_random_enemy() -> Enemy:
-    enemies = [
+# --- Enemys  ---
+def get_enemy_for_location(location: str) -> Enemy:
+    return random.choice(LOCATION_ENEMIES.get(location, [Enemy("Unknown Puppy", 6, (2, 4))]))
+LOCATION_ENEMIES = {
+    "The Clawed Goblet": [
         Enemy("Claw Bandit", 7, (2, 5)),
+        Enemy("Goblet Growler", 8, (3, 6))
+    ],
+    "Felis Infernum": [
         Enemy("Flame Paw", 8, (3, 6)),
+        Enemy("Inferno Pup", 9, (4, 7))
+    ],
+    "The Witherwild Thicket": [
         Enemy("Ghost Whisker", 6, (2, 5)),
-        Enemy("Halo Pouncer", 9, (3, 6))
+        Enemy("Thicket Howler", 7, (3, 5))
+    ],
+    "The Purrgola": [
+        Enemy("Sunnapper", 6, (2, 4)),
+        Enemy("Purring Menace", 7, (2, 5))
+    ],
+    "Felis Elysium": [
+        Enemy("Halo Pouncer", 9, (3, 6)),
+        Enemy("Blessed Barker", 10, (4, 6))
     ]
-    return random.choice(enemies)
+    }  
 
 # --- Home & Character Select ---
 @app.route("/")
@@ -89,7 +105,7 @@ def enter_location():
     session["current_location"] = location
     session["visited_locations"].append(location)
 
-    enemy = get_random_enemy()
+    enemy = get_enemy_for_location(location)
     session.update({
         "enemy_name": enemy.name,
         "enemy_health": enemy.health,
