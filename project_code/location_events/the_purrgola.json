@@ -1,15 +1,12 @@
 {
   "location": "The Purrgola",
-  "primary_attribute": "Intelligence",
-  "secondary_attribute": "Strength",
-  "prompt_text": "A mysterious door blocks your path in The Purrgola, with a riddle inscribed. What will you do?",
+  "primary_attribute": "Strength",
+  "secondary_attribute": "",
+  "prompt_text": "A floral battlefield blooms with deceptive beauty. Camouflaged Corgis spring from flowerbeds in ambush — cute, but deadly.",
   "pass": {
-    "message": "You solved the riddle and pushed the door open. You may proceed."
+    "message": "You held your ground against the camouflaged corgis. The petals settle, and you push forward. +1 Max Health gained."
   },
   "fail": {
-    "message": "You failed to solve the riddle and push the door open. You must find another way."
-  },
-  "partial_pass": {
-    "message": "You managed to solve the riddle or push the door, but not both. You made some progress, but the door remains closed."
+    "message": "The corgis overwhelmed you with speed and ferocity. Your journey ends beneath the blossoms of The Purrgola."
   }
 }

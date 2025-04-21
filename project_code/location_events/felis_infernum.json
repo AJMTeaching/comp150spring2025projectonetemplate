@@ -1,16 +1,12 @@
 {
-    "location": "Felis Infernum",
-    "primary_attribute": "Intelligence",
-    "secondary_attribute": "Strength",
-    "prompt_text": "A mysterious door blocks your path in Felis Infernum, with a riddle inscribed. What will you do?",
-    "pass": {
-      "message": "You solved the riddle and pushed the door open. You may proceed."
-    },
-    "fail": {
-      "message": "You failed to solve the riddle and push the door open. You must find another way."
-    },
-    "partial_pass": {
-      "message": "You managed to solve the riddle or push the door, but not both. You made some progress, but the door remains closed."
-    }
+  "location": "Felis Infernum",
+  "primary_attribute": "Strength",
+  "secondary_attribute": "",
+  "prompt_text": "A hellish horde of Dobermans with glowing red eyes leaps from the flames in Felis Infernum. The infernal gates slam behind you. There's no escape—only battle.",
+  "pass": {
+    "message": "You conquered the fire-born Dobermans and emerge singed but victorious. You gain +1 Max Health and continue deeper into the abyss."
+  },
+  "fail": {
+    "message": "You were torn apart by the infernal fangs of the Doberman legion. Felis Infernum claims another soul."
   }
-  
+}

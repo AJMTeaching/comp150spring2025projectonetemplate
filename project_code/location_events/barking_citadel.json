@@ -1,0 +1,13 @@
+{
+    "location": "Barking Citadel",
+    "primary_attribute": "Strength",
+    "secondary_attribute": "None",
+    "prompt_text": "You’ve reached the Barking Citadel, where the War General of the invading puppies stands surrounded by shattered armor and the echoes of battle. It’s time to end this war.",
+    "pass": {
+      "message": "With every ounce of strength earned through battle, you defeat the Barking Kitten War General. Peace returns to the feline realm—for now."
+    },
+    "fail": {
+      "message": "The War General's crushing might overwhelms you. Your tale ends here, one heroic pawprint among many."
+    }
+  }
+  

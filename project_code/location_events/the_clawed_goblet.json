@@ -1,16 +1,12 @@
 {
-    "location": "The Clawed Goblet",
-    "primary_attribute": "Intelligence",
-    "secondary_attribute": "Strength",
-    "prompt_text": "A mysterious door blocks your path in The Clawed Goblet, with a riddle inscribed. What will you do?",
-    "pass": {
-      "message": "You solved the riddle and pushed the door open. You may proceed."
-    },
-    "fail": {
-      "message": "You failed to solve the riddle and push the door open. You must find another way."
-    },
-    "partial_pass": {
-      "message": "You managed to solve the riddle or push the door, but not both. You made some progress, but the door remains closed."
-    }
+  "location": "The Clawed Goblet",
+  "primary_attribute": "Strength",
+  "secondary_attribute": "",
+  "prompt_text": "You step into a shattered cathedral of battle. Bulldog Brutes, armored and growling, block your path in The Clawed Goblet. Their eyes burn with loyalty to the enemy horde.",
+  "pass": {
+    "message": "You outmatched the Bulldog Brutes and shattered their ranks. The path clears. +1 Max Health gained."
+  },
+  "fail": {
+    "message": "You were overwhelmed by the brute force of the bulldogs. Your journey ends in the bloodied halls of The Clawed Goblet."
   }
-  
+}

@@ -1,16 +1,12 @@
 {
-    "location": "Felis Elysium",
-    "primary_attribute": "Intelligence",
-    "secondary_attribute": "Strength",
-    "prompt_text": "A mysterious door blocks your path in Felis Elysium, with a riddle inscribed. What will you do?",
-    "pass": {
-      "message": "You solved the riddle and pushed the door open. You may proceed."
-    },
-    "fail": {
-      "message": "You failed to solve the riddle and push the door open. You must find another way."
-    },
-    "partial_pass": {
-      "message": "You managed to solve the riddle or push the door, but not both. You made some progress, but the door remains closed."
-    }
+  "location": "Felis Elysium",
+  "primary_attribute": "Strength",
+  "secondary_attribute": "",
+  "prompt_text": "Enemy poodles with angelic halos descend upon you in Felis Elysium. The air smells of fur and judgment. Prepare to fight!",
+  "pass": {
+    "message": "You defeated the poodle pack in a divine duel. You gain +1 Max Health and stride forward with purpose."
+  },
+  "fail": {
+    "message": "You were overwhelmed by the fluffy holy paws of Elysium. Your journey ends here."
   }
-  
+}
