@@ -15,7 +15,7 @@ LOCATIONS = [
     "Felis Elysium"
 ]
 
-# --- Utility: Load Location Intro from JSON ---
+# --- Load Location Description ---
 def load_location_intro(location_name: str) -> str:
     folder_path = os.path.join(os.path.dirname(__file__), "location_events")
     filename = location_name.lower().replace(" ", "_") + ".json"
@@ -26,7 +26,7 @@ def load_location_intro(location_name: str) -> str:
         data = json.load(f)
         return data.get("intro", "This place is mysterious and silent...")
 
-# --- Utility: Random Enemy ---
+# --- Random Enemy Placeholder ---
 def get_random_enemy() -> Enemy:
     enemies = [
         Enemy("Claw Bandit", 7, (2, 5)),
@@ -36,7 +36,7 @@ def get_random_enemy() -> Enemy:
     ]
     return random.choice(enemies)
 
-# --- Home + Character Selection ---
+# --- Home & Character Select ---
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -57,7 +57,7 @@ def choose_character():
         "character_name": character.name,
         "health": character.health,
         "max_health": character.max_health,
-        "abilities": [a.name for a in character.abilities],
+        "abilities": [{"name": a.name, "description": a.description} for a in character.abilities],
         "inventory": ["Health Potion"],
         "strength": character.strength.value,
         "intelligence": character.intelligence.value,
@@ -67,7 +67,7 @@ def choose_character():
 
     return redirect(url_for("select_location"))
 
-# --- Location Selection ---
+# --- Location Select ---
 @app.route("/select-location")
 def select_location():
     visited = session.get("visited_locations", [])
@@ -97,7 +97,7 @@ def enter_location():
     })
     return redirect(url_for("game"))
 
-# --- Game Screen ---
+# --- Main Game View ---
 @app.route("/game")
 def game():
     if "character_name" not in session:
@@ -118,13 +118,13 @@ def game():
         location_intro=location_intro
     )
 
-# --- Combat Route ---
+# --- Combat Handler ---
 @app.route("/attack", methods=["POST"])
 def attack():
     data = request.get_json()
     selected_ability = data.get("ability")
     player = _rebuild_player_from_session()
-    enemy = Enemy(session["enemy_name"], int(session["enemy_health"]))
+    enemy = Enemy(session["enemy_name"], session["enemy_health"])
     inventory = session.get("inventory", [])
 
     message = "Something went wrong."
@@ -137,8 +137,10 @@ def attack():
     session["health"] = player.health
     session["enemy_health"] = enemy.health
 
-    # --- Post-defeat Logic ---
-    if enemy.health <= 0:
+    if not player.is_alive():
+        return {"redirect": url_for("defeated"), "message": f"{player.name} has fallen in battle..."}
+
+    if not enemy.is_alive():
         session["locations_visited"] += 1
         loot_messages = []
 
@@ -147,15 +149,14 @@ def attack():
             loot_messages.append("You found a Health Potion!")
 
         if random.random() < 0.3:
-            stat_choice = random.choice(["strength", "intelligence"])
-            session[stat_choice] += 1
-            loot_messages.append(f"{stat_choice.capitalize()} increased by 1!")
+            stat = random.choice(["strength", "intelligence"])
+            session[stat] += 1
+            loot_messages.append(f"✨ {stat.capitalize()} increased by 1!")
 
         session["max_health"] += 1
         session["health"] = session["max_health"]
-        loot_messages.append("Max Health increased by 1!")
-
         session["inventory"] = inventory
+        loot_messages.append("❤️ Max Health increased by 1!")
 
         if session["enemy_name"] == "Barking Kitten War General":
             return {
@@ -165,18 +166,18 @@ def attack():
 
         return {
             "redirect": url_for("select_location"),
-            "message": "Zone cleared! Choose your next location.\n" + "\n".join(loot_messages)
+            "message": "🌍 Zone cleared!\n" + "\n".join(loot_messages)
         }
 
     return {
         "player_health": player.health,
         "player_max_health": player.max_health,
-        "enemy_health": session["enemy_health"],
-        "enemy_max_health": session["enemy_max_health"],
+        "enemy_health": enemy.health,
+        "enemy_max_health": enemy.max_health,
         "message": message
     }
 
-# --- Heal Route ---
+# --- Healing ---
 @app.route("/heal", methods=["POST"])
 def heal():
     player = _rebuild_player_from_session()
@@ -188,7 +189,7 @@ def heal():
         "message": f"{player.name} healed successfully!" if success else f"{player.name} tried to heal but failed!"
     }
 
-# --- Item Route ---
+# --- Item Use ---
 @app.route("/use-item", methods=["POST"])
 def use_item():
     inventory = session.get("inventory", [])
@@ -197,16 +198,18 @@ def use_item():
         HealthPotion().use(player)
         inventory.remove("Health Potion")
         session.update({"inventory": inventory, "health": player.health})
-        message = f"{player.name} used a Health Potion!"
-    else:
-        message = "No Health Potions left!"
+        return {
+            "player_health": player.health,
+            "player_max_health": player.max_health,
+            "message": f"{player.name} used a Health Potion!"
+        }
     return {
         "player_health": player.health,
         "player_max_health": player.max_health,
-        "message": message
+        "message": "No Health Potions left!"
     }
 
-# --- Victory ---
+# --- Victory & Defeat Screens ---
 @app.route("/victory")
 def victory():
     return render_template("victory.html",
@@ -217,13 +220,17 @@ def victory():
         inventory=session.get("inventory", [])
     )
 
-# --- Reset ---
+@app.route("/defeated")
+def defeated():
+    return render_template("defeated.html", name=session.get("character_name", "Unknown Cat"))
+
+# --- Reset Session ---
 @app.route("/reset")
 def reset():
     session.clear()
     return redirect(url_for("home"))
 
-# --- Demo Routes ---
+# --- Debug/Demo Routes ---
 @app.route("/increment", methods=["POST"])
 def increment():
     session["count"] = session.get("count", 0) + 1
@@ -232,11 +239,10 @@ def increment():
 @app.route("/flip_case", methods=["POST"])
 def flip_case():
     data = request.get_json()
-    text = data.get("text", "")
-    flipped = ''.join(c.upper() if c.islower() else c.lower() for c in text)
+    flipped = ''.join(c.upper() if c.islower() else c.lower() for c in data.get("text", ""))
     return {"flipped_text": flipped}
 
-# --- Utility: Player Rebuilder ---
+# --- Reconstruct Character From Session ---
 def _rebuild_player_from_session():
     if session["character_name"] == "Wizard Cat":
         p = WizardCat()
