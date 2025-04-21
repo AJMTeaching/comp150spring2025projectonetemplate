@@ -104,3 +104,28 @@ class HealthPotion(Item):
             character.health = min(character.max_health, character.health + heal_amount)
             return True
         return False
+
+# --- THEMED ENEMY SUBCLASSES ---
+class ClawedGobletDog(Enemy):
+    def __init__(self):
+        super().__init__("Goblet Pup Raider", 8, (3, 6))
+
+class FelisInfernumDog(Enemy):
+    def __init__(self):
+        super().__init__("Infernal Pup", 9, (4, 7))
+
+class WitherwildThicketDog(Enemy):
+    def __init__(self):
+        super().__init__("Thicket Howler", 7, (2, 5))
+
+class PurrgolaDog(Enemy):
+    def __init__(self):
+        super().__init__("Purrgola Sniffer Scout", 8, (3, 6))
+
+class FelisElysiumDog(Enemy):
+    def __init__(self):
+        super().__init__("Elysian Barkseer", 10, (4, 7))
+
+class FinalBossDog(Enemy):
+    def __init__(self):
+        super().__init__("Barking Kitten War General", 14, (5, 8))
