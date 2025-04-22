@@ -145,6 +145,7 @@ class TestInventoryLogic(unittest.TestCase):
 
     def test_inventory_removal_after_use(self):
         char = Character("Hoarder Cat", health=5)
+        char.max_health = 20  # Ensure they can benefit from the potion
         potion = HealthPotion()
         char.inventory.append(potion)
         char.use_item_from_inventory(0)
