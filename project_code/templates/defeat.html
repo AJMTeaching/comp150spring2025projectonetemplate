@@ -1,38 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>You Were Defeated</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
             background-color: #fff0f0;
             margin-top: 60px;
-            color: #333;
         }
+
         .defeat-box {
             background-color: #ffe6e6;
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 0 10px rgba(255, 0, 0, 0.1);
-            display: inline-block;
             max-width: 680px;
+            margin: 0 auto;
         }
+
         h1 {
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             color: #b94a48;
         }
-        p {
-            font-size: 1.2rem;
-            margin: 10px 0;
-        }
+
         .post-credits {
             margin-top: 30px;
             font-style: italic;
             color: #666;
         }
-        button {
+
+        .defeat-button {
             margin-top: 25px;
             padding: 10px 22px;
             font-size: 1rem;
@@ -42,7 +40,8 @@
             border-radius: 8px;
             cursor: pointer;
         }
-        button:hover {
+
+        .defeat-button:hover {
             background-color: #555;
         }
     </style>
@@ -60,7 +59,7 @@
         </div>
 
         <form action="{{ url_for('reset') }}" method="GET">
-            <button type="submit">🔁 Try Again</button>
+            <button type="submit" class="defeat-button">🔁 Try Again</button>
         </form>
     </div>
 

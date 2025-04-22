@@ -11,22 +11,26 @@
             background-color: #fffdf5;
             color: #333;
         }
+
         .victory-box {
             background-color: #fefae0;
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
             display: inline-block;
-            max-width: 680px;
+            max-width: 700px;
         }
+
         h1 {
             font-size: 2.8rem;
             color: #5e6472;
         }
+
         p {
             font-size: 1.2rem;
             margin: 10px 0;
         }
+
         .stats {
             margin-top: 25px;
             text-align: left;
@@ -34,21 +38,25 @@
             padding: 20px;
             border-radius: 10px;
         }
+
         .stats h3 {
             margin-bottom: 12px;
             font-size: 1.4rem;
         }
+
         .post-credits {
             margin-top: 35px;
             font-style: italic;
             color: #555;
             background-color: #fdf7d9;
-            padding: 12px;
+            padding: 16px;
             border-radius: 8px;
         }
+
         .button-group {
             margin-top: 30px;
         }
+
         button {
             padding: 10px 22px;
             font-size: 1rem;
@@ -59,6 +67,7 @@
             border-radius: 8px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #45a049;
         }
@@ -90,12 +99,12 @@
             <form action="{{ url_for('reset') }}" method="GET" style="display:inline;">
                 <button type="submit">🐾 Play Again</button>
             </form>
-            <button onclick="alert('You would share this epic win with your friends!')">📣 Share Your Win</button>
+            <button onclick="alert('You would share this epic win with your friends!')" title="Imagine tweeting this...">📣 Share Your Win</button>
         </div>
 
         <div class="post-credits">
-            <p>As the dust settles and the colony rebuilds, whispers rise...</p>
-            <p>“But what if the War General was only the beginning?”</p>
+            <p>The skies clear, and the colony breathes easy once more...</p>
+            <p>But some say the War General was merely the first howl in a coming storm.</p>
         </div>
     </div>
 

@@ -56,7 +56,7 @@ class Item:
 
 # --- CHARACTER ---
 class Character(GameEntity):
-    def __init__(self, name: str, health: int = 10):
+    def __init__(self, name: str, health: int = 12):
         super().__init__(name, health)
         self.inventory: List[Item] = []
         self.strength = Statistic("Strength", value=5)
@@ -83,15 +83,15 @@ class Character(GameEntity):
 
 # --- ENEMY ---
 class Enemy(GameEntity):
-    def __init__(self, name: str, health: int, damage_range: tuple = (2, 5), special_name: str = "Chomp"):
+    def __init__(self, name: str, health: int, damage_range: tuple = (3, 6), special_name: str = "Chomp"):
         super().__init__(name, health)
         self.damage_range = damage_range
-        self.special_name = special_name  # name of the attack
+        self.special_name = special_name
 
-    def attack(self, target: Character) -> str:
+    def attack(self, target: Character) -> int:
         damage = random.randint(*self.damage_range)
         target.take_damage(damage)
-        return f"{self.name} used {self.special_name} and dealt {damage} damage!"
+        return damage
 
 # --- HEALTH POTION ---
 class HealthPotion(Item):
@@ -106,18 +106,18 @@ class HealthPotion(Item):
             return True
         return False
 
-# --- THEMED ENEMY SUBCLASSES ---
+# --- THEMED ENEMY SUBCLASSES (normalized range for regular enemies) ---
 class ClawedGobletDog(Enemy):
     def __init__(self):
         super().__init__("Goblet Pup Raider", 8, (3, 6))
 
 class FelisInfernumDog(Enemy):
     def __init__(self):
-        super().__init__("Infernal Pup", 9, (4, 7))
+        super().__init__("Infernal Pup", 8, (3, 6))
 
 class WitherwildThicketDog(Enemy):
     def __init__(self):
-        super().__init__("Thicket Howler", 7, (2, 5))
+        super().__init__("Thicket Howler", 8, (3, 6))
 
 class PurrgolaDog(Enemy):
     def __init__(self):
@@ -125,8 +125,9 @@ class PurrgolaDog(Enemy):
 
 class FelisElysiumDog(Enemy):
     def __init__(self):
-        super().__init__("Elysian Barkseer", 10, (4, 7))
+        super().__init__("Elysian Barkseer", 8, (3, 6))
 
+# --- FINAL BOSS ENEMY ---
 class FinalBossDog(Enemy):
     def __init__(self):
-        super().__init__("Barking Kitten War General", 14, (5, 8))
+        super().__init__("Barking Kitten War General", 14, (5, 8), special_name="War Slam")

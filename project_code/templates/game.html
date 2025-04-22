@@ -1,50 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Exploding Kittens RPG - Battle</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="{{ url_for('static', filename='Script.js') }}" defer></script>
-    <style>
-        .flash-hit {
-            animation: flash-red 0.3s;
-        }
-        @keyframes flash-red {
-            0% { background-color: rgba(255, 0, 0, 0.3); }
-            100% { background-color: transparent; }
-        }
-
-        .fade-log {
-            animation: fade-in 0.4s ease-out;
-        }
-        @keyframes fade-in {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section {
-            margin-bottom: 25px;
-        }
-
-        .combat-panel {
-            display: flex;
-            justify-content: space-between;
-            gap: 40px;
-            margin: 20px 0;
-        }
-
-        .combat-panel .section {
-            width: 50%;
-        }
-    </style>
 </head>
 <body>
 
     <div class="section">
-        <h1>{{ name }} has entered the battlefield!</h1>
-        <p><strong>Health:</strong> <span id="player-health">{{ health }} / {{ max_health }}</span></p>
-        <p><strong>Strength:</strong> {{ strength }} | <strong>Intelligence:</strong> {{ intelligence }}</p>
-        <p><strong>Inventory:</strong> {{ inventory | join(', ') if inventory else 'Empty' }}</p>
+        <h1>🐾 {{ name }} has entered the battlefield!</h1>
+        <p>
+            <strong>Health:</strong> <span id="player-health">{{ health }} / {{ max_health }}</span><br>
+            <strong>Strength:</strong> {{ strength }} | <strong>Intelligence:</strong> {{ intelligence }}<br>
+            <strong>Inventory:</strong> {{ inventory | join(', ') if inventory else 'Empty' }}
+        </p>
     </div>
 
     <div class="section">
@@ -53,7 +24,7 @@
             {% for ability in abilities %}
                 <button onclick="useAbility('{{ ability.name }}')" title="{{ ability.description }}">
                     {{ ability.name }} - {{ ability.description }}
-                </button><br>
+                </button>
             {% endfor %}
         </div>
     </div>
@@ -64,8 +35,6 @@
         <button onclick="useItem()">🧪 Use Health Potion</button>
     </div>
 
-    <hr>
-
     <div class="section" id="location-intro">
         <h2>🗺️ Zone Intel</h2>
         <p>{{ location_intro }}</p>
@@ -73,11 +42,10 @@
 
     <div class="combat-panel">
         <div class="section">
-            <h2>🐾 Player</h2>
+            <h2>🐱 Player</h2>
             <p><strong>{{ name }}</strong></p>
             <p><strong>Health:</strong> <span id="player-health">{{ health }} / {{ max_health }}</span></p>
         </div>
-
         <div class="section">
             <h2>🐶 Enemy: {{ enemy_name }}</h2>
             <p><strong>Health:</strong> <span id="enemy-health">{{ enemy_health }} / {{ enemy_max_health }}</span></p>
@@ -89,7 +57,7 @@
 
     <div class="section" id="combat-log">
         <h3>📜 Combat Log:</h3>
-        <div id="log-messages" style="white-space: pre-wrap; background: #f1f1f1; padding: 10px; border-radius: 5px;"></div>
+        <div id="log-messages"></div>
     </div>
 
 </body>
