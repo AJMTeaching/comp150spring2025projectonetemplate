@@ -1,12 +1,3 @@
 {
-  "location": "The Clawed Goblet",
-  "primary_attribute": "Strength",
-  "secondary_attribute": "",
-  "prompt_text": "You step into a shattered cathedral of battle. Bulldog Brutes, armored and growling, block your path in The Clawed Goblet. Their eyes burn with loyalty to the enemy horde.",
-  "pass": {
-    "message": "You outmatched the Bulldog Brutes and shattered their ranks. The path clears. +1 Max Health gained."
-  },
-  "fail": {
-    "message": "You were overwhelmed by the brute force of the bulldogs. Your journey ends in the bloodied halls of The Clawed Goblet."
-  }
+  "intro": "You step into a shattered cathedral of battle. Bulldog Brutes, armored and growling, block your path in The Clawed Goblet. Their eyes burn with loyalty to the enemy horde."
 }

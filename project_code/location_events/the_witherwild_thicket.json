@@ -1,12 +1,3 @@
 {
-  "location": "The Witherwild Thicket",
-  "primary_attribute": "Strength",
-  "secondary_attribute": "",
-  "prompt_text": "Dense vines and crooked trees hide snarling Doberman scouts. Their amber eyes pierce through the foliage as they prepare to strike.",
-  "pass": {
-    "message": "You sliced through the thicket and defeated the Doberman scouts. The forest exhales, and you march on. +1 Max Health gained."
-  },
-  "fail": {
-    "message": "You were overrun in the shadows of the Witherwild. The thicket swallows you whole."
-  }
+  "intro": "Dense vines and crooked trees hide snarling Doberman scouts. Their amber eyes pierce through the foliage as they prepare to strike."
 }

@@ -1,12 +1,3 @@
 {
-  "location": "Felis Elysium",
-  "primary_attribute": "Strength",
-  "secondary_attribute": "",
-  "prompt_text": "Enemy poodles with angelic halos descend upon you in Felis Elysium. The air smells of fur and judgment. Prepare to fight!",
-  "pass": {
-    "message": "You defeated the poodle pack in a divine duel. You gain +1 Max Health and stride forward with purpose."
-  },
-  "fail": {
-    "message": "You were overwhelmed by the fluffy holy paws of Elysium. Your journey ends here."
-  }
+  "intro": "Enemy poodles with angelic halos descend upon you in Felis Elysium. The air smells of fur and judgment. Prepare to fight!"
 }

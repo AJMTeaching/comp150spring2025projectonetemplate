@@ -1,12 +1,3 @@
 {
-  "location": "The Purrgola",
-  "primary_attribute": "Strength",
-  "secondary_attribute": "",
-  "prompt_text": "A floral battlefield blooms with deceptive beauty. Camouflaged Corgis spring from flowerbeds in ambush — cute, but deadly.",
-  "pass": {
-    "message": "You held your ground against the camouflaged corgis. The petals settle, and you push forward. +1 Max Health gained."
-  },
-  "fail": {
-    "message": "The corgis overwhelmed you with speed and ferocity. Your journey ends beneath the blossoms of The Purrgola."
-  }
+  "intro": "A floral battlefield blooms with deceptive beauty. Camouflaged Corgis spring from flowerbeds in ambush — cute, but deadly."
 }

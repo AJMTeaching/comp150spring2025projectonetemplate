@@ -1,12 +1,3 @@
 {
-  "location": "Felis Infernum",
-  "primary_attribute": "Strength",
-  "secondary_attribute": "",
-  "prompt_text": "A hellish horde of Dobermans with glowing red eyes leaps from the flames in Felis Infernum. The infernal gates slam behind you. There's no escape—only battle.",
-  "pass": {
-    "message": "You conquered the fire-born Dobermans and emerge singed but victorious. You gain +1 Max Health and continue deeper into the abyss."
-  },
-  "fail": {
-    "message": "You were torn apart by the infernal fangs of the Doberman legion. Felis Infernum claims another soul."
-  }
+  "intro": "A hellish horde of Dobermans with glowing red eyes leaps from the flames in Felis Infernum. The infernal gates slam behind you. There's no escape—only battle."
 }
