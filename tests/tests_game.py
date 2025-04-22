@@ -97,6 +97,59 @@ class TestEnemy(unittest.TestCase):
         self.assertTrue(2 <= damage <= 4)
         self.assertEqual(self.target.health, old_health - damage)
 
+# --- HEALTH POTION TESTS ---
+class TestHealthPotion(unittest.TestCase):
+
+    def setUp(self):
+        self.cat = Character("Potion Tester", health=20)
+        self.potion = HealthPotion()
+
+    def test_healing_when_not_full_health(self):
+        self.cat.health = 10
+        result = self.potion.use(self.cat)
+        self.assertTrue(result)
+        self.assertGreater(self.cat.health, 10)
+
+    def test_no_heal_when_full_health(self):
+        self.cat.health = self.cat.max_health
+        result = self.potion.use(self.cat)
+        self.assertFalse(result)
+        self.assertEqual(self.cat.health, self.cat.max_health)
+
+# --- DEATH LOGIC TESTS ---
+class TestDeathCondition(unittest.TestCase):
+
+    def test_is_alive_logic(self):
+        cat = Character("Near Death", health=1)
+        cat.take_damage(1)
+        self.assertFalse(cat.is_alive())
+
+# --- STRENGTH BONUS TESTS ---
+class TestAbilityWithStrengthBonus(unittest.TestCase):
+
+    def test_strength_increases_damage(self):
+        user = Character("Buff Cat", health=10)
+        user.strength.value = 15  # Should increase damage
+        enemy = Enemy("Dummy Dog", 20)
+        ability = Ability("Mighty Swipe", damage_range=(1, 1), chance_to_hit=1.0)  # Minimum range, but scales
+        ability.use(user, enemy)
+        self.assertLess(enemy.health, 20)  # Should be <20 because of bonus
+
+# --- INVENTORY EDGE CASES ---
+class TestInventoryLogic(unittest.TestCase):
+
+    def test_use_invalid_index(self):
+        char = Character("Forgetful Cat", health=10)
+        result = char.use_item_from_inventory(0)  # Empty inventory
+        self.assertFalse(result)
+
+    def test_inventory_removal_after_use(self):
+        char = Character("Hoarder Cat", health=5)
+        potion = HealthPotion()
+        char.inventory.append(potion)
+        char.use_item_from_inventory(0)
+        self.assertEqual(len(char.inventory), 0)
+
 
 if __name__ == '__main__':
     unittest.main()
