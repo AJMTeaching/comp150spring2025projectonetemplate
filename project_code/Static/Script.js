@@ -1,14 +1,25 @@
 // --- Combat Action Handlers ---
 function useAbility(abilityName) {
+  playSound("attack-sound");
   sendAction('/attack', { ability: abilityName });
 }
 
 function heal() {
+  playSound("heal-sound");
   sendAction('/heal');
 }
 
 function useItem() {
+  playSound("item-sound");
   sendAction('/use-item');
+}
+
+function playSound(id) {
+  const sound = document.getElementById(id);
+  if (sound) {
+    sound.currentTime = 0;
+    sound.play();
+  }
 }
 
 // --- Shared Send + Response Logic ---
@@ -17,10 +28,19 @@ function sendAction(endpoint, payload = {}) {
   axios.post(endpoint, payload)
     .then(response => {
       const data = response.data;
+
+      // Check redirect and play end-of-game sounds
       if (data.redirect) {
+        if (data.redirect.includes("victory")) playSound("victory-sound");
+        if (data.redirect.includes("defeated")) playSound("defeat-sound");
+
         showCombatLog(data.message || "Redirecting...");
         setTimeout(() => window.location.href = data.redirect, 1500);
       } else {
+        // Check if enemy dealt damage
+        if (data.message?.includes("counterattacked")) {
+          playSound("damage-sound");
+        }
         updateGameState(data);
       }
     })
