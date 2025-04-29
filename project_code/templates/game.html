@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exploding Kittens RPG - Battle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', filename='Script.js') }}" defer></script>
+</head>
+<body>
+
+    <div class="section">
+        <h1>🐾 {{ name }} has entered the battlefield!</h1>
+        <p>
+            <strong>Health:</strong> <span id="player-health">{{ health }} / {{ max_health }}</span><br>
+            <strong>Strength:</strong> {{ strength }} | <strong>Intelligence:</strong> {{ intelligence }}<br>
+            <strong>Inventory:</strong> {{ inventory | join(', ') if inventory else 'Empty' }}
+        </p>
+    </div>
+
+    <div class="section">
+        <h3>🛠️ Choose an Ability:</h3>
+        <div id="ability-buttons">
+            {% for ability in abilities %}
+                <button onclick="useAbility('{{ ability.name }}')" title="{{ ability.description }}">
+                    {{ ability.name }} - {{ ability.description }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>🩺 Other Actions:</h3>
+        <button onclick="heal()">💖 Attempt to Heal</button>
+        <button onclick="useItem()">🧪 Use Health Potion</button>
+    </div>
+
+    <div class="section" id="location-intro">
+        <h2>🗺️ Zone Intel</h2>
+        <p>{{ location_intro }}</p>
+    </div>
+
+    <div class="combat-panel">
+        <div class="section">
+            <h2>🐱 Player</h2>
+            <p><strong>{{ name }}</strong></p>
+            <p><strong>Health:</strong> <span id="player-health">{{ health }} / {{ max_health }}</span></p>
+        </div>
+        <div class="section">
+            <h2>🐶 Enemy: {{ enemy_name }}</h2>
+            <p><strong>Health:</strong> <span id="enemy-health">{{ enemy_health }} / {{ enemy_max_health }}</span></p>
+            {% if enemy_name == "Barking Kitten War General" %}
+                <div style="color: red; font-weight: bold;">⚠️ FINAL BOSS BATTLE! ⚠️</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="section" id="combat-log">
+        <h3>📜 Combat Log:</h3>
+        <div id="log-messages"></div>
+    </div>
+
+<audio id="attack-sound" src="{{ url_for('static', filename='sounds/attack.mp3') }}"></audio>
+<audio id="damage-sound" src="{{ url_for('static', filename='sounds/damage.mp3') }}"></audio>
+<audio id="heal-sound" src="{{ url_for('static', filename='sounds/healing.mp3') }}"></audio>
+<audio id="item-sound" src="{{ url_for('static', filename='sounds/potion.mp3') }}"></audio>
+<audio id="victory-sound" src="{{ url_for('static', filename='sounds/victroy.mp3') }}"></audio>
+<audio id="defeat-sound" src="{{ url_for('static', filename='sounds/defeat.mp3') }}"></audio>
+    
+</body>
+</html>

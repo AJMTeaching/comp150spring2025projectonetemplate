@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Victory!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 60px;
+            background-color: #fffdf5;
+            color: #333;
+        }
+
+        .victory-box {
+            background-color: #fefae0;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            max-width: 700px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            color: #5e6472;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .stats {
+            margin-top: 25px;
+            text-align: left;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .stats h3 {
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+        }
+
+        .post-credits {
+            margin-top: 35px;
+            font-style: italic;
+            color: #555;
+            background-color: #fdf7d9;
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .button-group {
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 10px 22px;
+            font-size: 1rem;
+            margin: 0 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 500px) {
+            .button-group {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="victory-box">
+        <h1>🏆 VICTORY, {{ name }}! 🏆</h1>
+        <p>You defeated the Barking Kitten War General and saved the Kitten Military Forces!</p>
+        <p>Your bravery and strength will echo in the legends of feline history.</p>
+
+        <div class="stats">
+            <h3>Final Stats:</h3>
+            <p><strong>Locations Visited:</strong> {{ visited_locations | length }} / 5</p>
+            <p><strong>Strength:</strong> {{ strength }} | <strong>Intelligence:</strong> {{ intelligence }}</p>
+            <p><strong>Inventory:</strong> {{ inventory | join(', ') if inventory else 'Empty' }}</p>
+        </div>
+
+        <div class="button-group">
+            <form action="{{ url_for('reset') }}" method="GET" style="display:inline;">
+                <button type="submit">🐾 Play Again</button>
+            </form>
+            <button onclick="alert('You would share this epic win with your friends!')" title="Imagine tweeting this...">📣 Share Your Win</button>
+        </div>
+
+        <div class="post-credits">
+            <p>The skies clear, and the colony breathes easy once more...</p>
+            <p>But some say the War General was merely the first howl in a coming storm.</p>
+        </div>
+    </div>
+
+</body>
+</html>

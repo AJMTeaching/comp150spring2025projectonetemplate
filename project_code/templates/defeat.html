@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>You Were Defeated</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background-color: #fff0f0;
+            margin-top: 60px;
+        }
+
+        .defeat-box {
+            background-color: #ffe6e6;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.1);
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            color: #b94a48;
+        }
+
+        .post-credits {
+            margin-top: 30px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .defeat-button {
+            margin-top: 25px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            background-color: #777;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .defeat-button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="defeat-box">
+        <h1>💀 Mission Failed 💀</h1>
+        <p>{{ name }}, you fought valiantly, but the intruder overwhelmed you.</p>
+        <p>The Kitten Military Forces have suffered a great loss...</p>
+
+        <div class="post-credits">
+            <p>But legends say heroes can rise again.</p>
+            <p>Will you return and reclaim your honor?</p>
+        </div>
+
+        <form action="{{ url_for('reset') }}" method="GET">
+            <button type="submit" class="defeat-button">🔁 Try Again</button>
+        </form>
+    </div>
+
+</body>
+</html>

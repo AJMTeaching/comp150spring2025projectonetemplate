@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exploding Kittens RPG</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', filename='Script.js') }}" defer></script>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 40px;
+            background-color: #fffdf5;
+            color: #333;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #5e6472;
+        }
+
+        p {
+            font-size: 1.15rem;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: inline-block;
+            text-align: left;
+            background: #fefae0;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            font-size: 1.1rem;
+            margin: 12px 0;
+        }
+
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🐱 <em>Exploding Kittens: The Web RPG</em></h1>
+    <p>Choose your feline champion to defend the colony!</p>
+
+    <form action="/choose-character" method="post">
+        <label>
+            <input type="radio" name="character" value="wizard" required>
+            🧙‍♂️ <strong>Wizard Cat</strong> – Arcane master of the whisker realm.
+        </label>
+        <label>
+            <input type="radio" name="character" value="feral">
+            🐾 <strong>Feral Cat</strong> – Wild and ruthless from the alleyways.
+        </label>
+        <label>
+            <input type="radio" name="character" value="exploding">
+            💥 <strong>Exploding Kitten</strong> – Unpredictable chaos with a boom.
+        </label>
+
+        <button type="submit">🎮 Start Game</button>
+    </form>
+
+</body>
+</html>

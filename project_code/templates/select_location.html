@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Choose Your Next Zone</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #fffdf5;
+            color: #333;
+            margin-top: 60px;
+        }
+
+        .container {
+            display: inline-block;
+            background-color: #fefae0;
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            font-size: 2.3rem;
+            margin-bottom: 30px;
+            color: #5e6472;
+        }
+
+        form button {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 14px auto;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.25s;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🌍 Choose Your Next Mission Zone</h1>
+        <form action="/enter-location" method="POST">
+            {% for location in locations %}
+                <button type="submit" name="location" value="{{ location }}" title="Deploy to {{ location }}">
+                    {{ location }}
+                </button>
+            {% endfor %}
+        </form>
+    </div>
+
+</body>
+</html>

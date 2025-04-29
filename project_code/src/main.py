@@ -1,139 +1,346 @@
 import json
-import sys
 import random
-from typing import List, Optional
+from typing import List, Dict, Optional
 from enum import Enum
+from abc import ABC, abstractmethod
 
 
+# --- ENUMS ---
 class EventStatus(Enum):
     UNKNOWN = "unknown"
     PASS = "pass"
     FAIL = "fail"
     PARTIAL_PASS = "partial_pass"
 
-
+# --- STATISTIC CLASS ---
 class Statistic:
-    def __init__(self, name: str, value: int = 0, description: str = "", min_value: int = 0, max_value: int = 100):
+    def __init__(self, name: str, value: int = 0, min_value: int = 0, max_value: int = 100):
         self.name = name
         self.value = value
-        self.description = description
         self.min_value = min_value
         self.max_value = max_value
 
-    def __str__(self):
-        return f"{self.name}: {self.value}"
-
-    def modify(self, amount: int):
+    def modify(self, amount: int) -> int:
         self.value = max(self.min_value, min(self.max_value, self.value + amount))
+        return self.value
 
-
-class Character:
-    def __init__(self, name: str = "Bob"):
+# --- GAME ENTITY BASE CLASS ---
+class GameEntity(ABC):
+    def __init__(self, name: str, health: int):
         self.name = name
-        self.strength = Statistic("Strength", description="Strength is a measure of physical power.")
-        self.intelligence = Statistic("Intelligence", description="Intelligence is a measure of cognitive ability.")
-        # Add more stats as needed
+        self.health = health
+        self.max_health = health
 
-    def __str__(self):
-        return f"Character: {self.name}, Strength: {self.strength}, Intelligence: {self.intelligence}"
+    def take_damage(self, amount: int) -> int:
+        self.health = max(0, self.health - amount)
+        print(f"{self.name} took {amount} damage! Remaining Health: {self.health}")
+        return self.health
 
-    def get_stats(self):
-        return [self.strength, self.intelligence]  # Extend this list if there are more stats
+    def is_alive(self) -> bool:
+        return self.health > 0
 
+# --- ABILITY CLASS ---
+class Ability:
+    def __init__(self, name: str, damage_range: tuple = (3, 7), chance_to_hit: float = 0.9):
+        self.name = name
+        self.damage_range = damage_range
+        self.chance_to_hit = chance_to_hit
 
-class Event:
-    def __init__(self, data: dict):
-        self.primary_attribute = data['primary_attribute']
-        self.secondary_attribute = data['secondary_attribute']
-        self.prompt_text = data['prompt_text']
-        self.pass_message = data['pass']['message']
-        self.fail_message = data['fail']['message']
-        self.partial_pass_message = data['partial_pass']['message']
-        self.status = EventStatus.UNKNOWN
-
-    def execute(self, party: List[Character], parser):
-        print(self.prompt_text)
-        character = parser.select_party_member(party)
-        chosen_stat = parser.select_stat(character)
-        self.resolve_choice(character, chosen_stat)
-
-    def resolve_choice(self, character: Character, chosen_stat: Statistic):
-        if chosen_stat.name == self.primary_attribute:
-            self.status = EventStatus.PASS
-            print(self.pass_message)
-        elif chosen_stat.name == self.secondary_attribute:
-            self.status = EventStatus.PARTIAL_PASS
-            print(self.partial_pass_message)
+    def use(self, user: 'Character', target: GameEntity) -> bool:
+        if random.random() <= self.chance_to_hit:
+            damage = random.randint(*self.damage_range)
+            if hasattr(user, 'strength'):
+                damage += user.strength.value // 3
+            print(f"{user.name} used {self.name} and dealt {damage} damage!")
+            target.take_damage(damage)
+            return True
         else:
-            self.status = EventStatus.FAIL
-            print(self.fail_message)
+            print(f"{user.name} used {self.name} but missed!")
+            return False
 
+# --- INPUT HANDLING CLASS ---
+class UserInputHandler:
+    @staticmethod
+    def get_valid_input(prompt: str, options: List[str]) -> str:
+        options_lower = [opt.lower() for opt in options]
+        while True:
+            user_input = input(prompt).strip().lower()
+            if user_input in options_lower:
+                return options[options_lower.index(user_input)]
+            print(f"Invalid input! Please choose from: {', '.join(options)}")
 
-class Location:
-    def __init__(self, events: List[Event]):
-        self.events = events
+    @staticmethod
+    def get_valid_number(prompt: str, min_val: int, max_val: int) -> int:
+        while True:
+            try:
+                choice = int(input(prompt))
+                if min_val <= choice <= max_val:
+                    return choice
+                print(f"Please enter a number between {min_val} and {max_val}.")
+            except ValueError:
+                print("Invalid input! Please enter a valid number.")
 
-    def get_event(self) -> Event:
-        return random.choice(self.events)
+# --- ITEM CLASS ---
+class Item:
+    def __init__(self, name: str, description: str):
+        self.name = name
+        self.description = description
 
+    def use(self, character: 'Character') -> bool:
+        print(f"{character.name} used {self.name}!")
+        return True
 
-class Game:
-    def __init__(self, parser, characters: List[Character], locations: List[Location]):
-        self.parser = parser
-        self.party = characters
-        self.locations = locations
-        self.continue_playing = True
+class HealthPotion(Item):
+    def __init__(self, healing_range: tuple = (5, 10)):
+        super().__init__(name="Health Potion", description="Restores health")
+        self.healing_range = healing_range
 
-    def start(self):
-        while self.continue_playing:
-            location = random.choice(self.locations)
-            event = location.get_event()
-            event.execute(self.party, self.parser)
-            if self.check_game_over():
-                self.continue_playing = False
-        print("Game Over.")
+    def use(self, character: 'Character') -> bool:
+        if character.health < character.max_health:
+            heal_amount = random.randint(*self.healing_range)
+            old_health = character.health
+            character.health = min(character.max_health, character.health + heal_amount)
+            actual_healing = character.health - old_health
+            print(f"{character.name} healed for {actual_healing} health! Current Health: {character.health}")
+            return True
+        else:
+            print(f"{character.name} is already at full health!")
+            return False
 
-    def check_game_over(self):
-        return len(self.party) == 0
+# --- CHARACTER CLASSES ---
+class Character(GameEntity):
+    def __init__(self, name: str, health: int = 10):
+        super().__init__(name, health)
+        self.inventory: List[Item] = []
+        self.strength = Statistic("Strength", value=5)
+        self.intelligence = Statistic("Intelligence", value=5)
+        self.abilities: List[Ability] = []
 
+    def heal(self) -> bool:
+        if random.random() < (2 / 3):
+            heal_amount = random.randint(5, 10)
+            old_health = self.health
+            self.health = min(self.max_health, self.health + heal_amount)
+            actual_healing = self.health - old_health
+            print(f"{self.name} healed for {actual_healing} health! Current Health: {self.health}")
+            return True
+        else:
+            print(f"{self.name} tried to heal, but it failed!")
+            return False
 
-class UserInputParser:
-    def parse(self, prompt: str) -> str:
-        return input(prompt)
+    def add_ability(self, ability: Ability) -> None:
+        self.abilities.append(ability)
 
-    def select_party_member(self, party: List[Character]) -> Character:
-        print("Choose a party member:")
-        for idx, member in enumerate(party):
-            print(f"{idx + 1}. {member.name}")
-        choice = int(self.parse("Enter the number of the chosen party member: ")) - 1
-        return party[choice]
+    def use_item_from_inventory(self, item_index: int) -> bool:
+        if 0 <= item_index < len(self.inventory):
+            item = self.inventory[item_index]
+            if item.use(self):
+                self.inventory.pop(item_index)
+                return True
+        return False
 
-    def select_stat(self, character: Character) -> Statistic:
-        print(f"Choose a stat for {character.name}:")
-        stats = character.get_stats()
-        for idx, stat in enumerate(stats):
-            print(f"{idx + 1}. {stat.name} ({stat.value})")
-        choice = int(self.parse("Enter the number of the stat to use: ")) - 1
-        return stats[choice]
+class WizardCat(Character):
+    def __init__(self):
+        super().__init__(name="Wizard Cat", health=12)
+        self.intelligence.value = 8
+        self.add_ability(Ability("Fireball", damage_range=(4, 8)))
+        self.add_ability(Ability("Magic Shield", damage_range=(2, 5)))
 
+class FeralCat(Character):
+    def __init__(self):
+        super().__init__(name="Feral Cat", health=15)
+        self.strength.value = 8
+        self.add_ability(Ability("Forsaken Furball", damage_range=(5, 9)))
+        self.add_ability(Ability("Cowardice", damage_range=(3, 6)))
 
-def load_events_from_json(file_path: str) -> List[Event]:
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-    return [Event(event_data) for event_data in data]
+class ExplodingKitten(Character):
+    def __init__(self):
+        super().__init__(name="Exploding Kitten", health=10)
+        self.add_ability(Ability("Nuclear Reactivity", damage_range=(4, 10)))
+        self.add_ability(Ability("Controlled Explosion", damage_range=(3, 7)))
 
+# --- ENEMY CLASS ---
+class Enemy(GameEntity):
+    def __init__(self, name: str, health: int, damage_range: tuple = (2, 5)):
+        super().__init__(name, health)
+        self.damage_range = damage_range
 
-def start_game():
-    parser = UserInputParser()
-    characters = [Character(f"Character_{i}") for i in range(3)]
+    def attack(self, target: Character) -> int:
+        damage = random.randint(*self.damage_range)
+        print(f"{self.name} attacks for {damage} damage!")
+        target.take_damage(damage)
+        return damage
 
-    # Load events from the JSON file
-    events = load_events_from_json('project_code/location_events/location_1.json')
+# --- COMBAT SYSTEM ---
+def combat(player: Character, enemy: Enemy) -> bool:
+    print(f"{player.name} engages in battle with {enemy.name}!")
+    print(f"{enemy.name}: 'You shall not claw past me so easily!'")
+    while player.is_alive() and enemy.is_alive():
+        print(f"\n{player.name}'s turn! Health: {player.health}/{player.max_health}")
+        print("Choose an action:")
+        print("1. Use Ability")
+        print("2. Attempt to Heal")
+        if player.inventory:
+            print("3. Use Item")
+            max_choice = 3
+        else:
+            max_choice = 2
 
-    locations = [Location(events)]
-    game = Game(parser, characters, locations)
-    game.start()
+        action = UserInputHandler.get_valid_number("Enter action number: ", 1, max_choice)
 
+        if action == 1:
+            print("Choose an ability:")
+            for idx, ability in enumerate(player.abilities):
+                print(f"{idx + 1}. {ability.name}")
+            choice = UserInputHandler.get_valid_number("Enter ability number: ", 1, len(player.abilities)) - 1
+            player.abilities[choice].use(player, enemy)
+        elif action == 2:
+            player.heal()
+        elif action == 3 and player.inventory:
+            print("Choose an item:")
+            for idx, item in enumerate(player.inventory):
+                print(f"{idx + 1}. {item.name} - {item.description}")
+            choice = UserInputHandler.get_valid_number("Enter item number: ", 1, len(player.inventory)) - 1
+            player.use_item_from_inventory(choice)
+
+        if not enemy.is_alive():
+            print(f"{enemy.name} is defeated!")
+            print(f"{player.name}: 'Another one bites the fur!'")
+            return True
+
+        print(f"\n{enemy.name}'s turn! Health: {enemy.health}")
+        enemy.attack(player)
+
+        if not player.is_alive():
+            print(f"{player.name} has been defeated... The intruder still roams free.")
+            return False
+
+    return player.is_alive()
+
+# --- GAME STATE ---
+class GameState:
+    def __init__(self):
+        self.player: Optional[Character] = None
+        self.locations_visited = 0
+        self.max_locations = 3
+
+# --- LOCATION AND ENEMY GENERATION ---
+def get_location_enemy(location: str) -> Enemy:
+    if location == "The Clawed Goblet":
+        return Enemy("Claw Bandit", 7, damage_range=(2, 5))
+    elif location == "Felis Infernum":
+        return Enemy("Flame Paw", 8, damage_range=(3, 6))
+    elif location == "The Witherwild Thicket":
+        return Enemy("Ghost Whisker", 6, damage_range=(2, 5))
+    elif location == "The Purrgola":
+        return Enemy("Sunning Saboteur", 7, damage_range=(2, 4))
+    elif location == "Felis Elysium":
+        return Enemy("Halo Pouncer", 9, damage_range=(3, 6))
+    else:
+        return Enemy("Mysterious Cat", 7, damage_range=(2, 5))
+
+# --- INTRODUCTION SCENE ---
+def introduction_scene() -> None:
+    print("\n*ALARM SOUNDS* BEEP! BEEP! BEEP!")
+    print("As the alarm is triggered, you awake to find the Barking Kitten War General in your barrack.")
+    print("Barking Kitten War General: 'Get up, rookie! There's an intruder in the colony and you need to get out there!'")
+    input("Press Enter to continue...")
+
+# --- GAME LOGIC ---
+def choose_character() -> Character:
+    print("Choose your kitten:")
+    choices = {
+        "1": WizardCat,
+        "2": FeralCat,
+        "3": ExplodingKitten
+    }
+    descriptions = {
+        "1": "Wizard Cat - A house cat by day, enchanting it's enemies by night!",
+        "2": "Feral Cat - Defeats enemies not so elegantly...",
+        "3": "Exploding Kitten - Exploding hearts every time they walk into the room!"
+    }
+
+    for key, desc in descriptions.items():
+        print(f"{key}. {desc}")
+
+    user_choice = UserInputHandler.get_valid_input("Enter your choice: ", list(choices.keys()))
+    return choices[user_choice]()
+
+def choose_location(locations: List[str], visited: List[str]) -> str:
+    while True:
+        print("Choose a location to explore:")
+        available_locations = []
+        
+        for idx, loc in enumerate(locations, 1):
+            status = " (visited)" if loc in visited else ""
+            print(f"{idx}. {loc}{status}")
+            if loc not in visited:
+                available_locations.append((idx, loc))
+        
+        # Check if there are any unvisited locations left
+        if not available_locations:
+            print("\nYou have visited all locations! Time for the final battle.")
+            # Return any location to continue the game flow (it won't be used anyway)
+            return locations[0]
+            
+        choice = UserInputHandler.get_valid_number("Enter location number: ", 1, len(locations)) - 1
+        selected_location = locations[choice]
+        
+        # If location was already visited, prompt to choose again
+        if selected_location in visited:
+            print(f"\nThis location is the same way you last left it!")
+            print("Please choose a different location you haven't visited yet.")
+            input("Press Enter to continue...\n")
+        else:
+            return selected_location
+
+def play_game() -> None:
+    print("Welcome to Exploding Kittens: The RPG!")
+    
+    introduction_scene()
+    
+    print("\nYour mission is clear: Find the Intruder and eliminate the threat!\n")
+
+    game_state = GameState()
+    game_state.player = choose_character()
+    print(f"\nYou have chosen: {game_state.player.name}")
+    
+    print("\nBarking Kitten War General: 'Now that you're ready, go save the colony!'")
+    input("Press Enter to continue...\n")
+    
+    game_state.player.inventory.append(HealthPotion())
+    print(f"You received a Health Potion to start your journey!")
+
+    locations = ["The Clawed Goblet", "Felis Infernum", "The Witherwild Thicket", "The Purrgola", "Felis Elysium"]
+    visited_locations = []
+
+    while game_state.locations_visited < game_state.max_locations and game_state.player.is_alive():
+        location = choose_location(locations, visited_locations)
+        visited_locations.append(location)
+        game_state.locations_visited += 1
+        
+        print(f"\nExploring {location}...")
+        enemy = get_location_enemy(location)
+        victory = combat(game_state.player, enemy)
+            
+        if victory:
+            game_state.player.max_health += 1
+            game_state.player.health = game_state.player.max_health
+            print(f"{game_state.player.name} has grown stronger! Max health is now {game_state.player.max_health}.")
+        else:
+            print("Game Over! You were defeated!")
+            return
+
+    if game_state.player.is_alive():
+        print("\nFinal Battle: The Barking Kitten War General appears from the shadows!")
+        print("Barking Kitten War General: 'You've made it far, but this is where your journey ends, rookie!'")
+        final_boss = Enemy("Barking Kitten War General", 14, damage_range=(4, 7))
+        if combat(game_state.player, final_boss):
+            print("Congratulations! You defeated the Barking Kitten War General.")
+            print("The Kitten Military Forces are saved, and you become a hero among cats!")
+        else:
+            print("Game Over! You were defeated by the Barking Kitten War General. Rest in Peace, soldier.")
 
 if __name__ == '__main__':
-    start_game()
+    play_game()
+    
